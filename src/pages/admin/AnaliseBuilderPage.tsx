@@ -9,30 +9,30 @@ type SelectOption = { value: string; label: string }
 
 const iconOptions: IconOption[] = [
   { value: 'briefcase', label: 'Maleta', Icon: Briefcase },
-  { value: 'factory', label: 'IndÃºstria', Icon: Factory },
+  { value: 'factory', label: 'Indústria', Icon: Factory },
   { value: 'building', label: 'Empresa', Icon: Building2 },
   { value: 'rocket', label: 'Crescimento', Icon: Rocket },
-  { value: 'users', label: 'ServiÃ§os', Icon: Users },
-  { value: 'heart', label: 'SaÃºde', Icon: Heart },
-  { value: 'stethoscope', label: 'ClÃ­nica', Icon: Stethoscope },
-  { value: 'cart', label: 'ComÃ©rcio', Icon: ShoppingCart },
+  { value: 'users', label: 'Serviços', Icon: Users },
+  { value: 'heart', label: 'Saúde', Icon: Heart },
+  { value: 'stethoscope', label: 'Clínica', Icon: Stethoscope },
+  { value: 'cart', label: 'Comércio', Icon: ShoppingCart },
   { value: 'store', label: 'Loja', Icon: Store },
   { value: 'megaphone', label: 'Marketing', Icon: Megaphone },
   { value: 'monitor', label: 'Tecnologia', Icon: Monitor },
   { value: 'database', label: 'Dados', Icon: Database },
   { value: 'globe', label: 'Mercado', Icon: Globe2 },
   { value: 'target', label: 'Objetivos', Icon: Target },
-  { value: 'settings', label: 'OperaÃ§Ãµes', Icon: Settings },
+  { value: 'settings', label: 'Operações', Icon: Settings },
   { value: 'wrench', label: 'Processos', Icon: Wrench },
   { value: 'package', label: 'Produto', Icon: Package },
   { value: 'lightbulb', label: 'Ideias', Icon: Lightbulb },
-  { value: 'shield', label: 'SeguranÃ§a', Icon: ShieldCheck },
+  { value: 'shield', label: 'Segurança', Icon: ShieldCheck },
   { value: 'chart', label: 'Resultados', Icon: BarChart3 },
 ]
 
 const fieldTypes: Array<{ value: DiagnosisFieldType; label: string }> = [
-  { value: 'single', label: 'Escolha Ãºnica' },
-  { value: 'radio', label: 'MÃºltipla escolha' },
+  { value: 'single', label: 'Escolha única' },
+  { value: 'radio', label: 'Múltipla escolha' },
   { value: 'select', label: 'Select (dropdown)' },
   { value: 'textarea', label: 'Texto longo' },
 ]
@@ -64,7 +64,7 @@ function createQuestion(): Required<DiagnosisQuestion> {
     required: false,
     placeholder: '',
     description: '',
-    options: ['OpÃ§Ã£o 1'],
+    options: ['Opção 1'],
     score: 0,
   })
 }
@@ -84,7 +84,7 @@ function createForm(): EditorForm {
   return normalizeForm({
     slug: `novo-segmento-${Date.now()}`,
     title: 'Novo segmento',
-    description: 'DescriÃ§Ã£o do segmento',
+    description: 'Descrição do segmento',
     isActive: true,
     icon: 'briefcase',
     sections: [createSection()],
@@ -214,7 +214,7 @@ export default function AnaliseBuilderPage(): ReactElement {
       })
       .catch(err => {
         console.warn(err)
-        if (alive) setError('NÃ£o foi possÃ­vel carregar os formulÃ¡rios da API.')
+        if (alive) setError('Não foi possível carregar os formulários da API.')
       })
       .finally(() => alive && setLoading(false))
     return () => { alive = false }
@@ -289,7 +289,7 @@ export default function AnaliseBuilderPage(): ReactElement {
       setSectionIndex(0)
       setQuestionIndex(0)
       setIconPickerIndex(null)
-      toast.success('Segmento excluÃ­do.')
+      toast.success('Segmento excluído.')
     } catch (err) {
       console.warn(err)
       setError('Erro ao excluir o segmento na API.')
@@ -317,7 +317,7 @@ export default function AnaliseBuilderPage(): ReactElement {
     }))
     setSectionIndex(Math.min(targetIndex, selectedForm.sections.length - 2))
     setQuestionIndex(0)
-    toast.success('Etapa excluÃ­da. Salve para publicar a alteraÃ§Ã£o.')
+    toast.success('Etapa excluída. Salve para publicar a alteração.')
   }
 
   const addQuestion = (): void => {
@@ -339,13 +339,13 @@ export default function AnaliseBuilderPage(): ReactElement {
   }
 
   const updateQuestionType = (type: DiagnosisFieldType): void => {
-    updateQuestion(current => ({ ...current, type, options: type === 'textarea' ? [] : current.options.length ? current.options : ['OpÃ§Ã£o 1'] }))
+    updateQuestion(current => ({ ...current, type, options: type === 'textarea' ? [] : current.options.length ? current.options : ['Opção 1'] }))
   }
 
   const saveCurrentForm = async (): Promise<void> => {
     if (!selectedForm) return
     const normalized = normalizeForm({ ...selectedForm, slug: selectedForm.originalSlug || selectedForm.slug || slugify(selectedForm.title) })
-    if (!normalized.title.trim()) { setError('Informe o tÃ­tulo do segmento.'); return }
+    if (!normalized.title.trim()) { setError('Informe o título do segmento.'); return }
     if (!normalized.sections.length) { setError('Adicione ao menos uma etapa.'); return }
     setSaving(true)
     setError('')
@@ -354,10 +354,10 @@ export default function AnaliseBuilderPage(): ReactElement {
         ? await diagnosisService.updateForm(selectedForm.originalSlug, normalized)
         : await diagnosisService.createForm({ ...normalized, slug: slugify(normalized.title) })
       setForms(current => current.map((form, index) => index === formIndex ? { ...saved, originalSlug: saved.slug } : form))
-      toast.success('FormulÃ¡rio salvo na API. Recarregue /analise para ver a versÃ£o publicada.')
+      toast.success('Formulário salvo na API. Recarregue /analise para ver a versão publicada.')
     } catch (err) {
       console.warn(err)
-      setError('Erro ao salvar o formulÃ¡rio na API.')
+      setError('Erro ao salvar o formulário na API.')
     } finally {
       setSaving(false)
     }
@@ -366,11 +366,11 @@ export default function AnaliseBuilderPage(): ReactElement {
   const SelectedIcon = getIcon(selectedForm?.icon).Icon
 
   if (loading) {
-    return <div className="rounded-2xl border border-[#e3e7ee] bg-white p-8 text-sm font-semibold text-[#5f6672]">Carregando formulÃ¡rios da API...</div>
+    return <div className="rounded-2xl border border-[#e3e7ee] bg-white p-8 text-sm font-semibold text-[#5f6672]">Carregando formulários da API...</div>
   }
 
   if (!selectedForm) {
-    return <div className="rounded-2xl border border-[#e3e7ee] bg-white p-8"><button onClick={addForm} className="rounded-xl bg-[#eb001a] px-4 py-2 text-sm font-bold text-white">Criar primeiro formulÃ¡rio</button></div>
+    return <div className="rounded-2xl border border-[#e3e7ee] bg-white p-8"><button onClick={addForm} className="rounded-xl bg-[#eb001a] px-4 py-2 text-sm font-bold text-white">Criar primeiro formulário</button></div>
   }
 
   return (
@@ -378,8 +378,8 @@ export default function AnaliseBuilderPage(): ReactElement {
       <ScrollbarStyles />
       <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[#e3e7ee] bg-white px-6 py-5">
         <div>
-          <h1 className="text-[22px] font-bold tracking-tight">Maker de FormulÃ¡rios</h1>
-          <p className="mt-1 text-[13px] text-[#6b7280]">Editor conectado Ã  API de diagnÃ³stico. Salvar publica no /analise.</p>
+          <h1 className="text-[22px] font-bold tracking-tight">Maker de Formulários</h1>
+          <p className="mt-1 text-[13px] text-[#6b7280]">Editor conectado à API de diagnóstico. Salvar publica no /analise.</p>
           {error && <p className="mt-2 text-[12px] font-bold text-[#eb001a]">{error}</p>}
         </div>
         <div className="flex flex-wrap items-center gap-3">
@@ -393,7 +393,7 @@ export default function AnaliseBuilderPage(): ReactElement {
       <div className="grid min-h-[760px] grid-cols-1 xl:grid-cols-[300px_minmax(0,1fr)]">
         <aside className="border-r border-[#e3e7ee] bg-white p-6">
           <h2 className="text-[16px] font-bold">Segmentos</h2>
-          <p className="mt-2 text-[13px] leading-relaxed text-[#5f6672]">Cada segmento Ã© um formulÃ¡rio da API.</p>
+          <p className="mt-2 text-[13px] leading-relaxed text-[#5f6672]">Cada segmento Ã© um formulário da API.</p>
           <div className="mt-5 space-y-3">
             {forms.map((form, index) => {
               const Icon = getIcon(form.icon).Icon
@@ -461,13 +461,13 @@ export default function AnaliseBuilderPage(): ReactElement {
               <div className="flex items-center gap-3">
                 <button type="button" onClick={() => setIconPickerIndex(formIndex)} className="grid h-11 w-11 place-items-center rounded-xl bg-[#fff1f3] text-[#eb001a]"><SelectedIcon className="h-5 w-5" /></button>
                 <div>
-                  <h2 className="text-[18px] font-bold">Fluxo do formulÃ¡rio: {selectedForm.title}</h2>
-                  <p className="mt-1 text-[12px] text-[#5f6672]">{selectedForm.sections.length} etapas Â· {totalQuestions} perguntas Â· slug: {selectedForm.originalSlug || selectedForm.slug}</p>
+                  <h2 className="text-[18px] font-bold">Fluxo do formulário: {selectedForm.title}</h2>
+                  <p className="mt-1 text-[12px] text-[#5f6672]">{selectedForm.sections.length} etapas · {totalQuestions} perguntas · slug: {selectedForm.originalSlug || selectedForm.slug}</p>
                 </div>
               </div>
               <div className="mt-4 grid gap-3 md:grid-cols-[240px_minmax(260px,1fr)]">
-                <label className="block text-[12px] font-bold text-[#111318]">TÃ­tulo do segmento<input className="admin-input mt-1 font-bold" value={selectedForm.title} onChange={event => setSelectedForm(item => ({ ...item, title: event.target.value, slug: item.originalSlug || slugify(event.target.value) }))} /></label>
-                <label className="block text-[12px] font-bold text-[#111318]">DescriÃ§Ã£o<input className="admin-input mt-1" value={selectedForm.description || ''} onChange={event => setSelectedForm(item => ({ ...item, description: event.target.value }))} /></label>
+                <label className="block text-[12px] font-bold text-[#111318]">Título do segmento<input className="admin-input mt-1 font-bold" value={selectedForm.title} onChange={event => setSelectedForm(item => ({ ...item, title: event.target.value, slug: item.originalSlug || slugify(event.target.value) }))} /></label>
+                <label className="block text-[12px] font-bold text-[#111318]">Descrição<input className="admin-input mt-1" value={selectedForm.description || ''} onChange={event => setSelectedForm(item => ({ ...item, description: event.target.value }))} /></label>
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
@@ -522,7 +522,7 @@ export default function AnaliseBuilderPage(): ReactElement {
 
           <section className="mt-4 min-w-0 rounded-2xl border border-[#e3e7ee] bg-white p-3 shadow-sm sm:p-5">
             <div className="mb-5">
-              <label className="block text-[12px] font-bold text-[#111318]">TÃ­tulo da etapa</label>
+              <label className="block text-[12px] font-bold text-[#111318]">Título da etapa</label>
               <input className="admin-input mt-1 max-w-[520px] font-bold" value={section?.title ?? ''} onChange={event => updateSection(item => ({ ...item, title: event.target.value }))} />
             </div>
             <div className="space-y-3">
@@ -560,10 +560,10 @@ export default function AnaliseBuilderPage(): ReactElement {
                   <button type="button" onClick={() => { setQuestionIndex(index); setQuestionModalOpen(true) }} className="min-w-0 text-left">
                     <span className="mb-1 block text-[12px] font-bold text-[#111318] sm:hidden">{index + 1}.</span>
                     <strong className="block min-w-0 break-words text-[14px] leading-snug">{item.label}</strong>
-                    <small className="mt-1 block text-[12px] text-[#6b7280]">{item.description || item.placeholder || (item.required ? 'ObrigatÃ³ria' : 'Opcional')} {item.required && <em className="ml-2 rounded bg-[#fff1f3] px-1.5 py-0.5 not-italic text-[#eb001a]">ObrigatÃ³ria</em>}</small>
+                    <small className="mt-1 block text-[12px] text-[#6b7280]">{item.description || item.placeholder || (item.required ? 'Obrigatória' : 'Opcional')} {item.required && <em className="ml-2 rounded bg-[#fff1f3] px-1.5 py-0.5 not-italic text-[#eb001a]">Obrigatória</em>}</small>
                   </button>
                   <span className="col-span-3 rounded-lg bg-[#f3f5f8] px-3 py-2 text-center text-[12px] font-bold text-[#394150] sm:col-span-1">{fieldTypes.find(type => type.value === item.type)?.label ?? item.type}</span>
-                  <button type="button" onClick={() => { setQuestionIndex(index); setQuestionModalOpen(true) }} className="text-center text-[#6b7280] hover:text-[#eb001a]">â€¢â€¢â€¢</button>
+                  <button type="button" onClick={() => { setQuestionIndex(index); setQuestionModalOpen(true) }} className="text-center text-[#6b7280] hover:text-[#eb001a]">...</button>
                 </div>
               ))}
             </div>
@@ -576,13 +576,13 @@ export default function AnaliseBuilderPage(): ReactElement {
         <Modal title="Editar pergunta" onClose={() => setQuestionModalOpen(false)}>
           <div className="space-y-4">
             <CustomSelect label="Tipo de campo" value={question.type} options={fieldTypes} onChange={value => updateQuestionType(value as DiagnosisFieldType)} />
-            <label className="flex cursor-pointer items-center justify-between rounded-xl border border-[#eae1ca] bg-[#f7f8fa] px-4 py-3 text-[15px] font-bold">ObrigatÃ³rio<input type="checkbox" checked={question.required} onChange={event => updateQuestion(item => ({ ...item, required: event.target.checked }))} className="h-5 w-5 cursor-pointer accent-[#eb001a]" /></label>
-            <label className="block text-[12px] font-bold">TÃ­tulo da pergunta<input className="admin-input mt-1" value={question.label} onChange={event => updateQuestion(item => ({ ...item, label: event.target.value }))} /></label>
-            <label className="block text-[12px] font-bold">DescriÃ§Ã£o<input className="admin-input mt-1" value={question.description} onChange={event => updateQuestion(item => ({ ...item, description: event.target.value }))} /></label>
+            <label className="flex cursor-pointer items-center justify-between rounded-xl border border-[#eae1ca] bg-[#f7f8fa] px-4 py-3 text-[15px] font-bold">Obrigatório<input type="checkbox" checked={question.required} onChange={event => updateQuestion(item => ({ ...item, required: event.target.checked }))} className="h-5 w-5 cursor-pointer accent-[#eb001a]" /></label>
+            <label className="block text-[12px] font-bold">Título da pergunta<input className="admin-input mt-1" value={question.label} onChange={event => updateQuestion(item => ({ ...item, label: event.target.value }))} /></label>
+            <label className="block text-[12px] font-bold">Descrição<input className="admin-input mt-1" value={question.description} onChange={event => updateQuestion(item => ({ ...item, description: event.target.value }))} /></label>
             {question.type === 'select' && <label className="block text-[12px] font-bold">Placeholder<input className="admin-input mt-1" value={question.placeholder} onChange={event => updateQuestion(item => ({ ...item, placeholder: event.target.value }))} /></label>}
             {question.type !== 'textarea' && (
               <div>
-                <p className="text-[12px] font-bold">OpÃ§Ãµes</p>
+                <p className="text-[12px] font-bold">Opções</p>
                 <div className="mt-2 space-y-2">
                   {question.options.map((option, index) => (
                     <div key={`${question.id}-${index}`} className="flex gap-2">
@@ -591,7 +591,7 @@ export default function AnaliseBuilderPage(): ReactElement {
                     </div>
                   ))}
                 </div>
-                <button type="button" onClick={() => updateQuestion(item => ({ ...item, options: [...item.options, `OpÃ§Ã£o ${item.options.length + 1}`] }))} className="mt-2 text-[13px] font-bold text-[#eb001a]"><Plus className="mr-1 inline h-4 w-4" />Adicionar opÃ§Ã£o</button>
+                <button type="button" onClick={() => updateQuestion(item => ({ ...item, options: [...item.options, `Opção ${item.options.length + 1}`] }))} className="mt-2 text-[13px] font-bold text-[#eb001a]"><Plus className="mr-1 inline h-4 w-4" />Adicionar opção</button>
               </div>
             )}
             <div className="flex justify-between border-t border-[#e3e7ee] pt-4">
