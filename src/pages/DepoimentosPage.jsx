@@ -254,50 +254,58 @@ export function DepoimentosHeroSection({ heroBlock }) {
   )
 }
 
-export function DepoimentosGridSection({ testimonials }) {
+export function DepoimentosGridSection({ testimonials, loading = false }) {
   return (
     <section className="bg-white" style={{ paddingBottom: '60px' }}>
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
-          {testimonials.map((t) => (
-            <div
-              key={t.id}
-              className="flex flex-col sm:flex-row overflow-hidden items-center sm:items-stretch"
-              style={{ border: '1px solid rgba(0,0,0,0.09)', borderRadius: '8px', background: '#fff' }}
-            >
-              {/* Video placeholder */}
-              <VideoBg video={t.video} />
+        {loading ? (
+          <div className="py-16 text-center">
+            <p className="font-poppins font-bold text-zinc-900" style={{ fontSize: '18px' }}>
+              Carregando
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+            {testimonials.map((t) => (
+              <div
+                key={t.id}
+                className="flex flex-col sm:flex-row overflow-hidden items-center sm:items-stretch"
+                style={{ border: '1px solid rgba(0,0,0,0.09)', borderRadius: '8px', background: '#fff' }}
+              >
+                {/* Video placeholder */}
+                <VideoBg video={t.video} />
 
-              {/* Content */}
-              <div className="flex flex-col justify-between p-6 flex-1 text-center sm:text-left items-center sm:items-start">
-                {/* Quote mark */}
-                <div>
-                  <svg viewBox="0 0 40 30" fill="#dc2626" className="mx-auto sm:mx-0" style={{ width: '32px', height: '24px', marginBottom: '10px', opacity: 0.9 }}>
-                    <path d="M0 30V18.182C0 9.697 5.333 3.636 16 0l2.909 4.545C13.576 6.364 10.788 9.697 10.182 14.545H18V30H0zm22 0V18.182C22 9.697 27.333 3.636 38 0l2.909 4.545C35.576 6.364 32.788 9.697 32.182 14.545H40V30H22z" />
-                  </svg>
-                  <p className="text-zinc-700" style={{ fontSize: '15px', lineHeight: '1.7' }}>
-                    {t.quote}
-                  </p>
-                </div>
+                {/* Content */}
+                <div className="flex flex-col justify-between p-6 flex-1 text-center sm:text-left items-center sm:items-start">
+                  {/* Quote mark */}
+                  <div>
+                    <svg viewBox="0 0 40 30" fill="#dc2626" className="mx-auto sm:mx-0" style={{ width: '32px', height: '24px', marginBottom: '10px', opacity: 0.9 }}>
+                      <path d="M0 30V18.182C0 9.697 5.333 3.636 16 0l2.909 4.545C13.576 6.364 10.788 9.697 10.182 14.545H18V30H0zm22 0V18.182C22 9.697 27.333 3.636 38 0l2.909 4.545C35.576 6.364 32.788 9.697 32.182 14.545H40V30H22z" />
+                    </svg>
+                    <p className="text-zinc-700" style={{ fontSize: '15px', lineHeight: '1.7' }}>
+                      {t.quote}
+                    </p>
+                  </div>
 
-                {/* Divider + name */}
-                <div style={{ marginTop: '20px' }}>
-                  <div className="mx-auto sm:mx-0" style={{ width: '28px', height: '2px', background: '#dc2626', marginBottom: '12px' }} />
-                  <p className="font-poppins font-bold text-zinc-900" style={{ fontSize: '15px', marginBottom: '2px' }}>
-                    {t.name}
-                  </p>
-                  <p className="text-zinc-400" style={{ fontSize: '13px', marginBottom: '10px' }}>
-                    {t.company}
-                  </p>
-                  <span className="inline-flex items-center gap-1.5 text-zinc-400" style={{ fontSize: '12px' }}>
-                    <IconCalendar />
-                    {formatClientSince(t.since)}
-                  </span>
+                  {/* Divider + name */}
+                  <div style={{ marginTop: '20px' }}>
+                    <div className="mx-auto sm:mx-0" style={{ width: '28px', height: '2px', background: '#dc2626', marginBottom: '12px' }} />
+                    <p className="font-poppins font-bold text-zinc-900" style={{ fontSize: '15px', marginBottom: '2px' }}>
+                      {t.name}
+                    </p>
+                    <p className="text-zinc-400" style={{ fontSize: '13px', marginBottom: '10px' }}>
+                      {t.company}
+                    </p>
+                    <span className="inline-flex items-center gap-1.5 text-zinc-400" style={{ fontSize: '12px' }}>
+                      <IconCalendar />
+                      {formatClientSince(t.since)}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )
@@ -361,8 +369,12 @@ export function DepoimentosCtaSection({ ctaBlock }) {
 /* Page */
 export default function DepoimentosPage() {
   const [adminData, setAdminData] = useState(null)
+  const [loadingTestimonials, setLoadingTestimonials] = useState(true)
   useEffect(() => {
-    getPublicSitePage('content-depoimentos').then(setAdminData)
+    getPublicSitePage('content-depoimentos')
+      .then(setAdminData)
+      .catch(() => setAdminData(null))
+      .finally(() => setLoadingTestimonials(false))
   }, [])
 
   const adminBlocks = adminData?.blocks ?? null
@@ -375,7 +387,7 @@ export default function DepoimentosPage() {
     <>
       <main style={{ marginTop: '90px' }}>
         <DepoimentosHeroSection heroBlock={heroBlock} />
-        <DepoimentosGridSection testimonials={testimonials} />
+        <DepoimentosGridSection testimonials={testimonials} loading={loadingTestimonials} />
         <DepoimentosCtaSection ctaBlock={ctaBlock} />
       </main>
       <Footer />

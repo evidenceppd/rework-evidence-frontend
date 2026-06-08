@@ -73,7 +73,7 @@ export default function Footer() {
 
           {/* Nav */}
           <div className="min-w-0 text-center lg:text-left w-full max-w-[170px] mx-auto lg:mx-0">
-            <p className="text-white text-xs font-bold tracking-widest uppercase mb-4" style={{ color: 'var(--color-red-500)' }}>{'NAVEGA\u00c7\u00c3O'}</p>
+            <p className="text-white text-xs font-bold tracking-widest uppercase mb-4" style={{ color: 'var(--color-red-500)' }}>{'MENU'}</p>
             <ul className="flex flex-col gap-2" style={{ gap: '5px' }}>
               {footerNavLinks.map((item) => (
                 <li key={item.to}>
