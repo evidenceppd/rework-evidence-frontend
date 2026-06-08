@@ -239,7 +239,7 @@ export default function ComoTrabalhamosPage() {
                 <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full"><path d="M96 0 A96 96 0 0 1 0 96" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="6 5" fill="none" opacity="0.4" /></svg>
               </div>
               <div className="overflow-hidden relative z-10" style={{ borderRadius: '12px' }}>
-                <img src={about.imageUrl || '/equipe.webp'} alt="Equipe Agência Evidence" className="w-full object-cover" style={{ minHeight: '420px', maxHeight: '460px' }} />
+                <img src={about.imageUrl || '/equipe.png'} alt="Equipe Agência Evidence" className="w-full object-cover" style={{ minHeight: '420px', maxHeight: '460px' }} />
               </div>
               <div className="absolute bottom-0 left-4 right-4 lg:left-6 lg:right-6 bg-white z-20 p-4 flex items-start gap-3" style={{ borderRadius: '10px', boxShadow: '0 8px 32px rgba(0,0,0,0.13)', maxWidth: '348px', margin: '0 auto' }}>
                 <div className="shrink-0 mt-0.5"><IconMedal /></div>
