@@ -74,7 +74,7 @@ export default function ComoTrabalhamos({ block = null }) {
   return (
     <section className="bg-zinc-950 py-8 border-t border-zinc-800">
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
-        <p className="text-red-500 text-xs font-bold tracking-widest uppercase mb-6 text-center md:text-left whitespace-pre-line" style={{ fontSize: '18px' }}>
+        <p className="text-red-500 text-xs font-bold tracking-widest uppercase mb-6 text-center whitespace-pre-line" style={{ fontSize: '18px' }}>
           {content.eyebrow}
         </p>
 

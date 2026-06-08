@@ -92,8 +92,17 @@ export function BlogCtaSection({ ctaBlock }) {
       <div className="max-w-368 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-10 rounded-xl p-8 lg:p-10" style={{ border: '1px solid rgb(228, 228, 231)', boxShadow: 'rgba(0,0,0,0.06) 0px 2px 16px', display: 'flex', justifyContent: 'space-around', background: '#f6f6f6' }}>
           <div className="shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ width: '140px', height: '140px', flexShrink: 0 }} fill="#dc2626">
-              <path d="M488.399 492h-21.933V173.536c0-14.823-12.06-26.882-26.882-26.882H390.56c-14.823 0-26.882 12.06-26.882 26.882V492h-55.692V317.825c0-14.823-12.059-26.882-26.882-26.882H232.08c-14.823 0-26.882 12.06-26.882 26.882V492h-55.692v-90.204c0-14.823-12.06-26.882-26.882-26.882H73.599c-14.823 0-26.882 12.06-26.882 26.882V492H23.601c-5.523 0-10 4.477-10 10s4.477 10 10 10h464.798c5.523 0 10-4.477 10-10s-4.477-10-10-10z" />
+            <svg width="587" height="587" viewBox="0 0 587 587" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-20 w-auto lg:h-[133px]">
+              <g clipPath="url(#clip0_blog_cta)">
+                <path d="M406.163 553.363V180.971H33.7717V318.658H268.476V553.363H406.163Z" stroke="#CB2C30" strokeWidth="9" />
+                <path d="M582.194 524.021V4.94043H63.1139V142.629H444.505V524.021H582.194Z" stroke="#CB2C30" strokeWidth="9" />
+                <path d="M230.133 582.704V357H4.42932V582.704H230.133Z" stroke="#CB2C30" strokeWidth="9" />
+              </g>
+              <defs>
+                <clipPath id="clip0_blog_cta">
+                  <rect width="587" height="587" fill="white" />
+                </clipPath>
+              </defs>
             </svg>
           </div>
           <div className="flex-1 text-center lg:text-left" style={{ maxWidth: '610px' }}>

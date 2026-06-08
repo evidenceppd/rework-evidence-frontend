@@ -23,7 +23,7 @@ export default function ComoAtuamos({ block = null }) {
             <p className="text-red-600 text-xs font-bold tracking-widest uppercase mb-3 text-center lg:text-left whitespace-pre-line" style={{ fontSize: '16px', fontWeight: 700 }}>
               {content.eyebrow}
             </p>
-            <h2 className="font-poppins text-3xl sm:text-4xl font-bold text-zinc-900 leading-tight mb-6 text-center lg:text-left whitespace-pre-line" style={{ maxWidth: '580px' }}>
+            <h2 className="font-poppins md:text-3xl text-[20px] font-bold text-zinc-900 leading-tight mb-6 text-center lg:text-left whitespace-pre-line" style={{ maxWidth: '580px' }}>
               {content.headline}
             </h2>
             <p className="text-zinc-600 text-sm leading-relaxed mb-8 text-center lg:text-left whitespace-pre-line" style={{ fontSize: '16px', maxWidth: '510px' }}>

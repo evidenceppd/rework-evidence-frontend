@@ -27,15 +27,17 @@ function splitHeadline(headline) {
 
 export default function Hero({ block = null }) {
   const content = { ...defaultBlock, ...(block || {}) }
-  const splitTitle = splitHeadline(content.headline)
+  const splitTitle = content.eyebrow
+    ? { first: content.headline || defaultBlock.headline, second: content.eyebrow }
+    : splitHeadline(content.headline)
   const first = splitTitle.first
-  const second = content.eyebrow || splitTitle.second
+  const second = splitTitle.second
   const stats = [content.statOne, content.statTwo, content.statThree]
 
   return (
     <section
       id="inicio"
-      className="relative h-screen bg-black flex items-center sm:pt-[76px]"
+      className="relative md:h-screen bg-black flex items-center sm:pt-[76px] h-fit"
       style={{ paddingTop: 0 }}
     >
       <div className="absolute inset-0">
@@ -61,7 +63,7 @@ export default function Hero({ block = null }) {
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center sm:justify-start">
               <a
-                href={content.buttonHref || '#contato'}
+                href={content.buttonHref || '/analise'}
                 className="cursor-pointer inline-flex w-full max-w-[288px] items-center justify-center gap-2 self-center bg-red-600 px-6 py-4 text-center text-sm font-bold sm:text-left tracking-wide text-white transition-colors duration-200 hover:bg-red-700 sm:w-auto sm:min-w-[256px] sm:max-w-[360px] sm:self-auto whitespace-pre-line"
               >
                 {content.buttonPrimary || defaultBlock.buttonPrimary}
@@ -70,7 +72,7 @@ export default function Hero({ block = null }) {
                 </svg>
               </a>
               <a
-                href={content.buttonSecondaryHref || '#como-trabalhamos'}
+                href={content.buttonSecondaryHref || '/como-trabalhamos'}
                 className="cursor-pointer inline-flex w-full max-w-[288px] items-center justify-center gap-2 self-center border border-white/30 px-6 py-4 text-center text-sm font-semibold sm:text-left tracking-wide text-white transition-colors duration-200 hover:border-white/60 sm:w-auto sm:min-w-[224px] sm:max-w-[320px] sm:self-auto whitespace-pre-line"
               >
                 {content.buttonSecondary || defaultBlock.buttonSecondary}
@@ -89,7 +91,7 @@ export default function Hero({ block = null }) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.5V21h4V13.5H3zm7-6V21h4V7.5h-4zm7 3V21h4V10.5h-4z" />
               </svg>
             </div>
-            <p className="text-zinc-400 leading-relaxed text-[11px] sm:text-[14px] whitespace-pre-line" style={{ lineHeight: '18px', maxWidth: '113px' }}>{stats[0] || defaultBlock.statOne}</p>
+            <p className="text-zinc-400 leading-relaxed text-[11px] sm:text-[14px] whitespace-pre-line" style={{ lineHeight: '18px' }}>{stats[0] || defaultBlock.statOne}</p>
           </div>
 
           <div className="w-px self-stretch bg-zinc-700" />
@@ -100,7 +102,7 @@ export default function Hero({ block = null }) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
               </svg>
             </div>
-            <p className="text-zinc-400 leading-relaxed text-[11px] sm:text-[14px] whitespace-pre-line" style={{ lineHeight: '18px', maxWidth: '130px' }}>{stats[1] || defaultBlock.statTwo}</p>
+            <p className="text-zinc-400 leading-relaxed text-[11px] sm:text-[14px] whitespace-pre-line" style={{ lineHeight: '18px' }}>{stats[1] || defaultBlock.statTwo}</p>
           </div>
 
           <div className="w-px self-stretch bg-zinc-700" />
@@ -111,7 +113,7 @@ export default function Hero({ block = null }) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
             </div>
-            <p className="text-zinc-400 leading-relaxed text-[11px] sm:text-[14px] whitespace-pre-line" style={{ lineHeight: '18px', maxWidth: '132px' }}>{stats[2] || defaultBlock.statThree}</p>
+            <p className="text-zinc-400 leading-relaxed text-[11px] sm:text-[14px] whitespace-pre-line" style={{ lineHeight: '18px' }}>{stats[2] || defaultBlock.statThree}</p>
           </div>
         </div>
       </div>

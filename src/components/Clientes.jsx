@@ -67,8 +67,8 @@ export default function Clientes() {
   return (
     <section id="clientes" className="bg-zinc-950 py-10 border-t border-zinc-800">
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
-        <p className="text-red-500 text-xs font-bold tracking-widest uppercase mb-8 text-center md:text-left" style={{ fontSize: '14px', fontWeight: 500 }}>
-          EMPRESAS QUE CONFIAM NA EVIDENCE
+        <p className="text-red-500 text-[17px] md:text-[18px] font-bold tracking-widest uppercase mb-8 text-center md:text-left" style={{fontWeight: 500 }}>
+          EMPRESAS QUE CONFIAM <br className='md:hidden'/> NA EVIDENCE
         </p>
 
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">

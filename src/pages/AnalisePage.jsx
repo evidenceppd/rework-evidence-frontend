@@ -213,8 +213,8 @@ function SegmentScreen({ adminData, forms, loading, error, onSelect }) {
         <section className="rounded-md border border-white/10 bg-[#07090c] px-12 pb-12 max-[720px]:px-5">
           <Stepper stage="segment" />
           <div className="mx-auto max-w-[820px] text-center">
-            <h1 className="font-poppins text-[clamp(32px,4vw,46px)] font-bold leading-tight">{title}</h1>
-            <p className="mx-auto mt-7 max-w-[720px] text-[18px] leading-[1.8]">{description}</p>
+            <h1 className="font-poppins whitespace-pre-line text-[clamp(32px,4vw,46px)] font-bold leading-tight">{title}</h1>
+            <p className="mx-auto mt-7 max-w-[720px] whitespace-pre-line text-[18px] leading-[1.8]">{description}</p>
             <p className="mt-10 text-[17px] font-bold">{prompt}</p>
           </div>
           {loading && <p className="mt-8 rounded-md border border-white/10 bg-white/5 p-5 text-center text-sm">Carregando segmentos da API...</p>}
@@ -320,7 +320,7 @@ export default function AnalisePage() {
 
   useEffect(() => {
     let alive = true
-    getPublicSitePage('analise').then((data) => alive && setAdminData(data)).catch(() => undefined)
+    getPublicSitePage('content-analise').then((data) => alive && setAdminData(data)).catch(() => undefined)
     diagnosisService.listFormsWithDetails(true)
       .then((items) => { if (alive) { setForms(items.map(normalizePublicForm)); setFormsError('') } })
       .catch((error) => { console.warn(error); if (alive) setFormsError('Não foi possível carregar os segmentos da API.') })

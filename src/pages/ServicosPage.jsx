@@ -421,16 +421,16 @@ export default function ServicosPage() {
           <div className="max-w-384 mx-auto px-4 sm:px-6 lg:px-8">
 
             {/* Header row */}
-            <div className="flex flex-col lg:flex-row lg:items-end gap-4 lg:gap-16 mb-10" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-              <div className="flex items-center justify-center lg:justify-start gap-3 shrink-0">
-                <div className="w-1 bg-red-600 self-stretch rounded-full hidden lg:block" style={{ minHeight: '20px' }} />
-                <p className="text-zinc-900 text-lg font-bold tracking-widest uppercase" style={{ fontSize: '15px', letterSpacing: '0.12em' }}>
+            <div className="flex flex-col lg:flex-row gap-4 lg:gap-16 mb-10 justify-center">
+              <div className="flex items-center justify-center gap-3 shrink-0">
+                {/* <div className="w-1 bg-red-600 self-stretch rounded-full hidden lg:block" style={{ minHeight: '20px' }} /> */}
+                <p className="text-zinc-900 text-lg lg:text-[25px] font-bold tracking-widest uppercase text-center" >
                   {gridBlock?.eyebrow || 'NOSSOS SERVIÇOS'}
                 </p>
               </div>
-              <p className="text-zinc-500 leading-relaxed lg:max-w-xl text-center lg:text-left" style={{ fontSize: '15px', maxWidth: '542px' }}>
+              {/* <p className="text-zinc-500 leading-relaxed lg:max-w-xl text-center lg:text-left" style={{ fontSize: '15px', maxWidth: '542px' }}>
                 {gridBlock?.description || 'Estratégia, execução e tecnologia trabalhando juntas para atrair as pessoas certas, converter oportunidades e acelerar resultados reais.'}
-              </p>
+              </p> */}
             </div>
 
             {/* Cards grid */}

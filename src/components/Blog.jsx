@@ -21,7 +21,7 @@ export default function Blog() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8 sm:mb-12">
           <div className="text-center sm:text-left">
             <p className="text-red-600 text-xs font-bold tracking-widest uppercase mb-2" style={{ fontSize: '14px' }}>DO BLOG</p>
-            <h2 className="font-poppins text-2xl sm:text-3xl font-bold text-zinc-900">Conteúdos que geram insights<br />e impulsionam resultados</h2>
+            <h2 className="font-poppins text-2xl sm:text-3xl font-bold text-zinc-900">Conteúdos que geram insights<br className='hidden md:block'/> e impulsionam resultados</h2>
           </div>
           <Link to="/blog" className="cursor-pointer hidden sm:flex items-center gap-1 text-sm text-red-600 hover:text-red-700 font-semibold transition-colors duration-200" style={{ fontSize: '14px', fontWeight: 700 }}>
             VER TODOS OS ARTIGOS →

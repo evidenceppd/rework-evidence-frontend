@@ -37,11 +37,11 @@ export default function Gargalos({ block = null }) {
   return (
     <section className="bg-zinc-950 py-16 border-t border-zinc-800">
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-[13px] md:mb-10 text-center md:text-left">
-          <p className="text-red-500 text-xs font-bold tracking-widest uppercase leading-tight whitespace-pre-line" style={{ fontSize: '15px' }}>
-            {content.eyebrow}
+        <div className="mb-[13px] text-center md:mb-10 md:text-left">
+          <p className="text-center text-[11px] font-bold uppercase leading-tight tracking-widest text-red-500 whitespace-pre-line">
+            {content.eyebrow} 
           </p>
-          <h2 className="font-poppins text-4xl font-bold text-white mt-1 whitespace-pre-line" style={{ fontSize: '30px' }}>{content.headline}</h2>
+          <h2 className="mt-1 text-center font-poppins text-[42px] font-bold text-white whitespace-pre-line">{content.headline}</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-0 divide-y md:divide-y-0 md:divide-x divide-zinc-800">
@@ -52,7 +52,7 @@ export default function Gargalos({ block = null }) {
               </div>
               <div className="flex flex-col gap-2">
                 <h3 className="font-poppins text-sm font-bold text-white tracking-widest uppercase whitespace-pre-line" style={{ fontSize: '16px' }}>{item.title}</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed whitespace-pre-line" style={{ fontSize: '18px' }}>{item.desc}</p>
+                <p className="text-zinc-400 text-sm leading-relaxed md:whitespace-pre-line" style={{ fontSize: '18px' }}>{item.desc}</p>
               </div>
             </div>
           ))}

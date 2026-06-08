@@ -87,7 +87,7 @@ export default function Depoimentos() {
     <section className="bg-white py-16 border-t border-zinc-200">
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-10">
-          <p className="text-red-500 text-xs font-bold tracking-widest uppercase text-center sm:text-left" style={{ fontSize: '18px' }}>
+          <p className="text-red-500 md:text-[20px] text-[17px] font-bold md:tracking-widest uppercase text-center sm:text-left">
             O QUE NOSSOS CLIENTES DIZEM
           </p>
           <a

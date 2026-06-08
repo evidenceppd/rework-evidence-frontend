@@ -144,9 +144,9 @@ export default function Footer() {
         <div className="border-t border-zinc-800 pt-6 flex min-w-0 flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-zinc-600 text-xs" style={{ textAlign: 'center' }}>© {new Date().getFullYear()} Agência Evidence. Todos os direitos reservados.</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="#" className="cursor-pointer text-zinc-600 hover:text-zinc-400 text-xs transition-colors">Política de Privacidade</a>
-            <span className="text-zinc-600 text-xs">|</span>
-            <a href="#" className="cursor-pointer text-zinc-600 hover:text-zinc-400 text-xs transition-colors">Termos de Uso</a>
+            <span className="cursor-pointer text-zinc-600 hover:text-zinc-400 text-xs transition-colors">CNPJ: 22.341.901/0001-80</span>
+            {/* <span className="text-zinc-600 text-xs">|</span>
+            <a href="#" className="cursor-pointer text-zinc-600 hover:text-zinc-400 text-xs transition-colors">Termos de Uso</a> */}
           </div>
         </div>
       </div>
