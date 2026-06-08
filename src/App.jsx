@@ -1,8 +1,7 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import './index.css'
 import Navbar from './components/Navbar'
-import AnalisePage from './pages/AnalisePage'
 import Hero from './components/Hero'
 import Cenario from './components/Cenario'
 import Gargalos from './components/Gargalos'
@@ -14,15 +13,17 @@ import Blog from './components/Blog'
 import CtaFinal from './components/CtaFinal'
 import Footer from './components/Footer'
 import WhatsAppFloatingButton from './components/WhatsAppFloatingButton'
-import ComoTrabalhamosPage from './pages/ComoTrabalhamosPage'
-import ServicosPage from './pages/ServicosPage'
-import ClientesPage from './pages/ClientesPage'
-import BlogPage from './pages/BlogPage'
-import BlogPostPage from './pages/BlogPostPage'
-import DepoimentosPage from './pages/DepoimentosPage'
-import AdminPage from './pages/AdminPage'
 import { getPublicSitePage } from './services/publicSiteContent.service'
 import { analyticsService } from './services/analytics.service'
+
+const AnalisePage = lazy(() => import('./pages/AnalisePage'))
+const ComoTrabalhamosPage = lazy(() => import('./pages/ComoTrabalhamosPage'))
+const ServicosPage = lazy(() => import('./pages/ServicosPage'))
+const ClientesPage = lazy(() => import('./pages/ClientesPage'))
+const BlogPage = lazy(() => import('./pages/BlogPage'))
+const BlogPostPage = lazy(() => import('./pages/BlogPostPage'))
+const DepoimentosPage = lazy(() => import('./pages/DepoimentosPage'))
+const AdminPage = lazy(() => import('./pages/AdminPage'))
 
 
 const PUBLIC_PAGE_TITLES = {
@@ -140,7 +141,10 @@ function App() {
   const hideNav = location.pathname.startsWith('/analise') || location.pathname.startsWith('/admin')
 
   useEffect(() => {
-    if (location.pathname.startsWith('/admin')) return
+    if (location.pathname.startsWith('/admin')) {
+      document.title = 'Painel Administrativo'
+      return
+    }
 
     const pageTitle = getPublicPageTitle(location.pathname)
     document.title = formatDocumentTitle(pageTitle)
@@ -160,17 +164,19 @@ function App() {
       <ScrollToTop />
       {!hideNav && <Navbar />}
       {!hideNav && <WhatsAppFloatingButton />}
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/como-trabalhamos" element={<ComoTrabalhamosPage />} />
-        <Route path="/servicos" element={<ServicosPage />} />
-        <Route path="/clientes" element={<ClientesPage />} />
-        <Route path="/blog" element={<BlogPage />} />
-        <Route path="/blog/:id" element={<BlogPostPage />} />
-        <Route path="/depoimentos" element={<DepoimentosPage />} />
-        <Route path="/analise" element={<AnalisePage />} />
-        <Route path="/admin/*" element={<AdminPage />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/como-trabalhamos" element={<ComoTrabalhamosPage />} />
+          <Route path="/servicos" element={<ServicosPage />} />
+          <Route path="/clientes" element={<ClientesPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:id" element={<BlogPostPage />} />
+          <Route path="/depoimentos" element={<DepoimentosPage />} />
+          <Route path="/analise" element={<AnalisePage />} />
+          <Route path="/admin/*" element={<AdminPage />} />
+        </Routes>
+      </Suspense>
     </div>
   )
 }

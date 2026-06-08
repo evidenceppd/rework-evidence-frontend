@@ -2236,9 +2236,9 @@ function BlockEditor({
         {!isProcesso && !isEstatisticas && !isGridServicos && !isClientesList && !isDepoimentosList && (
         <label className="block lg:col-span-2">
           <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">{labels.headline}</span>
-          <input
+          <textarea
             {...editorAttrs('headline')}
-            className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+            className="min-h-[68px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2.5 text-[14px] leading-relaxed outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
             value={isCenario ? cenarioHeadline : isGargalos ? gargalosHeadline : isAtuacao ? atuacaoHeadline : isFullProcesso ? block.headline : isProcesso ? processoStepOneTitle : block.headline}
             onChange={(event) => onUpdate(isFullProcesso ? 'headline' : isProcesso ? 'stepOneTitle' : 'headline', event.target.value)}
           />
@@ -2656,16 +2656,18 @@ function BlockEditor({
           <>
             <label className="block">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Texto do botão principal</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.buttonPrimary ?? 'RECEBER ANÁLISE'}
                 onChange={(event) => onUpdate('buttonPrimary', event.target.value)}
               />
             </label>
             <label className="block">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Texto do botão secundário</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.buttonSecondary ?? 'VER COMO FUNCIONA'}
                 onChange={(event) => onUpdate('buttonSecondary', event.target.value)}
               />
@@ -3483,8 +3485,8 @@ export default function SiteContentPage({
                       </label>
                       <label className="block lg:col-span-2">
                         <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título principal</span>
-                        <input
-                          className="h-11 w-full rounded-lg border border-[#dfe3ea] px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+                        <textarea
+                          className="min-h-[68px] w-full resize-y rounded-lg border border-[#dfe3ea] px-3 py-2.5 text-[14px] leading-relaxed outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                           value={block.headline}
                           onChange={(event) => updateBlock(block.id, 'headline', event.target.value)}
                         />

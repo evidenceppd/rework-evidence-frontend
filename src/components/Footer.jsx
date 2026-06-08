@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { Mail, Phone } from 'lucide-react'
 import { toWhatsAppHref, useContatoInfo, CONTATO_INFO_DEFAULTS } from '../services/contatoInfo.service'
 
@@ -14,6 +15,22 @@ const footerNavLinks = [
 export default function Footer() {
   const contato = useContatoInfo() || CONTATO_INFO_DEFAULTS
   const whatsappHref = toWhatsAppHref(contato.whatsapp)
+  const [showMap, setShowMap] = useState(false)
+
+  useEffect(() => {
+    if (showMap) return undefined
+
+    const loadMap = () => setShowMap(true)
+    const idleId = window.requestIdleCallback
+      ? window.requestIdleCallback(loadMap, { timeout: 1800 })
+      : window.setTimeout(loadMap, 900)
+
+    return () => {
+      if (window.cancelIdleCallback) window.cancelIdleCallback(idleId)
+      else window.clearTimeout(idleId)
+    }
+  }, [showMap])
+
   return (
     <footer id="contato" className="overflow-x-hidden bg-zinc-950 border-t border-zinc-800 pt-16 pb-8" style={{ borderColor: 'var(--color-red-700)' }}>
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -93,17 +110,22 @@ export default function Footer() {
             <p className="text-white text-xs font-bold tracking-widest uppercase mb-4" style={{ color: 'var(--color-red-500)' }}>ONDE ESTAMOS</p>
             <p className="break-words text-zinc-400 text-xs mb-1" style={{ fontSize: '14px' }}>{contato.endereco || 'Osvaldo Cruz - SP'}</p>
             <p className="text-zinc-400 text-xs mb-3" style={{ fontSize: '14px' }}>Atendemos todo o Brasil</p>
-            <div className="relative w-full max-w-full overflow-hidden" style={{ height: '150px' }}>
+            <div className="relative w-full max-w-full overflow-hidden bg-zinc-900" style={{ height: '150px' }}>
+              <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 text-center text-[12px] font-bold uppercase tracking-[0.16em] text-zinc-600">
+                AGENCIA EVIDENCE
+              </div>
+              {showMap && (
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10478.692249045629!2d-50.87932725723093!3d-21.788883335092176!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x949425d96adc880b%3A0xdddb190e31968103!2sAg%C3%AAncia%20Evidence%20-%20Publicidade%20e%20Propaganda%20Digital!5e0!3m2!1spt-BR!2sbr!4v1777464958018!5m2!1spt-BR!2sbr"
                 width="100%"
                 height="100%"
-                style={{ border: 0 }}
+                style={{ border: 0, position: 'absolute', inset: 0, zIndex: 1 }}
                 allowFullScreen=""
-                loading="lazy"
+                loading="eager"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Agência Evidence - Localização"
               />
+              )}
               <a
                 href="https://maps.google.com/?q=Agencia+Evidence"
                 target="_blank"

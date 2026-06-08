@@ -131,6 +131,9 @@ function IconCalendarSm() {
 
 
 export function ClientesHeroSection({ heroBlock, preview = false }) {
+  const hasHeroImage = Boolean(heroBlock?.imageUrl)
+  const heroImageUrl = hasHeroImage ? heroBlock.imageUrl : '/clientes-banner-fallback.png'
+
   return (
     <>
       {/* ── HERO ── */}
@@ -139,7 +142,7 @@ export function ClientesHeroSection({ heroBlock, preview = false }) {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: `url(${heroBlock?.imageUrl || '/2e8498a6-0a0c-474f-9b7f-a6fe475f0613.png'})`,
+            backgroundImage: `url(${heroImageUrl})`,
             backgroundSize: 'cover',
             backgroundPosition: 'right 35%',
             backgroundRepeat: 'no-repeat',
@@ -155,7 +158,7 @@ export function ClientesHeroSection({ heroBlock, preview = false }) {
             className="font-poppins font-bold text-white leading-tight mb-4 mx-auto lg:mx-0"
             style={{ fontSize: 'clamp(28px, 4vw, 48px)', maxWidth: '726px', lineHeight: '1.2' }}
           >
-            {heroBlock?.headline || <>Empresas que confiam<br />na Evidence para <span className="text-red-600">crescer.</span></>}
+            {heroBlock?.headline || 'Empresas que confiam na Evidence para crescer'}
           </h1>
           <p className="text-zinc-400 mx-auto lg:mx-0" style={{ fontSize: '20px', maxWidth: '457px', lineHeight: '1.6' }}>
             {heroBlock?.description || 'Parcerias construídas com estratégia, compromisso e foco em resultados reais.'}
@@ -204,7 +207,7 @@ export function ClientesHeroSection({ heroBlock, preview = false }) {
   )
 }
 
-export function ClientesGridSection({ clients, compact = false }) {
+export function ClientesGridSection({ clients, compact = false, loading = false }) {
   const [activeSegment, setActiveSegment] = useState('Todos os segmentos')
   const filterScrollRef = useRef(null)
   const segments = ['Todos os segmentos', ...Array.from(new Set(clients.map((client) => client.segment).filter(Boolean)))]
@@ -224,6 +227,12 @@ export function ClientesGridSection({ clients, compact = false }) {
       {/* ── FILTERS + GRID ── */}
       <section className={compact ? 'bg-white pt-8 pb-8' : 'bg-white pt-8 lg:pt-[120px] pb-12 lg:pb-16'}>
         <div className="max-w-368 mx-auto px-4 sm:px-6 lg:px-8">
+          {loading ? (
+            <div className="py-16 text-center">
+              <p className="font-poppins text-[18px] font-bold text-zinc-900">Carregando</p>
+            </div>
+          ) : (
+          <>
 
           {/* Filter tabs */}
           <div className={`relative flex items-center gap-2 ${compact ? 'mb-6' : 'mb-10'}`}>
@@ -294,6 +303,8 @@ export function ClientesGridSection({ clients, compact = false }) {
               </div>
             ))}
           </div>
+          </>
+          )}
         </div>
       </section>
     </>
@@ -364,8 +375,11 @@ export function ClientesCtaSection({ ctaBlock }) {
 /* ?? Page ?? */
 export default function ClientesPage() {
   const [adminData, setAdminData] = useState(null)
+  const [loadingClients, setLoadingClients] = useState(true)
   useEffect(() => {
-    getPublicSitePage('content-clientes').then(setAdminData)
+    getPublicSitePage('content-clientes')
+      .then(setAdminData)
+      .finally(() => setLoadingClients(false))
   }, [])
 
   const adminBlocks = adminData?.blocks ?? null
@@ -378,7 +392,7 @@ export default function ClientesPage() {
     <>
       <main style={{ marginTop: '90px' }}>
         <ClientesHeroSection heroBlock={heroBlock} />
-        <ClientesGridSection clients={clients} />
+        <ClientesGridSection clients={clients} loading={loadingClients} />
         <ClientesCtaSection ctaBlock={ctaBlock} />
       </main>
       <Footer />

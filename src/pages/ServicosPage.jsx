@@ -403,11 +403,11 @@ export default function ServicosPage() {
           <div className="relative z-10 max-w-384 mx-auto px-4 sm:px-6 lg:px-8">
             {/* Left */}
               <div className="max-w-2xl text-center lg:text-left mx-auto lg:mx-0 flex flex-col items-center lg:items-start">
-              <p className="text-red-600 text-xs font-bold tracking-widest uppercase mb-5" style={{ fontSize: '13px' }}>
+              <p className="text-zinc-900 text-xs font-bold tracking-widest uppercase mb-5" style={{ fontSize: '13px' }}>
                 {heroBlock?.eyebrow || 'NOSSOS SERVIÇOS'}
               </p>
               <h1 className="font-poppins text-3xl sm:text-4xl lg:text-[46px] font-bold text-zinc-900 leading-tight mb-6" style={{ lineHeight: '1.12' }}>
-                {heroBlock?.headline || <>Soluções completas para<br className="hidden lg:block" />{' '}gerar demanda e{' '}<span className="text-red-600">acelerar vendas.</span></>}
+                {heroBlock?.headline || <>Soluções completas para<br className="hidden lg:block" />{' '}gerar demanda e acelerar vendas.</>}
               </h1>
               <p className="text-zinc-500 leading-relaxed" style={{ fontSize: '18px', maxWidth: '560px' }}>
                 {heroBlock?.description || 'Atuamos em todas as frentes do marketing e vendas para estruturar, executar e escalar o crescimento da sua empresa.'}
@@ -558,7 +558,7 @@ export default function ServicosPage() {
               </div>
 
               {/* Divider 2 */}
-              <div className="hidden lg:block self-stretch w-px min-h-12" style={{ backgroundColor: 'rgba(63, 63, 70, 0.37)' }} />
+              {/* <div className="hidden lg:block self-stretch w-px min-h-12" style={{ backgroundColor: 'rgba(63, 63, 70, 0.68)' }} /> */}
 
               {/* CTA button */}
               <div className="flex flex-col items-center lg:items-stretch gap-4 shrink-0 w-full lg:w-auto">
@@ -572,7 +572,7 @@ export default function ServicosPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
                 </a>
-                <div className="flex items-center justify-center lg:justify-start gap-3">
+                {/* <div className="flex items-center justify-center lg:justify-start gap-3">
                   <div className="flex -space-x-2 shrink-0">
                     <img src="/peoples/men1.jpg" alt="Cliente 1" className="w-8 h-8 rounded-full border-2 border-zinc-900 object-cover" />
                     <img src="/peoples/men2.jpg" alt="Cliente 2" className="w-8 h-8 rounded-full border-2 border-zinc-900 object-cover" />
@@ -582,7 +582,7 @@ export default function ServicosPage() {
                   <p className="text-zinc-400 text-center lg:text-left" style={{ maxWidth: '131px', fontSize: '13px', lineHeight: '1.4' }}>
                     {ctaBlock?.statOne || '+60 empresas já confiam na Evidence'}
                   </p>
-                </div>
+                </div> */}
               </div>
 
             </div>

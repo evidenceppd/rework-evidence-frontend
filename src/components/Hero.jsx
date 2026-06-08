@@ -62,7 +62,7 @@ export default function Hero({ block = null }) {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center sm:justify-start">
               <a
                 href={content.buttonHref || '#contato'}
-                className="cursor-pointer inline-flex w-full max-w-[288px] items-center justify-center gap-2 self-center bg-red-600 px-6 py-4 text-center text-sm font-bold sm:text-left tracking-wide text-white transition-colors duration-200 hover:bg-red-700 sm:w-auto sm:min-w-[256px] sm:max-w-[360px] sm:self-auto"
+                className="cursor-pointer inline-flex w-full max-w-[288px] items-center justify-center gap-2 self-center bg-red-600 px-6 py-4 text-center text-sm font-bold sm:text-left tracking-wide text-white transition-colors duration-200 hover:bg-red-700 sm:w-auto sm:min-w-[256px] sm:max-w-[360px] sm:self-auto whitespace-pre-line"
               >
                 {content.buttonPrimary || defaultBlock.buttonPrimary}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -71,7 +71,7 @@ export default function Hero({ block = null }) {
               </a>
               <a
                 href={content.buttonSecondaryHref || '#como-trabalhamos'}
-                className="cursor-pointer inline-flex w-full max-w-[288px] items-center justify-center gap-2 self-center border border-white/30 px-6 py-4 text-center text-sm font-semibold sm:text-left tracking-wide text-white transition-colors duration-200 hover:border-white/60 sm:w-auto sm:min-w-[224px] sm:max-w-[320px] sm:self-auto"
+                className="cursor-pointer inline-flex w-full max-w-[288px] items-center justify-center gap-2 self-center border border-white/30 px-6 py-4 text-center text-sm font-semibold sm:text-left tracking-wide text-white transition-colors duration-200 hover:border-white/60 sm:w-auto sm:min-w-[224px] sm:max-w-[320px] sm:self-auto whitespace-pre-line"
               >
                 {content.buttonSecondary || defaultBlock.buttonSecondary}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">

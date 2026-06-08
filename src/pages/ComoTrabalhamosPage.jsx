@@ -136,16 +136,18 @@ function ComoTrabalhamosCtaSection({ cta }) {
             <h2 className="font-poppins font-bold text-white mb-3 leading-tight text-2xl sm:text-3xl lg:text-[29px]">{cta.headline}</h2>
             <p className="text-zinc-400 text-sm leading-relaxed" style={{ fontSize: '15px' }}>{cta.description}</p>
           </div>
-          <div className="hidden lg:block self-stretch w-px min-h-[48px]" style={{ backgroundColor: 'rgba(63, 63, 70, 0.37)' }} />
+          {/* <div className="hidden lg:block self-stretch w-px min-h-[48px]" style={{ backgroundColor: 'rgba(63, 63, 70, 0.37)' }} /> */}
           <div className="flex flex-col items-center lg:items-stretch gap-4 shrink-0 w-full lg:w-auto">
             <a href="#contato" className="cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold text-sm tracking-wide px-8 py-4 transition-colors duration-200 flex items-center justify-between gap-2" style={{ borderRadius: '4px', fontSize: '15px' }}>
               {cta.buttonPrimary}
               <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ width: '22px', height: '22px', flexShrink: 0 }}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </a>
+            {/*
             <div className="flex items-center justify-center lg:justify-start gap-3">
               <div className="flex -space-x-2 shrink-0">{[1, 2, 3, 4].map((i) => <img key={i} src={`/peoples/men${i}.jpg`} alt={`Cliente ${i}`} className="w-8 h-8 rounded-full border-2 border-zinc-900 object-cover" />)}</div>
               <p className="text-zinc-400 text-center lg:text-left" style={{ maxWidth: '131px', fontSize: '13px', lineHeight: '1.4' }}>+60 empresas j? confiam na Evidence</p>
             </div>
+            */}
           </div>
         </div>
       </div>

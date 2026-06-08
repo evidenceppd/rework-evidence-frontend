@@ -52,8 +52,6 @@ export default function CtaFinal({ block = null }) {
             </p>
           </div>
 
-          <div className="hidden lg:block self-stretch w-px min-h-[48px]" />
-
           <div className="flex flex-col items-center lg:items-stretch gap-4 shrink-0 w-full lg:w-auto">
             <a
               href={content.buttonHref || defaultBlock.buttonHref}

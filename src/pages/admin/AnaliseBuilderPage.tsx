@@ -383,7 +383,6 @@ export default function AnaliseBuilderPage(): ReactElement {
           {error && <p className="mt-2 text-[12px] font-bold text-[#eb001a]">{error}</p>}
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <div className="hidden h-10 min-w-[240px] items-center rounded-xl border border-[#dfe3ea] bg-[#f8fafc] px-3 text-[13px] text-[#8a93a3] md:flex">Buscar...</div>
           <button type="button" onClick={saveCurrentForm} disabled={saving} className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#eb001a] px-5 text-[13px] font-bold text-white shadow-[0_10px_24px_rgba(235,0,26,0.22)] disabled:opacity-60">
             <Save className="h-4 w-4" /> {saving ? 'Salvando...' : 'Salvar'}
           </button>
@@ -393,7 +392,7 @@ export default function AnaliseBuilderPage(): ReactElement {
       <div className="grid min-h-[760px] grid-cols-1 xl:grid-cols-[300px_minmax(0,1fr)]">
         <aside className="border-r border-[#e3e7ee] bg-white p-6">
           <h2 className="text-[16px] font-bold">Segmentos</h2>
-          <p className="mt-2 text-[13px] leading-relaxed text-[#5f6672]">Cada segmento Ã© um formulário da API.</p>
+          <p className="mt-2 text-[13px] leading-relaxed text-[#5f6672]">Cada segmento é um formulário da API.</p>
           <div className="mt-5 space-y-3">
             {forms.map((form, index) => {
               const Icon = getIcon(form.icon).Icon
@@ -605,4 +604,3 @@ export default function AnaliseBuilderPage(): ReactElement {
     </div>
   )
 }
-
