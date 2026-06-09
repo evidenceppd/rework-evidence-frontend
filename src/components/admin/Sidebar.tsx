@@ -71,6 +71,8 @@ const menuItems: MenuItem[] = [
   },
 ]
 
+const editorHiddenPages = new Set(['conteudos-analise-leads', 'conteudos-analise', 'usuarios'])
+
 interface SidebarProps {
   isOpen: boolean
   hoverMode?: boolean
@@ -90,9 +92,20 @@ export default function Sidebar({ isOpen, hoverMode = false, isMobile = false, i
   const isSidebarVisible = isMobile ? isMobileOpen : true
 
   const currentRole = authService.getUsuario()?.role?.toLowerCase()
-  const filteredMenuItems = menuItems.filter(item =>
-    item.id === 'usuarios' ? currentRole !== 'editor' : true
-  )
+  const filteredMenuItems = menuItems
+    .map((item) => {
+      if (currentRole !== 'editor') return item
+      if (editorHiddenPages.has(item.id)) return null
+
+      if (item.submenu) {
+        const submenu = item.submenu.filter(subItem => !editorHiddenPages.has(subItem.id))
+        if (submenu.length === 0) return null
+        return { ...item, submenu }
+      }
+
+      return item
+    })
+    .filter((item): item is MenuItem => Boolean(item))
 
   const toggleMenu = (menuId: string) => {
     if (!effectiveIsOpen) {

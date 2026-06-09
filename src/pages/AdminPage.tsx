@@ -41,6 +41,11 @@ type LocalBlogArticle = {
 }
 
 const adminBlogArticlesKey = 'evidence_admin_blog_articles'
+const editorRestrictedPages = new Set(['usuarios', 'conteudos-analise', 'conteudos-analise-leads'])
+
+function isEditorRestrictedPage(pageId: string | null | undefined) {
+  return !!pageId && editorRestrictedPages.has(pageId)
+}
 
 function formatDashboardDate(dateIso: string) {
   const parsed = new Date(dateIso)
@@ -398,7 +403,9 @@ function DashboardHome() {
   const [cleanupLoading, setCleanupLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const currentUser = authService.getUsuario()
-  const canCleanup = currentUser?.role === 'MASTER'
+  const currentRole = currentUser?.role?.toLowerCase()
+  const canCleanup = currentRole === 'master'
+  const canViewLeads = currentRole !== 'editor'
 
   const loadDashboardData = async (showToast = false) => {
     setLoading(true)
@@ -413,7 +420,7 @@ function DashboardHome() {
         analyticsService.getLast7Days(),
         analyticsService.getTopPages(5),
         noticiasService.getAll(),
-        diagnosisService.listLeads(),
+        canViewLeads ? diagnosisService.listLeads() : Promise.resolve([]),
       ])
 
       setTotalViews(stats.totalViews)
@@ -472,14 +479,14 @@ function DashboardHome() {
 
       {errorMessage && <div className="rounded-2xl border border-[#eb001a]/20 bg-[#fff1f3] px-4 py-3 text-sm font-bold text-[#eb001a]">{normalizeDashboardMessage(errorMessage)}</div>}
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section className={`grid gap-4 md:grid-cols-2 ${canViewLeads ? 'xl:grid-cols-4' : 'xl:grid-cols-2'}`}>
         <DashboardMetricCard label="Acessos no mês" value={loading ? '...' : viewsMonth} detail={`Total geral: ${totalViews}`} icon={<Users className="h-5 w-5" />} />
         <DashboardMetricCard label="Média diária" value={loading ? '...' : dailyAverage} detail="Últimos 30 dias" icon={<TrendingUp className="h-5 w-5" />} tone="green" />
-        <DashboardMetricCard label="Novas análises" value={loading ? '...' : recentLeads.length} detail={`${newLeads} ainda como novas`} icon={<MessageSquare className="h-5 w-5" />} tone="dark" />
-        <DashboardMetricCard label="Leads quentes" value={loading ? '...' : hotLeads} detail="Prioridade comercial" icon={<Flame className="h-5 w-5" />} tone="amber" />
+        {canViewLeads && <DashboardMetricCard label="Novas análises" value={loading ? '...' : recentLeads.length} detail={`${newLeads} ainda como novas`} icon={<MessageSquare className="h-5 w-5" />} tone="dark" />}
+        {canViewLeads && <DashboardMetricCard label="Leads quentes" value={loading ? '...' : hotLeads} detail="Prioridade comercial" icon={<Flame className="h-5 w-5" />} tone="amber" />}
       </section>
 
-      <section className="grid gap-5 xl:grid-cols-[minmax(0,1.45fr)_minmax(380px,0.8fr)]">
+      <section className={`grid gap-5 ${canViewLeads ? 'xl:grid-cols-[minmax(0,1.45fr)_minmax(380px,0.8fr)]' : ''}`}>
         <div className="space-y-5">
           <div className="rounded-[28px] border border-[#e3e7ee] bg-white p-4 shadow-sm sm:p-5">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -504,13 +511,15 @@ function DashboardHome() {
         </div>
 
         <aside className="space-y-5">
-          <div className="rounded-[28px] border border-[#e3e7ee] bg-white p-5 shadow-sm">
-            <div className="mb-5 flex items-start justify-between gap-3">
-              <div><p className="text-[11px] font-black uppercase tracking-[0.16em] text-[#eb001a]">Novas respostas das análises</p><h2 className="mt-1 text-xl font-black text-[#111318]">Chegadas recentes</h2><p className="mt-1 text-sm font-semibold text-[#6b7280]">Leads enviados pelo formulário /analise.</p></div>
-              <button type="button" onClick={() => navigate('/admin?page=conteudos-analise-leads')} className="inline-flex h-10 items-center gap-2 rounded-2xl bg-[#111318] px-3 text-[12px] font-black text-white transition hover:bg-[#eb001a]">Ver todos <ExternalLink className="h-3.5 w-3.5" /></button>
+          {canViewLeads && (
+            <div className="rounded-[28px] border border-[#e3e7ee] bg-white p-5 shadow-sm">
+              <div className="mb-5 flex items-start justify-between gap-3">
+                <div><p className="text-[11px] font-black uppercase tracking-[0.16em] text-[#eb001a]">Novas respostas das análises</p><h2 className="mt-1 text-xl font-black text-[#111318]">Chegadas recentes</h2><p className="mt-1 text-sm font-semibold text-[#6b7280]">Leads enviados pelo formulário /analise.</p></div>
+                <button type="button" onClick={() => navigate('/admin?page=conteudos-analise-leads')} className="inline-flex h-10 items-center gap-2 rounded-2xl bg-[#111318] px-3 text-[12px] font-black text-white transition hover:bg-[#eb001a]">Ver todos <ExternalLink className="h-3.5 w-3.5" /></button>
+              </div>
+              {recentLeads.length === 0 ? <p className="rounded-2xl bg-[#f8fafc] p-4 text-sm font-semibold text-[#6b7280]">Nenhuma resposta de análise recebida ainda.</p> : <div className="space-y-3">{recentLeads.map((lead) => <button key={lead.id} type="button" onClick={() => navigate('/admin?page=conteudos-analise-leads')} className="w-full rounded-2xl border border-[#e3e7ee] p-4 text-left transition hover:border-[#eb001a]/40 hover:bg-[#fffafb]"><div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="truncate text-[15px] font-black text-[#111318]">{lead.companyName || lead.name || 'Lead sem nome'}</p><p className="mt-1 text-[12px] font-bold text-[#6b7280]">{lead.name} - {lead.formType}</p></div><span className="rounded-full bg-[#fff1f3] px-2.5 py-1 text-[11px] font-black text-[#eb001a]">Score {lead.score ?? 0}</span></div><div className="mt-3 flex flex-wrap gap-2 text-[12px] font-semibold text-[#6b7280]"><span className="inline-flex items-center gap-1"><CalendarDays className="h-3.5 w-3.5" />{formatDashboardDate(lead.createdAt)}</span><span>{lead.city || '--'} / {lead.state || '--'}</span><span className="text-[#eb001a]">{lead.status}</span></div></button>)}</div>}
             </div>
-            {recentLeads.length === 0 ? <p className="rounded-2xl bg-[#f8fafc] p-4 text-sm font-semibold text-[#6b7280]">Nenhuma resposta de análise recebida ainda.</p> : <div className="space-y-3">{recentLeads.map((lead) => <button key={lead.id} type="button" onClick={() => navigate('/admin?page=conteudos-analise-leads')} className="w-full rounded-2xl border border-[#e3e7ee] p-4 text-left transition hover:border-[#eb001a]/40 hover:bg-[#fffafb]"><div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="truncate text-[15px] font-black text-[#111318]">{lead.companyName || lead.name || 'Lead sem nome'}</p><p className="mt-1 text-[12px] font-bold text-[#6b7280]">{lead.name} - {lead.formType}</p></div><span className="rounded-full bg-[#fff1f3] px-2.5 py-1 text-[11px] font-black text-[#eb001a]">Score {lead.score ?? 0}</span></div><div className="mt-3 flex flex-wrap gap-2 text-[12px] font-semibold text-[#6b7280]"><span className="inline-flex items-center gap-1"><CalendarDays className="h-3.5 w-3.5" />{formatDashboardDate(lead.createdAt)}</span><span>{lead.city || '--'} / {lead.state || '--'}</span><span className="text-[#eb001a]">{lead.status}</span></div></button>)}</div>}
-          </div>
+          )}
 
           <div className="rounded-[28px] border border-[#e3e7ee] bg-white p-5 shadow-sm">
             <div className="mb-5 flex items-center gap-3"><div className="grid h-10 w-10 place-items-center rounded-2xl bg-[#fff1f3] text-[#eb001a]"><Newspaper className="h-5 w-5" /></div><div><p className="text-[11px] font-black uppercase tracking-[0.16em] text-[#8a93a3]">Conteúdo</p><h3 className="text-lg font-black text-[#111318]">Últimos blogs</h3></div></div>
@@ -538,6 +547,8 @@ export default function AdminPage() {
   const [sidebarSize, setSidebarSize] = useState<SidebarSize>('default')
   const [isMobile, setIsMobile] = useState(false)
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
+  const currentUser = authService.getUsuario()
+  const isEditor = currentUser?.role?.toLowerCase() === 'editor'
 
   useEffect(() => {
     const onAuthExpired = () => setIsAuthenticated(false)
@@ -546,8 +557,16 @@ export default function AdminPage() {
   }, [])
 
   useEffect(() => {
-    setActivePage(pageFromUrl || 'dashboard')
-  }, [pageFromUrl])
+    const nextPage = pageFromUrl || 'dashboard'
+
+    if (isEditor && isEditorRestrictedPage(nextPage)) {
+      setActivePage('dashboard')
+      navigate('/admin', { replace: true })
+      return
+    }
+
+    setActivePage(nextPage)
+  }, [pageFromUrl, isEditor, navigate])
 
   useEffect(() => {
     // Always start in light mode â€” remove any previously saved dark preference
@@ -594,12 +613,16 @@ export default function AdminPage() {
   }
 
   const handleNavigate = (pageId: string) => {
+    if (isEditor && isEditorRestrictedPage(pageId)) return
+
     setActivePage(pageId)
     navigate(pageId === 'dashboard' ? '/admin' : `/admin?page=${encodeURIComponent(pageId)}`)
     if (isMobile) setIsMobileSidebarOpen(false)
   }
 
   const renderPage = () => {
+    if (isEditor && isEditorRestrictedPage(activePage)) return <DashboardHome />
+
     if (activePage === 'content-contato') return <FaleConosco />
 
     if (activePage.startsWith('content-')) {
@@ -616,10 +639,7 @@ export default function AdminPage() {
       case 'conteudos-blog': return <BlogCreatorPage />
       case 'conteudos-analise': return <AnaliseBuilderPage />
       case 'conteudos-analise-leads': return <AnaliseLeadsPage />
-      case 'usuarios': {
-        const role = authService.getUsuario()?.role?.toLowerCase()
-        return role === 'editor' ? <DashboardHome /> : <Usuarios />
-      }
+      case 'usuarios': return <Usuarios />
       case 'editar-perfil': return <EditarPerfil onBack={() => setActivePage('dashboard')} />
       default: return <DashboardHome />
     }
