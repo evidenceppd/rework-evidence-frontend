@@ -68,13 +68,13 @@ export function BlogHeroSection({ heroBlock, search = '', onSearchChange = () =>
     >
       <div className="absolute inset-0 lg:hidden" style={{ backgroundColor: 'rgba(247,248,248,0.78)' }} />
       <div className="relative max-w-368 mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-24 text-center lg:text-left">
-        <p className="text-red-600 font-bold tracking-widest uppercase mb-4" style={{ fontSize: '13px' }}>
+        <p className="text-red-600 font-bold tracking-widest uppercase mb-4 whitespace-pre-line" style={{ fontSize: '13px' }}>
           {heroBlock?.eyebrow || 'BLOG'}
         </p>
-        <h1 className="font-poppins font-bold text-zinc-900 leading-tight mb-4 mx-auto lg:mx-0" style={{ fontSize: 'clamp(26px, 3.5vw, 44px)', lineHeight: '1.15', maxWidth: '640px' }}>
-          {heroBlock?.headline || 'Conteúdos sobre marketing, vendas e crescimento empresarial'}
+        <h1 className="font-poppins font-bold text-zinc-900 leading-tight mb-4 mx-auto lg:mx-0 md:whitespace-pre-line" style={{ fontSize: 'clamp(26px, 3.5vw, 44px)', lineHeight: '1.15' }}>
+          {heroBlock?.headline || `Conteúdos sobre marketing, \n vendas e crescimento \n empresarial`}
         </h1>
-        <p className="text-zinc-700 mx-auto lg:mx-0" style={{ fontSize: '16px', lineHeight: '1.6', maxWidth: '480px', marginBottom: '2rem' }}>
+        <p className="text-zinc-700 mx-auto lg:mx-0 whitespace-pre-line" style={{ fontSize: '16px', lineHeight: '1.6', maxWidth: '480px', marginBottom: '2rem' }}>
           {heroBlock?.description || 'Insights práticos para empresas que querem gerar mais demanda e aumentar suas vendas.'}
         </p>
         <div className="flex items-center gap-3 border border-zinc-300 rounded-md bg-white px-4 py-3 w-full mx-auto lg:mx-0" style={{ maxWidth: '480px' }}>
