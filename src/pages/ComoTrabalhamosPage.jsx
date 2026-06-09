@@ -254,13 +254,13 @@ export default function ComoTrabalhamosPage() {
 
         <section className="bg-zinc-50 py-16 lg:py-20 border-t border-zinc-200">
           <div className="max-w-384 mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col lg:flex-row gap-6 lg:gap-16 mb-12 lg:mb-14">
+            <div className="mb-12 flex flex-col justify-between gap-6 lg:mb-14 lg:flex-row lg:gap-16">
               <div>
-                <p className="whitespace-pre-line text-red-600 text-xs font-bold tracking-widest uppercase mb-4 text-center lg:text-left" style={{ fontSize: '13px' }}>{process.eyebrow}</p>
-                <h2 className="font-poppins whitespace-pre-line text-2xl sm:text-3xl lg:text-[36px] font-bold text-zinc-900 leading-tight text-center lg:text-left">{process.headline}</h2>
+                <p className="mb-4 whitespace-pre-line text-center text-[13px] font-bold uppercase tracking-widest text-red-600 lg:text-left">{process.eyebrow}</p>
+                <h2 className="font-poppins whitespace-pre-line text-center text-2xl font-bold leading-tight text-zinc-900 sm:text-3xl lg:text-left lg:text-[36px]">{process.headline}</h2>
               </div>
-              <div className="flex items-end" style={{ maxWidth: '512px' }}>
-                <p className="whitespace-pre-line text-zinc-500 text-sm leading-relaxed text-center lg:text-left" style={{ fontSize: '17px' }}>{process.description}</p>
+              <div className="flex max-w-[512px] items-end">
+                <p className="whitespace-pre-line text-center text-[17px] leading-relaxed text-zinc-500 lg:text-left">{process.description}</p>
               </div>
             </div>
 

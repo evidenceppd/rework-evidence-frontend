@@ -920,15 +920,15 @@ function WorkProcessPreview({ block }: { block: SiteBlock }) {
   return (
     <section className="border-t border-zinc-200 bg-zinc-50 py-16 lg:py-20">
       <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 flex flex-col gap-6 lg:mb-14 lg:flex-row lg:gap-16">
+        <div className="mb-12 flex flex-col justify-between gap-6 lg:mb-14 lg:flex-row lg:gap-16">
           <div>
-            <p className="mb-4 whitespace-pre-line text-center text-xs font-bold uppercase tracking-widest text-red-600 lg:text-left" style={{ fontSize: '13px' }}>{block.eyebrow || 'COMO TRABALHAMOS'}</p>
+            <p className="mb-4 whitespace-pre-line text-center text-[13px] font-bold uppercase tracking-widest text-red-600 lg:text-left">{block.eyebrow || 'COMO TRABALHAMOS'}</p>
             <h2 className="font-poppins whitespace-pre-line text-center text-2xl font-bold leading-tight text-zinc-900 sm:text-3xl lg:text-left lg:text-[36px]">
               {block.headline || 'Um processo estratégico para transformar objetivos em resultados.'}
             </h2>
           </div>
-          <div className="flex items-end" style={{ maxWidth: '512px' }}>
-            <p className="whitespace-pre-line text-center text-sm leading-relaxed text-zinc-500 lg:text-left" style={{ fontSize: '17px' }}>
+          <div className="flex max-w-[512px] items-end">
+            <p className="whitespace-pre-line text-center text-[17px] leading-relaxed text-zinc-500 lg:text-left">
               {block.description || 'Acreditamos em um método claro, colaborativo e orientado a dados para entregar soluções personalizadas que geram impacto real no seu negócio.'}
             </p>
           </div>
@@ -2546,6 +2546,24 @@ function BlockEditor({
         )}
         {isProcesso && (
           <>
+            <label className="block lg:col-span-2">
+              <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título principal</span>
+              <textarea
+                {...editorAttrs('headline')}
+                className="min-h-[68px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2.5 text-[14px] leading-relaxed outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+                value={block.headline}
+                onChange={(event) => onUpdate('headline', event.target.value)}
+              />
+            </label>
+            <label className="block lg:col-span-2">
+              <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Texto de apoio</span>
+              <textarea
+                {...editorAttrs('description')}
+                className="min-h-[92px] w-full resize-none rounded-lg border border-[#dfe3ea] bg-white px-3 py-2.5 text-[14px] leading-relaxed outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+                value={block.description}
+                onChange={(event) => onUpdate('description', event.target.value)}
+              />
+            </label>
             <label className="block lg:col-span-2">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título da etapa 1</span>
               <textarea
