@@ -139,7 +139,14 @@ function getYoutubeEmbedUrl(url) {
   const value = String(url ?? '').trim()
   if (!value) return ''
   const match = value.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/)
-  return match ? `https://www.youtube.com/embed/${match[1]}` : ''
+  if (!match) return ''
+
+  const params = new URLSearchParams({ rel: '0', modestbranding: '1' })
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    params.set('origin', window.location.origin)
+  }
+
+  return `https://www.youtube.com/embed/${match[1]}?${params.toString()}`
 }
 
 function VideoBg({ video }) {
@@ -152,6 +159,7 @@ function VideoBg({ video }) {
           title="V?deo do depoimento"
           className="h-full min-h-[220px] w-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
         />
       </div>
@@ -282,7 +290,7 @@ export function DepoimentosGridSection({ testimonials, loading = false }) {
                     <svg viewBox="0 0 40 30" fill="#dc2626" className="mx-auto sm:mx-0" style={{ width: '32px', height: '24px', marginBottom: '10px', opacity: 0.9 }}>
                       <path d="M0 30V18.182C0 9.697 5.333 3.636 16 0l2.909 4.545C13.576 6.364 10.788 9.697 10.182 14.545H18V30H0zm22 0V18.182C22 9.697 27.333 3.636 38 0l2.909 4.545C35.576 6.364 32.788 9.697 32.182 14.545H40V30H22z" />
                     </svg>
-                    <p className="text-zinc-700" style={{ fontSize: '15px', lineHeight: '1.7' }}>
+                    <p className="whitespace-pre-line text-zinc-700" style={{ fontSize: '15px', lineHeight: '1.7' }}>
                       {t.quote}
                     </p>
                   </div>

@@ -1,5 +1,17 @@
-export const BACKEND_ORIGIN = (import.meta.env.VITE_BACKEND_ORIGIN || 'http://localhost:3000').replace(/\/$/, '')
-export const BACKEND_URL = (import.meta.env.VITE_API_URL || `${BACKEND_ORIGIN}/api`).replace(/\/$/, '')
+const configuredApiUrl = import.meta.env.VITE_API_URL
+const configuredBackendOrigin = import.meta.env.VITE_BACKEND_ORIGIN
+const currentHostname = globalThis.location?.hostname
+const isLocalFrontend = currentHostname === 'localhost' || currentHostname === '127.0.0.1' || currentHostname === '::1'
+const defaultBackendOrigin = isLocalFrontend ? 'http://localhost:3000' : configuredBackendOrigin || 'http://localhost:3000'
+const isAbsoluteApiUrl = /^https?:\/\//i.test(configuredApiUrl || '')
+
+export const BACKEND_ORIGIN = (
+  configuredApiUrl && isAbsoluteApiUrl
+    ? new URL(configuredApiUrl).origin
+    : defaultBackendOrigin
+).replace(/\/$/, '')
+
+export const BACKEND_URL = (configuredApiUrl || `${BACKEND_ORIGIN}/api`).replace(/\/$/, '')
 
 type ApiEnvelope<T> = { status?: string; data?: T; message?: string; error?: string }
 

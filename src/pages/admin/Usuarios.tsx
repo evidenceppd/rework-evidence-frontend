@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Users, Trash2, Search, Edit, X, Eye, EyeOff, Shield, Key, Mail, CheckCircle, UserCheck } from 'lucide-react'
+import { Users, Trash2, Search, Edit, X, Eye, EyeOff, Shield, Key, Mail, CheckCircle } from 'lucide-react'
 import { usuarioService, type Usuario } from '../../services/usuario.service'
 import { toast } from 'sonner'
 import { authService } from '../../services/auth.service'
@@ -25,6 +25,7 @@ export default function Usuarios() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [savingUsuario, setSavingUsuario] = useState(false)
+  const [formError, setFormError] = useState('')
 
   // Email confirmation modal
   const [confirmModalOpen, setConfirmModalOpen] = useState(false)
@@ -32,11 +33,30 @@ export default function Usuarios() {
   const [confirmCode, setConfirmCode] = useState('')
   const [confirmingCode, setConfirmingCode] = useState(false)
   const [resendingCode, setResendingCode] = useState(false)
-  const [activatingId, setActivatingId] = useState<string | null>(null)
 
   useEffect(() => {
     loadUsuarios()
   }, [])
+
+  const showFormError = (message: string) => {
+    setFormError(message)
+    toast.error(message)
+  }
+
+  const getApiErrorMessage = (error: any, fallback: string) => {
+    const message = error?.response?.data?.message || error?.response?.data?.error || error?.message || fallback
+    const translations: Record<string, string> = {
+      'email, nomeCompleto and password are required': 'Email, nome e senha sao obrigatorios',
+      'password must be at least 8 characters': 'Senha deve ter pelo menos 8 caracteres',
+      'Email already in use': 'Email ja esta em uso',
+      'Insufficient permissions': 'Permissoes insuficientes',
+      'Admins can only assign editor role': 'Administradores so podem criar usuarios editores',
+      'Cannot assign master role via API': 'Nao e possivel atribuir perfil master',
+      'Confirmation code expired or not found': 'Codigo de confirmacao expirado ou nao encontrado',
+      'Invalid confirmation code': 'Codigo de confirmacao invalido',
+    }
+    return translations[message] || message
+  }
 
   const loadUsuarios = async () => {
     try {
@@ -44,8 +64,8 @@ export default function Usuarios() {
       const data = await usuarioService.getAll()
       setUsuarios(data)
     } catch (error) {
-      console.error('Erro ao carregar usuários:', error)
-      console.warn('Erro ao carregar usuários')
+      console.error('Erro ao carregar usuarios:', error)
+      toast.error('Erro ao carregar usuarios')
     } finally {
       setLoading(false)
     }
@@ -74,45 +94,50 @@ export default function Usuarios() {
     setFirstLogin(false)
     setShowPassword(false)
     setShowConfirmPassword(false)
+    setFormError('')
   }
 
   const handleSave = async () => {
+    setFormError('')
+
     if (!nome.trim()) {
-      console.warn('Nome é obrigatório')
+      showFormError('Nome e obrigatorio')
       return
     }
 
     if (!email.trim()) {
-      console.warn('Email é obrigatório')
+      showFormError('Email e obrigatorio')
       return
     }
 
     if (!editingUsuario && !senha) {
-      console.warn('Senha é obrigatória para novos usuários')
+      showFormError('Senha e obrigatoria para novos usuarios')
       return
     }
 
     if (senha && senha.length < 8) {
-      console.warn('Senha deve ter pelo menos 8 caracteres')
+      showFormError('Senha deve ter pelo menos 8 caracteres')
       return
     }
 
     if (senha && senha !== confirmarSenha) {
-      console.warn('As senhas não coincidem')
+      showFormError('As senhas nao coincidem')
       return
     }
 
     setSavingUsuario(true)
     try {
       if (role.toLowerCase() === 'master' && currentUser?.role?.toLowerCase() !== 'master') {
-        console.warn('Apenas usuários MASTER podem atribuir o perfil MASTER')
+        showFormError('Apenas usuarios MASTER podem atribuir o perfil MASTER')
         setSavingUsuario(false)
         return
       }
       const isAwaitingConfirmation = editingUsuario && !editingUsuario.ativo
       const data: any = isAwaitingConfirmation
         ? { nome, email, first_login: firstLogin }
-        : { nome, email, role, ativo, first_login: firstLogin }
+        : editingUsuario
+          ? { nome, email, role, ativo, first_login: firstLogin }
+          : { nome, email, role, ativo: false, first_login: firstLogin }
 
       if (senha) {
         data.senha = senha
@@ -120,22 +145,22 @@ export default function Usuarios() {
 
       if (editingUsuario) {
         await usuarioService.update(editingUsuario.id, data)
-        toast.success('Usuário atualizado com sucesso!')
+        toast.success('Usuario atualizado com sucesso!')
       } else {
         const created = await usuarioService.create(data)
         handleCloseModal()
         setConfirmingUsuario({ id: created.id, emailMasked: created.emailMasked || created.email })
         setConfirmCode('')
         setConfirmModalOpen(true)
-        toast.info('Usuário criado! Confirme o e-mail para ativar a conta.')
+        toast.info('Usuario criado! Confirme o e-mail para ativar a conta.')
       }
 
       await loadUsuarios()
       handleCloseModal()
     } catch (error: any) {
-      console.error('Erro ao salvar usuário:', error)
-      const errorMessage = error?.response?.data?.error || 'Erro ao salvar usuário'
-      console.warn(errorMessage)
+      console.error('Erro ao salvar usuario:', error)
+      const errorMessage = getApiErrorMessage(error, 'Erro ao salvar usuario')
+      showFormError(errorMessage)
     } finally {
       setSavingUsuario(false)
     }
@@ -144,19 +169,19 @@ export default function Usuarios() {
   const handleConfirmEmail = async () => {
     if (!confirmingUsuario) return
     if (confirmCode.trim().length !== 6) {
-      console.warn('Digite o código de 6 dígitos')
+      toast.error('Digite o codigo de 6 digitos')
       return
     }
     setConfirmingCode(true)
     try {
       await usuarioService.confirmEmail(confirmingUsuario.id, confirmCode.trim())
-      toast.success('E-mail confirmado! Usuário ativado com sucesso.')
+      toast.success('E-mail confirmado! Usuario ativado com sucesso.')
       setConfirmModalOpen(false)
       setConfirmingUsuario(null)
       setConfirmCode('')
       await loadUsuarios()
     } catch (error: any) {
-      console.warn(error?.response?.data?.error || 'Código inválido ou expirado')
+      toast.error(getApiErrorMessage(error, 'Codigo invalido ou expirado'))
     } finally {
       setConfirmingCode(false)
     }
@@ -169,9 +194,9 @@ export default function Usuarios() {
       setConfirmingUsuario({ id: userId, emailMasked: result.emailMasked })
       setConfirmCode('')
       setConfirmModalOpen(true)
-      toast.info('Código enviado ao e-mail do usuário')
+      toast.info('Codigo enviado ao e-mail do usuario')
     } catch (error: any) {
-      console.warn(error?.response?.data?.error || 'Erro ao enviar código de confirmação')
+      toast.error(getApiErrorMessage(error, 'Erro ao enviar codigo de confirmacao'))
     } finally {
       setResendingCode(false)
     }
@@ -184,22 +209,18 @@ export default function Usuarios() {
       const result = await usuarioService.sendConfirmation(confirmingUsuario.id)
       setConfirmingUsuario(prev => prev ? { ...prev, emailMasked: result.emailMasked } : null)
       setConfirmCode('')
-      toast.info('Novo código enviado!')
+      toast.info('Novo codigo enviado!')
     } catch (error: any) {
-      console.warn(error?.response?.data?.error || 'Erro ao reenviar código')
+      toast.error(getApiErrorMessage(error, 'Erro ao reenviar codigo'))
     } finally {
       setResendingCode(false)
     }
   }
 
-  const handleActivate = async (id: string, _nome: string) => {
-    // Ativação só ocorre via confirmação de e-mail
-    await handleSendConfirmation(id)
-  }
 
   const handleDelete = async (id: string, nome: string) => {
     if (String(id) === String(currentUser?.id)) {
-      console.warn('Você não pode excluir seu próprio usuário')
+      toast.error('Voce nao pode excluir seu proprio usuario')
       return
     }
 
@@ -210,7 +231,7 @@ export default function Usuarios() {
         toast.success('Usuário removido com sucesso!')
       } catch (error) {
         console.error('Erro ao remover usuário:', error)
-        console.warn('Erro ao remover usuário')
+        toast.error('Erro ao remover usuario')
       }
     }
   }
@@ -380,9 +401,9 @@ export default function Usuarios() {
                     <th className="px-6 py-3.5 text-right text-[11px] font-bold text-[#eb001a] uppercase tracking-widest">Ações</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                <tbody>
                   {usuariosFiltrados.map((usuario) => (
-                    <tr key={usuario.id} className="hover:bg-[#eb001a]/5 dark:hover:bg-[#eb001a]/10 transition-colors">
+                    <tr key={usuario.id} className="border-b border-gray-100 last:border-b-0 hover:bg-[#eb001a]/5 dark:border-gray-800 dark:hover:bg-[#eb001a]/10 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <div className="w-10 h-10 bg-[#eb001a]/10 rounded-full flex items-center justify-center text-[#eb001a] font-semibold">
@@ -412,16 +433,6 @@ export default function Usuarios() {
                             >
                               <Mail size={15} />
                               Confirmar E-mail
-                            </button>
-                          )}
-                          {!usuario.ativo && !usuario.emailPendente && String(usuario.id) !== String(currentUser?.id) && usuario.role?.toLowerCase() !== 'master' && (
-                            <button
-                              onClick={() => handleActivate(usuario.id, usuario.nome)}
-                              disabled={activatingId === usuario.id}
-                              className="inline-flex items-center gap-1.5 px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors text-sm disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-                            >
-                              <UserCheck size={15} />
-                              {activatingId === usuario.id ? 'Ativando...' : 'Ativar'}
                             </button>
                           )}
                           {String(usuario.id) !== String(currentUser?.id) && usuario.role?.toLowerCase() !== 'master' && (
@@ -531,7 +542,10 @@ export default function Usuarios() {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={senha}
-                    onChange={(e) => setSenha(e.target.value)}
+                    onChange={(e) => {
+                      setSenha(e.target.value)
+                      setFormError('')
+                    }}
                     placeholder="Digite a senha (mínimo 8 caracteres)"
                     disabled={savingUsuario}
                     className="w-full px-3 py-2 pr-12 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#eb001a] focus:border-transparent disabled:opacity-50"
@@ -556,7 +570,10 @@ export default function Usuarios() {
                   <input
                     type={showConfirmPassword ? 'text' : 'password'}
                     value={confirmarSenha}
-                    onChange={(e) => setConfirmarSenha(e.target.value)}
+                    onChange={(e) => {
+                      setConfirmarSenha(e.target.value)
+                      setFormError('')
+                    }}
                     placeholder="Confirme a senha"
                     disabled={savingUsuario}
                     className="w-full px-3 py-2 pr-12 border border-gray-200 dark:border-gray-600 rounded-lg text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#eb001a] focus:border-transparent disabled:opacity-50"
@@ -570,6 +587,12 @@ export default function Usuarios() {
                   </button>
                 </div>
               </div>
+
+              {formError && (
+                <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700" role="alert">
+                  {formError}
+                </div>
+              )}
 
               {/* Perfil - hidden while awaiting email confirmation */}
               {(!editingUsuario || editingUsuario.ativo) && (
@@ -591,8 +614,15 @@ export default function Usuarios() {
                 </div>
               )}
 
+              {!editingUsuario && (
+                <div className="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
+                  <Mail size={18} className="mt-0.5 shrink-0 text-blue-600" />
+                  <span>Novos usuarios ficam pendentes ate confirmar o codigo enviado por e-mail. Depois da confirmacao, a conta sera ativada para login.</span>
+                </div>
+              )}
+
               {/* Status Ativo - hidden while awaiting email confirmation */}
-              {(!editingUsuario || editingUsuario.ativo) && (
+              {editingUsuario && editingUsuario.ativo && (
                 <div className="flex items-center gap-3">
                   <input
                     type="checkbox"
@@ -603,7 +633,7 @@ export default function Usuarios() {
                     className="w-5 h-5 text-[#eb001a] border-gray-300 rounded focus:ring-[#eb001a]"
                   />
                   <label htmlFor="ativo" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Usuário ativo (pode fazer login no sistema)
+                    Usuario ativo (pode fazer login no sistema)
                   </label>
                 </div>
               )}
