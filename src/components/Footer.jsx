@@ -99,6 +99,12 @@ export default function Footer() {
                   <a href={`mailto:${contato.email}`} className="min-w-0 break-all hover:text-white transition-colors">{contato.email}</a>
                 </li>
               )}
+              {contato.email_adicional && (
+                <li className="flex items-center justify-center lg:justify-start gap-2 text-zinc-400 text-xs" style={{ fontSize: '14px' }}>
+                  <Mail className="h-5 w-5 shrink-0 text-zinc-400" />
+                  <a href={`mailto:${contato.email_adicional}`} className="min-w-0 break-all hover:text-white transition-colors">{contato.email_adicional}</a>
+                </li>
+              )}
             </ul>
           </div>
 

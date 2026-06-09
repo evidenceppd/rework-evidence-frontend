@@ -4,6 +4,7 @@ import { api } from './api'
 export interface ContatoInfo {
   id: number
   email: string
+  email_adicional: string
   endereco: string
   link_maps: string
   telefone_1: string
@@ -31,6 +32,7 @@ interface SiteConfig {
     telefone_1?: string
     telefone_2?: string
     email?: string
+    email_adicional?: string
     location?: string
     endereco?: string
     link_maps?: string
@@ -40,6 +42,7 @@ interface SiteConfig {
 
 export const CONTATO_INFO_DEFAULTS: ContatoInfoPayload = {
   email: 'contato@agenciaevidence.com.br',
+  email_adicional: '',
   endereco: 'Osvaldo Cruz - SP',
   link_maps: '',
   telefone_1: '',
@@ -62,6 +65,7 @@ function mapConfigToContato(config: SiteConfig | null): ContatoInfo | null {
   return {
     id: Number(config.id || 1),
     email: contact.email || CONTATO_INFO_DEFAULTS.email,
+    email_adicional: contact.email_adicional || CONTATO_INFO_DEFAULTS.email_adicional,
     endereco: contact.location || contact.endereco || contact.where_we_are || CONTATO_INFO_DEFAULTS.endereco,
     link_maps: contact.link_maps || CONTATO_INFO_DEFAULTS.link_maps,
     telefone_1: contact.telefone_1 || contact.telefone || CONTATO_INFO_DEFAULTS.telefone_1,
@@ -90,6 +94,7 @@ function mapContatoToConfig(payload: ContatoInfoPayload, current?: SiteConfig | 
       telefone_1: payload.telefone_1,
       telefone_2: payload.telefone_2,
       email: payload.email,
+      email_adicional: payload.email_adicional,
       location: payload.endereco,
       endereco: payload.endereco,
       link_maps: payload.link_maps,

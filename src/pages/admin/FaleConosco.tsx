@@ -6,6 +6,7 @@ import { CONTATO_INFO_DEFAULTS, contatoInfoService, setContatoInfoCache, type Co
 
 export interface ContatoFooterConfig {
   email: string
+  email_adicional: string
   endereco: string
   link_maps: string
   telefone_1: string
@@ -86,6 +87,10 @@ export default function FaleConosco() {
       nextErrors.email = 'Informe um e-mail v\u00e1lido.'
     }
 
+    if (form.email_adicional.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email_adicional.trim())) {
+      nextErrors.email_adicional = 'Informe um e-mail valido ou deixe em branco.'
+    }
+
     if (!form.endereco.trim()) {
       nextErrors.endereco = 'Endere\u00e7o \u00e9 obrigat\u00f3rio.'
     }
@@ -114,6 +119,7 @@ export default function FaleConosco() {
         setSaving(true)
         const payload: ContatoInfoPayload = {
           email: form.email,
+          email_adicional: form.email_adicional,
           endereco: form.endereco,
           link_maps: form.link_maps,
           telefone_1: form.telefone_1,
@@ -171,6 +177,18 @@ export default function FaleConosco() {
                 required
               />
               {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
+            </div>
+
+            <div>
+              <label className={labelClass}>E-mail adicional (opcional)</label>
+              <input
+                type="email"
+                value={form.email_adicional}
+                onChange={(e) => updateField('email_adicional', e.target.value)}
+                className={`${inputClass} ${errors.email_adicional ? errorInputClass : ''}`}
+                placeholder="Ex: atendimento@empresa.com"
+              />
+              {errors.email_adicional && <p className="text-xs text-red-500 mt-1">{errors.email_adicional}</p>}
             </div>
 
             <div>

@@ -19,6 +19,14 @@ function authToken() {
   return localStorage.getItem('admin_token') || localStorage.getItem('admin_mfa_token') || ''
 }
 
+function shouldExpireSession(endpoint: string, envelope?: ApiEnvelope<unknown>) {
+  const message = String(envelope?.message || envelope?.error || '').toLowerCase()
+  const isCodeValidationEndpoint = endpoint.includes('/auth/mfa') || endpoint.includes('/confirm-email')
+  const isCodeValidationError = message.includes('code') || message.includes('mfa')
+
+  return !(isCodeValidationEndpoint && isCodeValidationError)
+}
+
 async function request<T>(method: string, endpoint: string, body?: unknown): Promise<T> {
   const headers: Record<string, string> = {}
   const token = authToken()
@@ -38,7 +46,7 @@ async function request<T>(method: string, endpoint: string, body?: unknown): Pro
 
   if (!response.ok) {
     const envelope = parsed as ApiEnvelope<T> | undefined
-    if (response.status === 401) {
+    if (response.status === 401 && shouldExpireSession(endpoint, envelope as ApiEnvelope<unknown> | undefined)) {
       localStorage.removeItem('admin_token')
       window.dispatchEvent(new Event('auth:expired'))
     }
