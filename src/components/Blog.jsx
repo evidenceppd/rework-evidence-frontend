@@ -32,8 +32,8 @@ export default function Blog() {
           <p className="rounded-xl border border-zinc-100 bg-zinc-50 px-5 py-8 text-center text-zinc-500">Nenhum artigo publicado ainda.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {posts.map((post) => (
-              <article key={post.id} className="group cursor-pointer flex flex-col border border-zinc-200">
+            {posts.map((post, index) => (
+              <article key={post.id} className={`group cursor-pointer flex-col border border-zinc-200 ${index > 0 ? 'hidden md:flex' : 'flex'}`}>
                 <Link to={`/blog/${post.id}`} className="aspect-video w-full overflow-hidden shrink-0 bg-zinc-100">
                   {post.imagemCapa ? <img src={resolveImageUrl(post.imagemCapa)} alt={post.titulo} className="h-full w-full object-cover group-hover:opacity-90 transition-opacity" /> : <ImagePlaceholder className="w-full h-full group-hover:opacity-90 transition-opacity" label="Blog post" />}
                 </Link>
@@ -47,6 +47,20 @@ export default function Blog() {
                 </div>
               </article>
             ))}
+          </div>
+        )}
+
+        {posts.length > 0 && (
+          <div className="mt-8 flex justify-center sm:hidden">
+            <Link
+              to="/blog"
+              className="cursor-pointer inline-flex items-center justify-center gap-2 bg-red-600 px-6 py-4 text-center text-sm font-bold tracking-wide text-white transition-colors duration-200 hover:bg-red-700"
+            >
+              VER BLOGS
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
           </div>
         )}
       </div>

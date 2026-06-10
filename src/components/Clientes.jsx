@@ -73,11 +73,11 @@ export default function Clientes() {
 
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="md:hidden overflow-hidden w-full">
-            <div className="animate-marquee gap-6">
+            <div className="animate-marquee gap-3">
               {[...clients, ...clients].map((client, index) => (
                 <div
                   key={`${client.id}-mobile-${index}`}
-                  className="flex items-center justify-center opacity-70 mx-4"
+                  className="flex items-center justify-center opacity-70 mx-2"
                 >
                   <ClientLogo client={client} />
                 </div>

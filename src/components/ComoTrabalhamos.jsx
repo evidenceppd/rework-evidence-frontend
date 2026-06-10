@@ -78,11 +78,11 @@ export default function ComoTrabalhamos({ block = null }) {
           {content.eyebrow}
         </p>
 
-        <div className="flex flex-col md:flex-row items-stretch gap-6 md:gap-0">
+        <div className="flex flex-col min-[802px]:flex-row items-stretch gap-6 min-[802px]:gap-0">
           {steps.map((step, i) => (
             <React.Fragment key={i}>
               <div className="flex-1 py-4">
-                <div className="flex flex-col items-center text-center md:flex-row md:items-start md:text-left gap-4">
+                <div className="flex flex-col items-center text-center min-[802px]:flex-row min-[802px]:items-start min-[802px]:text-left gap-4">
                   <span className="font-poppins text-6xl font-bold text-red-600 leading-none shrink-0">{step.num}</span>
                   <StepIcon type={step.icon} />
                   <div>
@@ -92,7 +92,7 @@ export default function ComoTrabalhamos({ block = null }) {
                 </div>
               </div>
               {i < steps.length - 1 && (
-                <div key={`arrow-${i}`} className="hidden md:flex items-center px-2 text-zinc-600 shrink-0 self-center">
+                <div key={`arrow-${i}`} className="hidden min-[802px]:flex items-center px-2 text-zinc-600 shrink-0 self-center">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" style={{ width: '70px', height: '70px', transform: 'rotate(-90deg)' }} fill="currentColor">
                     <path d="M64 88a3.988 3.988 0 0 1-2.828-1.172l-40-40c-1.563-1.563-1.563-4.094 0-5.656s4.094-1.563 5.656 0L64 78.344l37.172-37.172c1.563-1.563 4.094-1.563 5.656 0s1.563 4.094 0 5.656l-40 40A3.988 3.988 0 0 1 64 88z" />
                   </svg>

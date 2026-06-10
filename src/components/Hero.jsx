@@ -85,7 +85,7 @@ export default function Hero({ block = null }) {
           </div>
         </div>
 
-        <div className="mt-10 sm:mt-16 flex flex-row gap-4 sm:gap-8 items-start justify-center sm:justify-start [@media(max-height:710px)]:mt-0">
+        <div className="mt-10 sm:mt-16 flex flex-row gap-4 sm:gap-8 items-start justify-center sm:justify-start [@media(max-height:710px)]:mt-0" style={{ flexWrap: 'wrap' }}>
           <div className="flex flex-col items-center text-center sm:flex-row sm:items-center sm:text-left gap-2 sm:gap-3 flex-1 sm:flex-none">
             <div className="shrink-0">
               <svg className="text-red-500 w-10 h-10 sm:w-[50px] sm:h-[50px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
