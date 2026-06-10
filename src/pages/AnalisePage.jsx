@@ -203,7 +203,7 @@ function SegmentScreen({ adminData, forms, loading, error, onSelect }) {
   const heroBlock = adminData?.blocks?.find((block) => block.id === 'hero' || block.id === 'segmento')
   const title = copyFromAdmin(heroBlock, 'headline', 'Vamos começar a análise do seu negócio?')
   const description = copyFromAdmin(heroBlock, 'description', 'Para oferecer um diagnóstico preciso e estratégias personalizadas, precisamos entender melhor o contexto do seu negócio.')
-  const prompt = copyFromAdmin(heroBlock, 'preview', 'Selecione o segmento que melhor representa sua empresa:')
+  const prompt = 'Selecione o segmento que melhor representa sua empresa:'
 
   return (
     <main className="min-h-screen bg-[#050608] text-white">

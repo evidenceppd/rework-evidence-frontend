@@ -350,19 +350,24 @@ export default function AnaliseBuilderPage(): ReactElement {
     setSaving(true)
     setError('')
     try {
-      const formsToSave = forms.map((form, index) => normalizeForm({
-        ...form,
-        ...(index === formIndex ? normalized : {}),
-        slug: form.originalSlug || form.slug || slugify(form.title),
-        displayOrder: index,
-      }))
-      const savedForms = await Promise.all(formsToSave.map((form) => {
-        const currentOriginal = forms.find(item => (item.originalSlug || item.slug) === form.slug)
-        return currentOriginal?.originalSlug && !currentOriginal.isNew
-          ? diagnosisService.updateForm(currentOriginal.originalSlug, form)
-          : diagnosisService.createForm({ ...form, slug: slugify(form.title) })
-      }))
-      setForms(savedForms.map(saved => ({ ...saved, originalSlug: saved.slug })))
+      const activeSlug = selectedForm.originalSlug || selectedForm.slug
+      for (let index = 0; index < forms.length; index += 1) {
+        const currentForm = forms[index]
+        const formToSave = normalizeForm({
+          ...currentForm,
+          ...(index === formIndex ? normalized : {}),
+          slug: currentForm.originalSlug || currentForm.slug || slugify(currentForm.title),
+          displayOrder: index,
+        })
+        if (currentForm.originalSlug && !currentForm.isNew) {
+          await diagnosisService.updateForm(currentForm.originalSlug, formToSave)
+        } else {
+          await diagnosisService.createForm({ ...formToSave, slug: slugify(formToSave.title) })
+        }
+      }
+      const refreshedForms = (await diagnosisService.listFormsWithDetails(false)).map(item => ({ ...item, originalSlug: item.slug }))
+      setForms(refreshedForms)
+      setFormIndex(Math.max(0, refreshedForms.findIndex(form => form.slug === activeSlug)))
       toast.success('Formulário salvo na API. Recarregue /analise para ver a versão publicada.')
     } catch (err) {
       console.warn(err)
