@@ -17,9 +17,20 @@ export default function ComoAtuamos({ block = null }) {
 
   return (
     <section id="como-trabalhamos" className="bg-white overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-2 items-stretch">
+      <style>{`
+        @media (max-width: 1535px) {
+          .como-atuamos-image-wrap {
+            padding: 0;
+            display: flex;
+            align-items: center;
+            padding-right: 30px;
+            justify-content: flex-end;
+          }
+        }
+      `}</style>
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(360px,0.9fr)_minmax(0,1.1fr)] 2xl:grid-cols-2 items-stretch">
         <div className="flex justify-end">
-          <div className="w-full max-w-[768px] py-20 px-4 sm:px-6 lg:px-8">
+          <div className="w-full max-w-[680px] py-20 px-4 sm:px-6 lg:px-8 2xl:max-w-[768px]">
             <p className="text-red-600 text-xs font-bold tracking-widest uppercase mb-3 text-center lg:text-left whitespace-pre-line" style={{ fontSize: '16px', fontWeight: 700 }}>
               {content.eyebrow}
             </p>
@@ -43,12 +54,12 @@ export default function ComoAtuamos({ block = null }) {
           </div>
         </div>
 
-        <div className="min-h-[400px] lg:min-h-0">
+        <div className="como-atuamos-image-wrap flex h-auto min-h-0 items-center justify-start pr-[35px]">
           <img
             src={content.imageUrl || defaultBlock.imageUrl}
             alt="Dashboard Evidence"
-            className="w-full h-full object-cover object-center"
-            style={{ objectPosition: 'center center' }}
+            className="w-full h-full"
+            style={{ maxWidth: '735px', height: 'auto' }}
           />
         </div>
       </div>

@@ -140,12 +140,9 @@ export function ClientesHeroSection({ heroBlock, preview = false }) {
       <section className="relative bg-zinc-950" style={preview ? { marginBottom: '72px' } : undefined}>
         {/* bg image overlay */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 bg-cover bg-[position:54%_center] bg-no-repeat sm:bg-[position:60%_center] lg:bg-[position:right_35%]"
           style={{
             backgroundImage: `url(${heroImageUrl})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'right 35%',
-            backgroundRepeat: 'no-repeat',
             opacity: 0.35,
           }}
         />

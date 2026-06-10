@@ -34,15 +34,14 @@ function PostImage({ src, title }) {
     <img
       src={resolveImageUrl(src)}
       alt={title}
-      className="w-full object-cover"
-      style={{ height: '220px', flexShrink: 0 }}
+      className="h-auto w-full shrink-0 object-cover"
     />
   )
 }
 
 function IconClock() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '13px', height: '13px', flexShrink: 0 }}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-[13px] w-[13px] shrink-0">
       <circle cx="12" cy="12" r="10" />
       <polyline points="12 6 12 12 16 14" />
     </svg>
@@ -192,16 +191,16 @@ export default function BlogPage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {paginated.map((post) => (
-                  <article key={post.id} className="flex flex-col border border-zinc-200 rounded-xl overflow-hidden bg-white transition-shadow duration-200" style={{ borderRadius: '7px', borderColor: 'rgba(0,0,0,0.08)' }}>
+                  <article key={post.id} className="flex flex-col overflow-hidden rounded-[7px] border border-black/[0.08] bg-white transition-shadow duration-200">
                     <PostImage src={post.image} title={post.title} />
                     <div className="flex flex-col flex-1 p-5">
                       <div className="flex items-center justify-between gap-3 mb-3">
-                        <span className="text-red-600 font-bold tracking-widest uppercase" style={{ fontSize: '12px' }}>{post.category}</span>
-                        <span className="flex items-center gap-1 text-zinc-400" style={{ fontSize: '12px' }}><IconClock />{post.date}</span>
+                        <span className="text-[12px] font-bold uppercase tracking-widest text-red-600">{post.category}</span>
+                        <span className="flex items-center gap-1 text-[12px] text-zinc-400"><IconClock />{post.date}</span>
                       </div>
-                      <h2 className="font-poppins font-bold text-zinc-900 mb-2" style={{ fontSize: '21px', lineHeight: '1.35' }}>{post.title}</h2>
-                      <p className="text-zinc-500 flex-1" style={{ fontSize: '17px', lineHeight: '1.6' }}>{post.excerpt}</p>
-                      <Link to={`/blog/${post.id}`} className="cursor-pointer inline-flex items-center gap-2 text-red-600 font-medium mt-4 hover:text-red-700 transition-colors duration-200" style={{ fontSize: '17px' }}>Ler artigo →</Link>
+                      <h2 className="font-poppins mb-2 text-[21px] font-bold leading-[1.35] text-zinc-900">{post.title}</h2>
+                      <p className="flex-1 text-[17px] leading-[1.6] text-zinc-500">{post.excerpt}</p>
+                      <Link to={`/blog/${post.id}`} className="mt-4 inline-flex cursor-pointer items-center gap-2 text-[17px] font-medium text-red-600 transition-colors duration-200 hover:text-red-700">Ler artigo →</Link>
                     </div>
                   </article>
                 ))}

@@ -41,10 +41,11 @@ export default function Hero({ block = null }) {
       style={{ paddingTop: 0 }}
     >
       <div className="absolute inset-0">
-        <img src={content.imageUrl || defaultBlock.imageUrl} alt="" className="w-full h-full object-cover" />
+        <img src={content.imageUrl || defaultBlock.imageUrl} alt="" className="w-full h-full object-cover object-[100%_center]" />
+        <div className="absolute inset-0 bg-black/60 sm:bg-black/35 lg:bg-transparent" />
       </div>
 
-      <div className="relative z-10 max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:py-20 lg:py-28 w-full [@media(max-height:710px)]:flex [@media(max-height:710px)]:flex-col [@media(max-height:710px)]:justify-between [@media(max-height:710px)]:pb-6 [@media(max-height:710px)]:h-full" style={{ paddingTop: 0 }}>
+      <div className="relative z-10 max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 pt-[30px] pb-16 sm:py-20 lg:py-28 w-full [@media(max-height:710px)]:flex [@media(max-height:710px)]:flex-col [@media(max-height:710px)]:justify-between [@media(max-height:710px)]:pb-6 [@media(max-height:710px)]:h-full">
         <div className="[@media(max-height:710px)]:flex [@media(max-height:710px)]:items-center [@media(max-height:710px)]:flex-1">
           <div
             className="max-w-2xl mx-auto sm:mx-0 text-center sm:text-left [@media(max-height:710px)]:h-[calc(100vh-90px)] [@media(max-height:710px)]:flex [@media(max-height:710px)]:flex-col [@media(max-height:710px)]:justify-center"

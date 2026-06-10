@@ -212,7 +212,7 @@ export default function ComoTrabalhamosPage() {
   return (
     <>
       <main style={{ marginTop: '90px' }}>
-        <section className="bg-white py-16 lg:py-24">
+        <section className="bg-white py-16 max-[390px]:pb-[30px] lg:py-24">
           <div className="max-w-384 mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row justify-between gap-12">
             <div className="flex flex-col gap-12 flex-1">
               <div style={{ maxWidth: '800px' }}>
@@ -234,14 +234,14 @@ export default function ComoTrabalhamosPage() {
               </div>
             </div>
 
-            <div className="relative pb-10 w-full lg:w-auto mx-auto lg:mx-0" style={{ maxWidth: '497px' }}>
+            <div className="relative h-fit w-full max-w-[497px] pb-10 mx-auto lg:w-auto lg:mx-0">
               <div className="absolute -top-4 -right-4 w-24 h-24 z-0 pointer-events-none">
                 <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full"><path d="M96 0 A96 96 0 0 1 0 96" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="6 5" fill="none" opacity="0.4" /></svg>
               </div>
               <div className="overflow-hidden relative z-10" style={{ borderRadius: '12px' }}>
-                <img src={about.imageUrl || '/equipe.png'} alt="Equipe Agência Evidence" className="w-full object-cover" style={{ minHeight: '420px', maxHeight: '460px' }} />
+                <img src={about.imageUrl || '/equipe.png'} alt="Equipe Agência Evidence" className="h-auto w-full object-cover" />
               </div>
-              <div className="absolute bottom-0 left-4 right-4 lg:left-6 lg:right-6 bg-white z-20 p-4 flex items-start gap-3" style={{ borderRadius: '10px', boxShadow: '0 8px 32px rgba(0,0,0,0.13)', maxWidth: '348px', margin: '0 auto' }}>
+              <div className="z-20 mt-4 flex w-full items-start gap-3 rounded-[10px] bg-white p-4 shadow-[0_8px_32px_rgba(0,0,0,0.13)] min-[391px]:absolute min-[391px]:bottom-0 min-[391px]:left-0 min-[391px]:right-0 min-[391px]:mx-auto min-[391px]:mt-0 min-[391px]:max-w-[348px] lg:left-6 lg:right-6">
                 <div className="shrink-0 mt-0.5"><IconMedal /></div>
                 <div className="flex-1 min-w-0">
                   <p className="whitespace-pre-line text-zinc-800 text-sm font-semibold leading-snug mb-1" style={{ fontSize: '14px' }}>{about.statOne}</p>

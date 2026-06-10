@@ -1,8 +1,6 @@
 const configuredApiUrl = import.meta.env.VITE_API_URL
 const configuredBackendOrigin = import.meta.env.VITE_BACKEND_ORIGIN
-const currentHostname = globalThis.location?.hostname
-const isLocalFrontend = currentHostname === 'localhost' || currentHostname === '127.0.0.1' || currentHostname === '::1'
-const defaultBackendOrigin = isLocalFrontend ? 'http://localhost:3000' : configuredBackendOrigin || 'http://localhost:3000'
+const defaultBackendOrigin = configuredBackendOrigin || 'http://localhost:3000'
 const isAbsoluteApiUrl = /^https?:\/\//i.test(configuredApiUrl || '')
 
 export const BACKEND_ORIGIN = (

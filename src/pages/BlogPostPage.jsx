@@ -13,11 +13,11 @@ function formatDate(iso) {
 }
 
 function IconClock() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '14px', height: '14px', flexShrink: 0 }}><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5 shrink-0"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
 }
 
 function IconArrowLeft() {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: '16px', height: '16px' }}><path d="M19 12H5" /><path d="M12 5l-7 7 7 7" /></svg>
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M19 12H5" /><path d="M12 5l-7 7 7 7" /></svg>
 }
 
 export default function BlogPostPage() {
@@ -66,34 +66,44 @@ export default function BlogPostPage() {
 
   return (
     <>
-      <main style={{ marginTop: '90px' }}>
-        <section className="bg-white border-b border-zinc-100" style={{ paddingTop: '48px', paddingBottom: '0' }}>
+      <main className="mt-[90px]">
+        <section className="border-b border-zinc-100 bg-white pt-12 pb-0">
           <div className="max-w-368 mx-auto px-4 sm:px-6 lg:px-8">
-            <nav className="flex items-center gap-2 mb-8" style={{ fontSize: '13px' }}>
-              <Link to="/" className="text-zinc-400 hover:text-zinc-600 transition-colors">Home</Link><span className="text-zinc-300">/</span><Link to="/blog" className="text-zinc-400 hover:text-zinc-600 transition-colors">Blog</Link><span className="text-zinc-300">/</span><span className="text-zinc-600 truncate" style={{ maxWidth: '260px' }}>{article.categoria || 'Blog'}</span>
+            <nav className="mb-8 flex items-center gap-2 text-[13px]">
+              <Link to="/" className="text-zinc-400 hover:text-zinc-600 transition-colors">Home</Link><span className="text-zinc-300">/</span><Link to="/blog" className="text-zinc-400 hover:text-zinc-600 transition-colors">Blog</Link><span className="text-zinc-300">/</span><span className="max-w-[260px] truncate text-zinc-600">{article.categoria || 'Blog'}</span>
             </nav>
-            <span className="inline-block text-red-600 font-bold tracking-widest uppercase mb-4" style={{ fontSize: '12px', background: 'rgba(220,38,38,0.07)', borderRadius: '4px', padding: '4px 10px' }}>{article.categoria || 'Blog'}</span>
-            <h1 className="font-poppins font-bold text-zinc-900" style={{ fontSize: 'clamp(26px, 3.5vw, 46px)', lineHeight: '1.15', maxWidth: '860px', marginBottom: '20px' }}>{article.titulo}</h1>
-            <p className="text-zinc-500" style={{ fontSize: '18px', lineHeight: '1.65', maxWidth: '760px', marginBottom: '32px' }}>{article.descricao}</p>
+            <span className="mb-4 inline-block rounded bg-red-600/[0.07] px-2.5 py-1 text-[12px] font-bold uppercase tracking-widest text-red-600">{article.categoria || 'Blog'}</span>
+            <h1 className="font-poppins mb-5 max-w-[860px] text-[clamp(26px,3.5vw,46px)] font-bold leading-[1.15] text-zinc-900">{article.titulo}</h1>
+            <p className="mb-8 max-w-[760px] text-[18px] leading-[1.65] text-zinc-500">{article.descricao}</p>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-zinc-100">
-              <div className="flex items-center gap-4 text-zinc-400" style={{ fontSize: '13px' }}><span className="flex items-center gap-1.5"><IconClock />{formatDate(article.createdAt)}</span><span className="hidden sm:block w-1 h-1 rounded-full bg-zinc-300" /><span>{readTime} de leitura</span></div>
+              <div className="flex items-center gap-4 text-[13px] text-zinc-400"><span className="flex items-center gap-1.5"><IconClock />{formatDate(article.createdAt)}</span><span className="hidden sm:block w-1 h-1 rounded-full bg-zinc-300" /><span>{readTime} de leitura</span></div>
             </div>
           </div>
         </section>
 
-        <div className="max-w-368 mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingTop: '40px' }}><div className="rounded-xl overflow-hidden" style={{ borderRadius: '12px' }}><img src={resolveImageUrl(cover)} alt={article.titulo} className="w-full object-cover" style={{ height: 'clamp(220px, 40vw, 480px)', display: 'block' }} /></div></div>
-
-        <div className="max-w-368 mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingTop: '48px', paddingBottom: '48px' }}>
-          <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
-            <article className="flex-1 min-w-0">
-              <BlogBlocksContent blocks={blocks} fallback={article.descricao} />
-              <div className="flex flex-col sm:flex-row gap-4 mt-10"><Link to="/blog" className="flex items-center gap-2 text-zinc-500 hover:text-zinc-800 border border-zinc-200 hover:border-zinc-400 rounded-lg px-5 py-4 transition-colors flex-1" style={{ fontSize: '14px' }}><IconArrowLeft /><div><p style={{ fontSize: '11px', color: '#a1a1aa', marginBottom: '2px' }}>ANTERIOR</p><p className="font-medium text-zinc-700">Voltar ao Blog</p></div></Link></div>
-            </article>
-            <aside className="hidden lg:block shrink-0" style={{ width: '300px' }}><div className="sticky" style={{ top: '110px' }}>{tocItems.length > 0 && <div className="mb-7 rounded-[10px] border border-black/5 bg-[#f9f9f9] p-6"><p className="font-poppins mb-4 text-[14px] font-bold uppercase tracking-wide text-zinc-800">Neste artigo</p><ul className="space-y-2 text-[14px] text-zinc-500">{tocItems.map((item, index) => <li key={`${index}-${item}`} className="border-b border-black/5 pb-2 last:border-0"><span className="mr-2 text-red-600">▸</span>{item}</li>)}</ul></div>}<div style={{ padding: '24px', background: '#dc2626', borderRadius: '10px' }}><p className="font-poppins font-bold text-white" style={{ fontSize: '16px', lineHeight: '1.4', marginBottom: '12px' }}>Quer resultados como esses na sua empresa?</p><p style={{ fontSize: '13px', lineHeight: '1.6', color: 'rgba(255,255,255,0.85)', marginBottom: '20px' }}>Fale com um especialista da Evidence e descubra como alinhar marketing e vendas no seu negócio.</p><Link to="/analise" className="block text-center font-semibold text-red-600 bg-white hover:bg-zinc-100 transition-colors" style={{ fontSize: '14px', padding: '11px 20px', borderRadius: '5px' }}>Receber análise</Link></div></div></aside>
+        <div className="max-w-368 mx-auto px-4 pt-10 sm:px-6 lg:px-8">
+          <div
+            className="flex h-fit max-w-[1408px] items-center justify-center overflow-hidden rounded-xl lg:h-[580px]"
+          >
+            <img
+              src={resolveImageUrl(cover)}
+              alt={article.titulo}
+              className="block w-full object-cover"
+            />
           </div>
         </div>
 
-        {relatedPosts.length > 0 && <section className="bg-white" style={{ padding: '60px 0' }}><div className="max-w-368 mx-auto px-4 sm:px-6 lg:px-8"><h2 className="font-poppins font-bold text-zinc-900 mb-8" style={{ fontSize: 'clamp(20px, 2vw, 28px)' }}>Artigos relacionados</h2><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">{relatedPosts.map((post) => <Link key={post.id} to={`/blog/${post.id}`} className="flex flex-col border bg-white overflow-hidden hover:shadow-md transition-shadow duration-200 group" style={{ borderRadius: '7px', borderColor: 'rgba(0,0,0,0.08)' }}><div className="overflow-hidden" style={{ height: '180px', flexShrink: 0 }}><img src={resolveImageUrl(post.imagemCapa || post.imagemBanner || '/banner-blog.png')} alt={post.titulo} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" /></div><div style={{ padding: '20px' }}><span className="text-red-600 font-bold uppercase" style={{ fontSize: '11px', letterSpacing: '0.06em' }}>{post.categoria || 'Blog'}</span><h3 className="font-poppins font-bold text-zinc-800 mt-2 group-hover:text-red-600 transition-colors" style={{ fontSize: '16px', lineHeight: '1.4' }}>{post.titulo}</h3><p className="text-zinc-400 mt-3 flex items-center gap-1.5" style={{ fontSize: '12px' }}><IconClock />{formatDate(post.createdAt)}</p></div></Link>)}</div></div></section>}
+        <div className="max-w-368 mx-auto px-4 pt-[5px] pb-12 sm:px-6 lg:px-8 lg:pt-12">
+          <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
+            <article className="flex-1 min-w-0">
+              <BlogBlocksContent blocks={blocks} fallback={article.descricao} />
+              <div className="mt-10 flex flex-col gap-4 sm:flex-row"><Link to="/blog" className="flex flex-1 items-center gap-2 rounded-lg border border-zinc-200 px-5 py-4 text-[14px] text-zinc-500 transition-colors hover:border-zinc-400 hover:text-zinc-800"><IconArrowLeft /><div><p className="mb-0.5 text-[11px] text-zinc-400">ANTERIOR</p><p className="font-medium text-zinc-700">Voltar ao Blog</p></div></Link></div>
+            </article>
+            <aside className="hidden w-[300px] shrink-0 lg:block"><div className="sticky top-[110px]">{tocItems.length > 0 && <div className="mb-7 rounded-[10px] border border-black/5 bg-[#f9f9f9] p-6"><p className="font-poppins mb-4 text-[14px] font-bold uppercase tracking-wide text-zinc-800">Neste artigo</p><ul className="space-y-2 text-[14px] text-zinc-500">{tocItems.map((item, index) => <li key={`${index}-${item}`} className="border-b border-black/5 pb-2 last:border-0"><span className="mr-2 text-red-600">▸</span>{item}</li>)}</ul></div>}<div className="rounded-[10px] bg-red-600 p-6"><p className="font-poppins mb-3 text-[16px] font-bold leading-[1.4] text-white">Quer resultados como esses na sua empresa?</p><p className="mb-5 text-[13px] leading-[1.6] text-white/85">Fale com um especialista da Evidence e descubra como alinhar marketing e vendas no seu negócio.</p><Link to="/analise" className="block rounded-[5px] bg-white px-5 py-[11px] text-center text-[14px] font-semibold text-red-600 transition-colors hover:bg-zinc-100">Receber análise</Link></div></div></aside>
+          </div>
+        </div>
+
+        {relatedPosts.length > 0 && <section className="bg-white pb-[60px] pt-0 sm:pt-[60px]"><div className="max-w-368 mx-auto px-4 sm:px-6 lg:px-8"><h2 className="font-poppins mb-8 text-[clamp(20px,2vw,28px)] font-bold text-zinc-900">Artigos relacionados</h2><div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">{relatedPosts.map((post) => <Link key={post.id} to={`/blog/${post.id}`} className="group flex flex-col overflow-hidden rounded-[7px] border border-black/[0.08] bg-white transition-shadow duration-200 hover:shadow-md"><div className="h-auto shrink-0 overflow-hidden"><img src={resolveImageUrl(post.imagemCapa || post.imagemBanner || '/banner-blog.png')} alt={post.titulo} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" /></div><div className="p-5"><span className="text-[11px] font-bold uppercase tracking-[0.06em] text-red-600">{post.categoria || 'Blog'}</span><h3 className="font-poppins mt-2 text-[16px] font-bold leading-[1.4] text-zinc-800 transition-colors group-hover:text-red-600">{post.titulo}</h3><p className="mt-3 flex items-center gap-1.5 text-[12px] text-zinc-400"><IconClock />{formatDate(post.createdAt)}</p></div></Link>)}</div></div></section>}
       </main>
       <Footer />
     </>
