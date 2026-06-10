@@ -41,7 +41,13 @@ function ClientLogo({ client }) {
   if (!client.imageUrl) return <LogoPlaceholder />
 
   return (
-    <img src={client.imageUrl} alt={client.name} className="h-16 w-32 object-contain md:h-20 md:w-40 lg:h-22 lg:w-44" />
+    <img
+      src={client.imageUrl}
+      alt={client.name}
+      loading="lazy"
+      decoding="async"
+      className="h-16 w-32 object-contain md:h-20 md:w-40 lg:h-22 lg:w-44"
+    />
   )
 }
 export default function Clientes() {
@@ -72,12 +78,12 @@ export default function Clientes() {
         </p>
 
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div className="md:hidden overflow-hidden w-full">
+          <div className="md:hidden overflow-hidden w-full" style={{ contain: 'layout paint' }}>
             <div className="animate-marquee gap-3">
               {[...clients, ...clients].map((client, index) => (
                 <div
                   key={`${client.id}-mobile-${index}`}
-                  className="flex items-center justify-center opacity-70 mx-2"
+                  className="flex shrink-0 items-center justify-center opacity-70 mx-2"
                 >
                   <ClientLogo client={client} />
                 </div>

@@ -37,7 +37,7 @@ export default function Hero({ block = null }) {
   return (
     <section
       id="inicio"
-      className="relative md:h-screen bg-black flex items-center sm:pt-[76px] h-fit"
+      className="relative md:min-h-screen bg-black flex items-center sm:pt-[76px] h-fit [@media(min-width:768px)_and_(max-height:710px)]:min-h-[calc(100vh+92px)]"
       style={{ paddingTop: 0 }}
     >
       <div className="absolute inset-0">
