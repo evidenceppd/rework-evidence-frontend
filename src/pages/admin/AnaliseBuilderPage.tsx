@@ -344,16 +344,25 @@ export default function AnaliseBuilderPage(): ReactElement {
 
   const saveCurrentForm = async (): Promise<void> => {
     if (!selectedForm) return
-    const normalized = normalizeForm({ ...selectedForm, slug: selectedForm.originalSlug || selectedForm.slug || slugify(selectedForm.title) })
+    const normalized = normalizeForm({ ...selectedForm, slug: selectedForm.originalSlug || selectedForm.slug || slugify(selectedForm.title), displayOrder: formIndex })
     if (!normalized.title.trim()) { setError('Informe o título do segmento.'); return }
     if (!normalized.sections.length) { setError('Adicione ao menos uma etapa.'); return }
     setSaving(true)
     setError('')
     try {
-      const saved = selectedForm.originalSlug && !selectedForm.isNew
-        ? await diagnosisService.updateForm(selectedForm.originalSlug, normalized)
-        : await diagnosisService.createForm({ ...normalized, slug: slugify(normalized.title) })
-      setForms(current => current.map((form, index) => index === formIndex ? { ...saved, originalSlug: saved.slug } : form))
+      const formsToSave = forms.map((form, index) => normalizeForm({
+        ...form,
+        ...(index === formIndex ? normalized : {}),
+        slug: form.originalSlug || form.slug || slugify(form.title),
+        displayOrder: index,
+      }))
+      const savedForms = await Promise.all(formsToSave.map((form) => {
+        const currentOriginal = forms.find(item => (item.originalSlug || item.slug) === form.slug)
+        return currentOriginal?.originalSlug && !currentOriginal.isNew
+          ? diagnosisService.updateForm(currentOriginal.originalSlug, form)
+          : diagnosisService.createForm({ ...form, slug: slugify(form.title) })
+      }))
+      setForms(savedForms.map(saved => ({ ...saved, originalSlug: saved.slug })))
       toast.success('Formulário salvo na API. Recarregue /analise para ver a versão publicada.')
     } catch (err) {
       console.warn(err)
@@ -590,7 +599,10 @@ export default function AnaliseBuilderPage(): ReactElement {
                     </div>
                   ))}
                 </div>
-                <button type="button" onClick={() => updateQuestion(item => ({ ...item, options: [...item.options, `Opção ${item.options.length + 1}`] }))} className="mt-2 text-[13px] font-bold text-[#eb001a]"><Plus className="mr-1 inline h-4 w-4" />Adicionar opção</button>
+                <div className="mt-2 flex flex-wrap gap-4">
+                  <button type="button" onClick={() => updateQuestion(item => ({ ...item, options: [...item.options, `Opção ${item.options.length + 1}`] }))} className="text-[13px] font-bold text-[#eb001a]"><Plus className="mr-1 inline h-4 w-4" />Adicionar opção</button>
+                  <button type="button" onClick={() => updateQuestion(item => item.options.some(option => option.trim().toLowerCase() === 'outro') ? item : ({ ...item, options: [...item.options, 'Outro'] }))} className="text-[13px] font-bold text-[#111318]"><Plus className="mr-1 inline h-4 w-4" />Adicionar Outro</button>
+                </div>
               </div>
             )}
             <div className="flex justify-between border-t border-[#e3e7ee] pt-4">
