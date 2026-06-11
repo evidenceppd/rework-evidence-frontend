@@ -330,7 +330,7 @@ const defaultAceleradorItems = [
 ]
 
 const defaultStats = [
-  { icon: <IconUsers />, value: '+20', label: 'empresas aceleradas' },
+  { icon: <IconUsers />, value: '+500', label: 'empresas aceleradas' },
   { icon: <IconTrendingUp />, value: 'milhões', label: 'em vendas geradas' },
   { icon: <IconGrid />, value: 'diversos', label: 'segmentos atendidos' },
   { icon: <IconTrophy />, value: 'resultados', label: 'comprovados' },

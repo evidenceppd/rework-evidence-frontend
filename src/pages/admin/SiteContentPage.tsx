@@ -2126,15 +2126,22 @@ function BlockEditor({
     setServiceCardsDraft(isGridServicos ? readServiceCards(block) : [])
   }, [isGridServicos, block.id, block.servicesJson])
   const serviceCards = isGridServicos ? serviceCardsDraft : []
-  const clientCards = isClientesList ? readClientCards(block) : []
+  const [clientCardsDraft, setClientCardsDraft] = useState<ClientCard[]>(() => (isClientesList ? readClientCards(block) : []))
+  useEffect(() => {
+    setClientCardsDraft(isClientesList ? readClientCards(block) : [])
+  }, [isClientesList, block.id, block.clientsJson])
+  const clientCards = isClientesList ? clientCardsDraft : []
   const [testimonialCardsDraft, setTestimonialCardsDraft] = useState<TestimonialCard[]>(() => (isDepoimentosList ? readTestimonialCards(block) : []))
   useEffect(() => {
     setTestimonialCardsDraft(isDepoimentosList ? readTestimonialCards(block) : [])
   }, [isDepoimentosList, block.id, block.testimonialsJson])
   const testimonialCards = isDepoimentosList ? testimonialCardsDraft : []
+  const [draggingClientIndex, setDraggingClientIndex] = useState<number | null>(null)
+  const [clientDropIndex, setClientDropIndex] = useState<number | null>(null)
   const [draggingTestimonialIndex, setDraggingTestimonialIndex] = useState<number | null>(null)
   const [testimonialDropIndex, setTestimonialDropIndex] = useState<number | null>(null)
   const [openIconPicker, setOpenIconPicker] = useState<string | null>(null)
+  const [openClientSegmentPicker, setOpenClientSegmentPicker] = useState<string | null>(null)
   const editorAttrs = (field: string, scope = block.id) => ({
     name: `${pageId || 'site'}-${scope}-${field}`,
     'data-edit-html': 'true',
@@ -2160,13 +2167,46 @@ function BlockEditor({
     })
     updateServiceCards(nextCards, shouldCommit)
   }
-  const updateClientCards = (nextCards: ClientCard[]) => {
+  const commitClientCards = (nextCards = clientCards) => {
     onUpdate('clientsJson', JSON.stringify(nextCards))
   }
-  const updateClientCard = (index: number, field: keyof ClientCard, value: string) => {
+  const updateClientCards = (nextCards: ClientCard[], shouldCommit = true) => {
+    setClientCardsDraft(nextCards)
+    if (shouldCommit) {
+      commitClientCards(nextCards)
+    }
+  }
+  const updateClientCard = (index: number, field: keyof ClientCard, value: string, shouldCommit = false) => {
     updateClientCards(clientCards.map((client, clientIndex) => (
       clientIndex === index ? { ...client, [field]: value } : client
-    )))
+    )), shouldCommit)
+  }
+  const reorderClientCards = (fromIndex: number, toIndex: number) => {
+    if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return
+
+    const nextCards = [...clientCards]
+    const [movedCard] = nextCards.splice(fromIndex, 1)
+    if (!movedCard) return
+
+    nextCards.splice(toIndex, 0, movedCard)
+    updateClientCards(nextCards)
+  }
+  const handleClientDragStart = (event: DragEvent<HTMLElement>, index: number) => {
+    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.setData('text/plain', String(index))
+    setDraggingClientIndex(index)
+  }
+  const handleClientDrop = (event: DragEvent<HTMLElement>, index: number) => {
+    event.preventDefault()
+    const fromIndex = Number(event.dataTransfer.getData('text/plain'))
+    setDraggingClientIndex(null)
+    setClientDropIndex(null)
+    if (!Number.isInteger(fromIndex)) return
+    reorderClientCards(fromIndex, index)
+  }
+  const resetClientDragState = () => {
+    setDraggingClientIndex(null)
+    setClientDropIndex(null)
   }
   const handleClientImageUpload = (index: number, event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -2813,8 +2853,40 @@ function BlockEditor({
           <>
             {clientCards.map((client, index) => (
               <Fragment key={`cliente-${index}`}>
-                <div className="lg:col-span-2 mt-2 flex items-center justify-between gap-3 border-t border-[#e7e9ee] pt-4">
-                  <p className="text-[12px] font-bold uppercase tracking-widest text-[#eb001a]">Cliente {index + 1}</p>
+                <div
+                  className={`lg:col-span-2 mt-2 flex items-center justify-between gap-3 border-t pt-4 transition-all duration-150 ${
+                    draggingClientIndex === index
+                      ? 'scale-[0.99] border-[#eb001a] opacity-60'
+                      : clientDropIndex === index
+                        ? 'border-[#eb001a] bg-[#fff6f7] shadow-[inset_4px_0_0_#eb001a]'
+                        : 'border-[#e7e9ee]'
+                  }`}
+                  draggable={clientCards.length > 1}
+                  onDragStart={(event) => handleClientDragStart(event, index)}
+                  onDragEnd={resetClientDragState}
+                  onDragEnter={() => setClientDropIndex(index)}
+                  onDragOver={(event) => {
+                    event.preventDefault()
+                    event.dataTransfer.dropEffect = 'move'
+                    setClientDropIndex(index)
+                  }}
+                  onDrop={(event) => handleClientDrop(event, index)}
+                >
+                  <div className="flex min-w-0 items-center gap-3">
+                    {clientCards.length > 1 && (
+                      <span className="grid h-10 w-10 flex-none cursor-grab place-items-center rounded-lg border border-[#ffd5da] bg-white text-[#eb001a] shadow-sm active:cursor-grabbing">
+                        <GripVertical className="h-5 w-5" />
+                      </span>
+                    )}
+                    <div className="min-w-0">
+                      <p className="text-[12px] font-bold uppercase tracking-widest text-[#eb001a]">Cliente {index + 1}</p>
+                      {clientCards.length > 1 && (
+                        <p className="mt-1 truncate text-[12px] font-semibold text-[#5f6672]">
+                          Arraste pelo ícone para reordenar: {client.name || 'Sem nome'}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                   {clientCards.length > 1 && (
                     <button
                       type="button"
@@ -2827,27 +2899,41 @@ function BlockEditor({
                   )}
                 </div>
                 <label className="block">
-                  <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Nome</span>
-                  <input
-                    className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
-                    value={client.name}
-                    onChange={(event) => updateClientCard(index, 'name', event.target.value)}
-                  />
-                </label>
-                <label className="block">
                   <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Segmento</span>
-                  <select
-                    className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
-                    value={client.segment}
-                    onChange={(event) => updateClientCard(index, 'segment', event.target.value)}
-                  >
-                    {client.segment && !clientSegmentOptions.includes(client.segment) && (
-                      <option value={client.segment}>{client.segment}</option>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      className="flex h-11 w-full cursor-pointer items-center justify-between gap-3 rounded-lg border border-[#dfe3ea] bg-white px-3 text-left text-[14px] outline-none transition-colors hover:border-[#f87171] focus:border-[#f87171] focus:ring-2 focus:ring-[#f87171]/10"
+                      onClick={() => setOpenClientSegmentPicker(openClientSegmentPicker === `cliente-segmento-${index}` ? null : `cliente-segmento-${index}`)}
+                    >
+                      <span className="min-w-0 truncate text-[#111318]">{client.segment || 'Selecione um segmento'}</span>
+                      <ChevronDown className={`h-4 w-4 shrink-0 text-[#5f6672] transition-transform ${openClientSegmentPicker === `cliente-segmento-${index}` ? 'rotate-180' : ''}`} />
+                    </button>
+                    {openClientSegmentPicker === `cliente-segmento-${index}` && (
+                      <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-40 overflow-hidden rounded-xl border border-[#e7e9ee] bg-white py-1 shadow-xl">
+                        {[...(client.segment && !clientSegmentOptions.includes(client.segment) ? [client.segment] : []), ...clientSegmentOptions].map((segment) => {
+                          const isSelected = segment === client.segment
+                          return (
+                            <button
+                              key={segment}
+                              type="button"
+                              className={`flex h-10 w-full cursor-pointer items-center px-3 text-left text-[14px] transition-colors ${
+                                isSelected
+                                  ? 'bg-[#fee2e2] font-semibold text-[#b91c1c]'
+                                  : 'bg-white text-[#111318] hover:bg-[#fff7f7] hover:text-[#b91c1c]'
+                              }`}
+                              onClick={() => {
+                                updateClientCard(index, 'segment', segment)
+                                setOpenClientSegmentPicker(null)
+                              }}
+                            >
+                              {segment}
+                            </button>
+                          )
+                        })}
+                      </div>
                     )}
-                    {clientSegmentOptions.map((segment) => (
-                      <option key={segment} value={segment}>{segment}</option>
-                    ))}
-                  </select>
+                  </div>
                 </label>
                 <label className="block">
                   <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Cliente desde</span>
@@ -2855,6 +2941,7 @@ function BlockEditor({
                     className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                     value={client.since}
                     onChange={(event) => updateClientCard(index, 'since', event.target.value)}
+                    onBlur={() => commitClientCards()}
                   />
                 </label>
                 <label className="block">
@@ -2863,6 +2950,7 @@ function BlockEditor({
                     className="min-h-[76px] w-full resize-none rounded-lg border border-[#dfe3ea] bg-white px-3 py-2.5 text-[14px] leading-relaxed outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                     value={client.description}
                     onChange={(event) => updateClientCard(index, 'description', event.target.value)}
+                    onBlur={() => commitClientCards()}
                   />
                 </label>
                 <div className="block lg:col-span-2">

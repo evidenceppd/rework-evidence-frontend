@@ -1,4 +1,3 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
 
 /* Admin Panel - Identidade visual do site
    Tema claro: cinza claro (#f7f8fa) + vermelho (#eb001a) + texto escuro
@@ -108,10 +107,10 @@ html:not(.dark) .admin-panel .shadow-sm {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(196, 155, 60, 0.10) !important;
 }
 
-/* Fonte - Figtree (Google Fonts) exclusiva do painel admin */
+/* Fonte local compartilhada com o site */
 .admin-panel,
 .admin-panel * {
-  font-family: 'Figtree', sans-serif;
+  font-family: 'Product Sans', system-ui, sans-serif;
 }
 
 /* Preserva quebras de linha em campos de texto do admin */
@@ -351,7 +350,7 @@ html:not(.dark) .admin-panel .shadow-sm {
 
 .blog-rich-editor h2 {
   margin: 18px 0 10px;
-  font-family: Poppins, system-ui, sans-serif;
+  font-family: 'Product Sans', system-ui, sans-serif;
 }
 
 

@@ -55,17 +55,26 @@ function readClientCards(block) {
 /* ── SVG Placeholders & Icons ── */
 function LogoPlaceholder() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="168" height="90" viewBox="0 0 168 90" style={{ flexShrink: 0, width: 'clamp(80px, 18vw, 168px)', height: 'auto' }}>
+    <svg xmlns="http://www.w3.org/2000/svg" width="168" height="90" viewBox="0 0 168 90" className="h-full w-full rounded-md border border-zinc-200">
       <rect width="168" height="90" rx="6" fill="#f4f4f5" stroke="#e4e4e7" strokeWidth="1.5" />
     </svg>
   )
 }
 
 function ClientLogo({ client }) {
-  if (!client.imageUrl) return <LogoPlaceholder />
+  const frameClassName = 'grid w-full max-w-[130px] shrink-0 place-items-center overflow-hidden rounded-md bg-white xl:max-w-[168px]'
+
+  if (!client.imageUrl) {
+    return (
+      <div className={frameClassName} style={{ aspectRatio: '168 / 90' }}>
+        <LogoPlaceholder />
+      </div>
+    )
+  }
+
   return (
-    <div className="grid shrink-0 place-items-center overflow-hidden rounded-md border border-zinc-200 bg-white" style={{ width: 'clamp(80px, 18vw, 168px)', aspectRatio: '168 / 90' }}>
-      <img src={client.imageUrl} alt={client.name} className="h-full w-full object-cover" />
+    <div className={frameClassName} style={{ aspectRatio: '168 / 90' }}>
+      <img src={client.imageUrl} alt={client.name} className="max-h-full w-full object-contain" />
     </div>
   )
 }
@@ -168,7 +177,7 @@ export function ClientesHeroSection({ heroBlock, preview = false }) {
               <div className="flex flex-col lg:flex-row items-center gap-2 lg:gap-4">
                 <div className="text-red-600 shrink-0"><IconUsers /></div>
                 <div>
-                  <p className="font-poppins font-bold text-white" style={{ fontSize: 'clamp(16px, 2.5vw, 22px)', lineHeight: '1.2' }}>{heroBlock?.statOne || '+20'}</p>
+                  <p className="font-poppins font-bold text-white" style={{ fontSize: 'clamp(16px, 2.5vw, 22px)', lineHeight: '1.2' }}>{heroBlock?.statOne || '+500'}</p>
                   <p className="text-zinc-400" style={{ fontSize: '13px' }}>{heroBlock?.statOneLabel || 'empresas atendidas'}</p>
                 </div>
               </div>
@@ -192,7 +201,7 @@ export function ClientesHeroSection({ heroBlock, preview = false }) {
               <div className="flex flex-col lg:flex-row items-center gap-2 lg:gap-4">
                 <div className="text-red-600 shrink-0"><IconCalendar /></div>
                 <div>
-                  <p className="font-poppins font-bold text-white" style={{ fontSize: 'clamp(16px, 2.5vw, 22px)', lineHeight: '1.2' }}>{heroBlock?.statFour || 'desde 2020'}</p>
+                  <p className="font-poppins font-bold text-white" style={{ fontSize: 'clamp(16px, 2.5vw, 22px)', lineHeight: '1.2' }}>{heroBlock?.statFour || 'desde 2015'}</p>
                   <p className="text-zinc-400" style={{ fontSize: '13px' }}>{heroBlock?.statFourLabel || 'gerando resultados'}</p>
                 </div>
               </div>
@@ -288,7 +297,7 @@ export function ClientesGridSection({ clients, compact = false, loading = false 
                     <p className="font-poppins font-bold text-zinc-900 mb-1" style={{ fontSize: '14px', lineHeight: '1.3' }}>
                       {client.name}
                     </p>
-                    <p className="text-zinc-500" style={{ fontSize: '13px', lineHeight: '1.5' }}>
+                    <p className="whitespace-pre-line text-zinc-500" style={{ fontSize: '13px', lineHeight: '1.5' }}>
                       {client.description}
                     </p>
                   </div>

@@ -25,7 +25,21 @@ function readClients(pageContent) {
   }
 }
 
-function LogoPlaceholder() {
+function LogoPlaceholder({ mobile = false }) {
+  if (mobile) {
+    return (
+      <div className="grid h-auto w-[min(180px,42vw)] max-w-[180px] shrink-0 place-items-center overflow-hidden rounded-md border-0 bg-white aspect-[168/90]">
+        <svg className="h-full w-full text-zinc-400" viewBox="0 0 112 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="1" width="110" height="62" rx="4" fill="currentColor" fillOpacity="0.16" />
+          <rect x="16" y="17" width="28" height="18" rx="2" fill="currentColor" fillOpacity="0.22" />
+          <rect x="52" y="18" width="42" height="4" rx="2" fill="currentColor" fillOpacity="0.36" />
+          <rect x="52" y="29" width="30" height="3" rx="1.5" fill="currentColor" fillOpacity="0.22" />
+          <rect x="16" y="43" width="78" height="3" rx="1.5" fill="currentColor" fillOpacity="0.16" />
+        </svg>
+      </div>
+    )
+  }
+
   return (
     <svg className="h-16 w-32 md:h-20 md:w-40 lg:h-22 lg:w-44" viewBox="0 0 112 64" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="1" y="1" width="110" height="62" rx="4" stroke="currentColor" strokeOpacity="0.28" />
@@ -37,8 +51,22 @@ function LogoPlaceholder() {
   )
 }
 
-function ClientLogo({ client }) {
-  if (!client.imageUrl) return <LogoPlaceholder />
+function ClientLogo({ client, mobile = false }) {
+  if (!client.imageUrl) return <LogoPlaceholder mobile={mobile} />
+
+  if (mobile) {
+    return (
+      <div className="grid h-auto w-[min(180px,42vw)] max-w-[180px] shrink-0 place-items-center overflow-hidden rounded-md border-0 bg-white aspect-[168/90]">
+        <img
+          src={client.imageUrl}
+          alt={client.name}
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover"
+        />
+      </div>
+    )
+  }
 
   return (
     <img
@@ -46,7 +74,7 @@ function ClientLogo({ client }) {
       alt={client.name}
       loading="lazy"
       decoding="async"
-      className="h-16 w-32 object-contain md:h-20 md:w-40 lg:h-22 lg:w-44"
+      className="h-16 w-32 object-contain md:h-20 md:w-40 lg:h-[90px] lg:w-[168px]"
     />
   )
 }
@@ -71,31 +99,31 @@ export default function Clientes() {
   }, [])
 
   return (
-    <section id="clientes" className="bg-zinc-950 py-10 border-t border-zinc-800">
+    <section id="clientes" className="bg-zinc-950 py-8 md:py-9 border-t border-zinc-800">
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
-        <p className="text-red-500 text-[17px] md:text-[18px] font-bold tracking-widest uppercase mb-8 text-center md:text-left" style={{fontWeight: 500 }}>
+        <p className="text-red-500 text-[17px] md:text-[18px] font-bold tracking-widest uppercase mb-8 text-center md:text-left" style={{ fontWeight: 500 }}>
           EMPRESAS QUE CONFIAM <br className='md:hidden'/> NA EVIDENCE
         </p>
 
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between md:gap-10">
           <div className="md:hidden overflow-hidden w-full" style={{ contain: 'layout paint' }}>
             <div className="animate-marquee gap-3">
               {[...clients, ...clients].map((client, index) => (
                 <div
                   key={`${client.id}-mobile-${index}`}
-                  className="flex shrink-0 items-center justify-center opacity-70 mx-2"
+                  className="flex shrink-0 items-center justify-center opacity-100 mx-2"
                 >
-                  <ClientLogo client={client} />
+                  <ClientLogo client={client} mobile />
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="hidden md:flex flex-nowrap items-center gap-6 lg:gap-8 xl:gap-10">
+          <div className="hidden md:flex flex-1 flex-nowrap items-center justify-between gap-6 lg:gap-8 xl:gap-10">
             {clients.map((client) => (
               <div
                 key={client.id}
-                className="flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity duration-200"
+                className="flex items-center justify-center opacity-100 transition-opacity duration-200"
               >
                 <ClientLogo client={client} />
               </div>

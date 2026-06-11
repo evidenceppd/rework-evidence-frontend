@@ -92,7 +92,7 @@ function makeStats(heroBlock) {
           <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
         </svg>
       ),
-      value: heroBlock?.statOne || '+20',
+      value: heroBlock?.statOne || '+500',
       label: heroBlock?.statOneLabel || 'empresas atendidas',
     },
     {
@@ -128,7 +128,7 @@ function makeStats(heroBlock) {
           <path d="M20.063 27.505h-6.452a1 1 0 0 0-1 1v5.828a1 1 0 0 0 1 1h6.452a1 1 0 0 0 1-1v-5.828a1 1 0 0 0-1-1zm-1 5.828h-4.452v-3.828h4.452zM34.253 27.505H27.8a1 1 0 0 0-1 1v5.828a1 1 0 0 0 1 1h6.452a1 1 0 0 0 1-1v-5.828a1 1 0 0 0-1-1zm-1 5.828H28.8v-3.828h4.452zM48.442 27.505H41.99a1 1 0 0 0-1 1v5.828a1 1 0 0 0 1 1h6.453a1 1 0 0 0 1-1v-5.828a1 1 0 0 0-1-1zm-1 5.828H42.99v-3.828h4.453zM20.063 41.694h-6.452a1 1 0 0 0-1 1v5.828a1 1 0 0 0 1 1h6.452a1 1 0 0 0 1-1v-5.828a1 1 0 0 0-1-1zm-1 5.828h-4.452v-3.828h4.452zM34.253 41.694H27.8a1 1 0 0 0-1 1v5.828a1 1 0 0 0 1 1h6.452a1 1 0 0 0 1-1v-5.828a1 1 0 0 0-1-1zm-1 5.828H28.8v-3.828h4.452zM48.442 41.694H41.99a1 1 0 0 0-1 1v5.828a1 1 0 0 0 1 1h6.453a1 1 0 0 0 1-1v-5.828a1 1 0 0 0-1-1zm-1 5.828H42.99v-3.828h4.453z" />
         </svg>
       ),
-      value: heroBlock?.statFour || 'desde 2020',
+      value: heroBlock?.statFour || 'desde 2015',
       label: heroBlock?.statFourLabel || 'gerando resultados',
     },
   ]

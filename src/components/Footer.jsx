@@ -34,7 +34,7 @@ export default function Footer() {
   return (
     <footer id="contato" className="overflow-x-hidden bg-zinc-950 border-t border-zinc-800 pt-16 pb-8" style={{ borderColor: 'var(--color-red-700)' }}>
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid min-w-0 grid-cols-1 gap-8 lg:grid-cols-[minmax(0,285px)_minmax(0,170px)_minmax(0,260px)_1px_minmax(0,405px)] lg:gap-8 xl:gap-12 mb-12 items-start justify-center lg:justify-between">
+        <div className="grid min-w-0 grid-cols-1 gap-8 lg:grid-cols-[minmax(0,285px)_minmax(0,170px)_minmax(0,320px)_1px_minmax(0,345px)] lg:gap-8 xl:gap-12 mb-12 items-start justify-center lg:justify-between">
 
           {/* Brand */}
           <div className="min-w-0 text-center lg:text-left w-full max-w-[285px] mx-auto lg:mx-0">
@@ -84,7 +84,7 @@ export default function Footer() {
           </div>
 
           {/* Contact */}
-          <div className="min-w-0 text-center lg:text-left w-full max-w-[260px] mx-auto lg:mx-0">
+          <div className="min-w-0 text-center lg:text-left w-full max-w-[320px] mx-auto lg:mx-0">
             <p className="text-white text-xs font-bold tracking-widest uppercase mb-4" style={{ color: 'var(--color-red-500)' }}>FALE CONOSCO</p>
             <ul className="flex flex-col gap-3">
               {contato.whatsapp && (
@@ -96,13 +96,13 @@ export default function Footer() {
               {contato.email && (
                 <li className="flex items-center justify-center lg:justify-start gap-2 text-zinc-400 text-xs" style={{ fontSize: '14px' }}>
                   <Mail className="h-5 w-5 shrink-0 text-zinc-400" />
-                  <a href={`mailto:${contato.email}`} className="min-w-0 break-all hover:text-white transition-colors">{contato.email}</a>
+                  <a href={`mailto:${contato.email}`} className="min-w-0 break-words hover:text-white transition-colors">{contato.email}</a>
                 </li>
               )}
               {contato.email_adicional && (
                 <li className="flex items-center justify-center lg:justify-start gap-2 text-zinc-400 text-xs" style={{ fontSize: '14px' }}>
                   <Mail className="h-5 w-5 shrink-0 text-zinc-400" />
-                  <a href={`mailto:${contato.email_adicional}`} className="min-w-0 break-all hover:text-white transition-colors">{contato.email_adicional}</a>
+                  <a href={`mailto:${contato.email_adicional}`} className="min-w-0 break-words hover:text-white transition-colors">{contato.email_adicional}</a>
                 </li>
               )}
             </ul>
