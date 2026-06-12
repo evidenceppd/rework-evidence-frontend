@@ -1462,7 +1462,7 @@ const defaultClientCards: ClientCard[] = [
   { name: 'Ponto Certo Distribuição', description: 'Distribuição ágil e eficiente com foco em qualidade e relacionamento duradouro.', since: '2021', segment: 'Comércio' },
 ]
 
-const clientSegmentOptions = ['Indústria', 'Saúde', 'Agronegócio', 'Serviços', 'Comércio', 'Tecnologia']
+const clientSegmentOptions = ['Indústria', 'Agroindústria', 'Indústria Comércio', 'Saúde', 'Agronegócio', 'Serviços', 'Comércio', 'Tecnologia']
 
 function readClientCards(block: SiteBlock): ClientCard[] {
   if (block.clientsJson) {
@@ -2136,6 +2136,8 @@ function BlockEditor({
     setTestimonialCardsDraft(isDepoimentosList ? readTestimonialCards(block) : [])
   }, [isDepoimentosList, block.id, block.testimonialsJson])
   const testimonialCards = isDepoimentosList ? testimonialCardsDraft : []
+  const [draggingServiceIndex, setDraggingServiceIndex] = useState<number | null>(null)
+  const [serviceDropIndex, setServiceDropIndex] = useState<number | null>(null)
   const [draggingClientIndex, setDraggingClientIndex] = useState<number | null>(null)
   const [clientDropIndex, setClientDropIndex] = useState<number | null>(null)
   const [draggingTestimonialIndex, setDraggingTestimonialIndex] = useState<number | null>(null)
@@ -2166,6 +2168,33 @@ function BlockEditor({
       }
     })
     updateServiceCards(nextCards, shouldCommit)
+  }
+  const reorderServiceCards = (fromIndex: number, toIndex: number) => {
+    if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return
+
+    const nextCards = [...serviceCards]
+    const [movedCard] = nextCards.splice(fromIndex, 1)
+    if (!movedCard) return
+
+    nextCards.splice(toIndex, 0, movedCard)
+    updateServiceCards(nextCards)
+  }
+  const handleServiceDragStart = (event: DragEvent<HTMLElement>, index: number) => {
+    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.setData('text/plain', String(index))
+    setDraggingServiceIndex(index)
+  }
+  const handleServiceDrop = (event: DragEvent<HTMLElement>, index: number) => {
+    event.preventDefault()
+    const fromIndex = Number(event.dataTransfer.getData('text/plain'))
+    setDraggingServiceIndex(null)
+    setServiceDropIndex(null)
+    if (!Number.isInteger(fromIndex)) return
+    reorderServiceCards(fromIndex, index)
+  }
+  const resetServiceDragState = () => {
+    setDraggingServiceIndex(null)
+    setServiceDropIndex(null)
   }
   const commitClientCards = (nextCards = clientCards) => {
     onUpdate('clientsJson', JSON.stringify(nextCards))
@@ -2880,11 +2909,6 @@ function BlockEditor({
                     )}
                     <div className="min-w-0">
                       <p className="text-[12px] font-bold uppercase tracking-widest text-[#eb001a]">Cliente {index + 1}</p>
-                      {clientCards.length > 1 && (
-                        <p className="mt-1 truncate text-[12px] font-semibold text-[#5f6672]">
-                          Arraste pelo ícone para reordenar: {client.name || 'Sem nome'}
-                        </p>
-                      )}
                     </div>
                   </div>
                   {clientCards.length > 1 && (
@@ -2923,7 +2947,7 @@ function BlockEditor({
                                   : 'bg-white text-[#111318] hover:bg-[#fff7f7] hover:text-[#b91c1c]'
                               }`}
                               onClick={() => {
-                                updateClientCard(index, 'segment', segment)
+                                updateClientCard(index, 'segment', segment, true)
                                 setOpenClientSegmentPicker(null)
                               }}
                             >
@@ -3121,8 +3145,33 @@ function BlockEditor({
               const SelectedIcon = selectedIcon.icon
               return (
                 <Fragment key={serviceId}>
-                  <div className="lg:col-span-2 mt-2 flex items-center justify-between gap-3 border-t border-[#e7e9ee] pt-4">
-                    <p className="text-[12px] font-bold uppercase tracking-widest text-[#eb001a]">Serviço {index + 1}</p>
+                  <div
+                    className={`lg:col-span-2 mt-2 flex items-center justify-between gap-3 border-t pt-4 transition-all duration-150 ${
+                      draggingServiceIndex === index
+                        ? 'scale-[0.99] border-[#eb001a] opacity-60'
+                        : serviceDropIndex === index
+                          ? 'border-[#eb001a] bg-[#fff6f7] shadow-[inset_4px_0_0_#eb001a]'
+                          : 'border-[#e7e9ee]'
+                    }`}
+                    draggable={serviceCards.length > 1}
+                    onDragStart={(event) => handleServiceDragStart(event, index)}
+                    onDragEnd={resetServiceDragState}
+                    onDragEnter={() => setServiceDropIndex(index)}
+                    onDragOver={(event) => {
+                      event.preventDefault()
+                      event.dataTransfer.dropEffect = 'move'
+                      setServiceDropIndex(index)
+                    }}
+                    onDrop={(event) => handleServiceDrop(event, index)}
+                  >
+                    <div className="flex min-w-0 items-center gap-3">
+                      {serviceCards.length > 1 && (
+                        <span className="grid h-10 w-10 flex-none cursor-grab place-items-center rounded-lg border border-[#ffd5da] bg-white text-[#eb001a] shadow-sm active:cursor-grabbing">
+                          <GripVertical className="h-5 w-5" />
+                        </span>
+                      )}
+                      <p className="text-[12px] font-bold uppercase tracking-widest text-[#eb001a]">Serviço {index + 1}</p>
+                    </div>
                     {serviceCards.length > 1 && (
                       <button
                         type="button"
