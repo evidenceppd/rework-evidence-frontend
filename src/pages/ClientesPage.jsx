@@ -36,7 +36,7 @@ function readClientCards(block) {
         const clients = parsed
           .map((item, index) => ({
             id: index + 1,
-            name: String(item?.name ?? ''),
+            name: String(item?.name ?? '').trim().toLowerCase() === 'novo cliente' ? '' : String(item?.name ?? ''),
             description: String(item?.description ?? ''),
             since: String(item?.since ?? ''),
             segment: String(item?.segment ?? ''),
@@ -294,9 +294,11 @@ export function ClientesGridSection({ clients, compact = false, loading = false 
                 <div className="flex flex-col xl:flex-row gap-3 xl:gap-4 p-5 flex-1 items-center xl:items-start text-center xl:text-left">
                   <ClientLogo client={client} />
                   <div className="flex flex-col justify-center min-w-0">
-                    <p className="font-poppins font-bold text-zinc-900 mb-1" style={{ fontSize: '14px', lineHeight: '1.3' }}>
-                      {client.name}
-                    </p>
+                    {client.name && (
+                      <p className="font-poppins font-bold text-zinc-900 mb-1" style={{ fontSize: '14px', lineHeight: '1.3' }}>
+                        {client.name}
+                      </p>
+                    )}
                     <p className="whitespace-pre-line text-zinc-500" style={{ fontSize: '13px', lineHeight: '1.5' }}>
                       {client.description}
                     </p>

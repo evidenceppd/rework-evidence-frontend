@@ -14,7 +14,7 @@ import CtaFinal from './components/CtaFinal'
 import Footer from './components/Footer'
 import WhatsAppFloatingButton from './components/WhatsAppFloatingButton'
 import { getPublicSitePage } from './services/publicSiteContent.service'
-import { analyticsService } from './services/analytics.service'
+import { analyticsService, getAnalyticsSessionId } from './services/analytics.service'
 
 const AnalisePage = lazy(() => import('./pages/AnalisePage'))
 const ComoTrabalhamosPage = lazy(() => import('./pages/ComoTrabalhamosPage'))
@@ -43,16 +43,6 @@ function getPublicPageTitle(pathname) {
 
 function formatDocumentTitle(pageTitle) {
   return `${pageTitle} | Ag\u00eancia Evidence`
-}
-
-function getAnalyticsSessionId() {
-  const key = 'evidence_analytics_session_id'
-  const existing = sessionStorage.getItem(key)
-  if (existing) return existing
-
-  const next = globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`
-  sessionStorage.setItem(key, next)
-  return next
 }
 
 function useHomeBlocks() {
@@ -143,6 +133,11 @@ function App() {
   useEffect(() => {
     if (location.pathname.startsWith('/admin')) {
       document.title = 'Painel Administrativo'
+      return
+    }
+
+    if (location.pathname.startsWith('/blog/')) {
+      document.title = formatDocumentTitle('Post do blog')
       return
     }
 

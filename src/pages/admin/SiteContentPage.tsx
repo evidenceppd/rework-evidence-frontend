@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState, type ChangeEvent, type DragEvent } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState, type ChangeEvent, type DragEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { siteContentService } from '../../services/siteContent.service'
 import Hero from '../../components/Hero'
@@ -1471,7 +1471,7 @@ function readClientCards(block: SiteBlock): ClientCard[] {
       if (Array.isArray(parsed)) {
         const clients = parsed
           .map((item) => ({
-            name: String(item?.name ?? ''),
+            name: String(item?.name ?? '').trim().toLowerCase() === 'novo cliente' ? '' : String(item?.name ?? ''),
             description: String(item?.description ?? ''),
             since: String(item?.since ?? ''),
             segment: String(item?.segment ?? ''),
@@ -2144,6 +2144,19 @@ function BlockEditor({
   const [testimonialDropIndex, setTestimonialDropIndex] = useState<number | null>(null)
   const [openIconPicker, setOpenIconPicker] = useState<string | null>(null)
   const [openClientSegmentPicker, setOpenClientSegmentPicker] = useState<string | null>(null)
+  const dragScrollFrameRef = useRef<number | null>(null)
+  const dragScrollStopTimeoutRef = useRef<number | null>(null)
+  const dragScrollStepRef = useRef(0)
+  useEffect(() => {
+    return () => {
+      if (dragScrollFrameRef.current !== null) {
+        cancelAnimationFrame(dragScrollFrameRef.current)
+      }
+      if (dragScrollStopTimeoutRef.current !== null) {
+        window.clearTimeout(dragScrollStopTimeoutRef.current)
+      }
+    }
+  }, [])
   const editorAttrs = (field: string, scope = block.id) => ({
     name: `${pageId || 'site'}-${scope}-${field}`,
     'data-edit-html': 'true',
@@ -2184,15 +2197,69 @@ function BlockEditor({
     event.dataTransfer.setData('text/plain', String(index))
     setDraggingServiceIndex(index)
   }
+  const stopAutoScrollPageDuringDrag = () => {
+    dragScrollStepRef.current = 0
+    if (dragScrollStopTimeoutRef.current !== null) {
+      window.clearTimeout(dragScrollStopTimeoutRef.current)
+      dragScrollStopTimeoutRef.current = null
+    }
+    if (dragScrollFrameRef.current !== null) {
+      cancelAnimationFrame(dragScrollFrameRef.current)
+      dragScrollFrameRef.current = null
+    }
+  }
+  const runDragAutoScroll = () => {
+    const scrollStep = dragScrollStepRef.current
+    if (scrollStep === 0) {
+      dragScrollFrameRef.current = null
+      return
+    }
+
+    window.scrollBy(0, scrollStep)
+    dragScrollFrameRef.current = requestAnimationFrame(runDragAutoScroll)
+  }
+  const autoScrollPageDuringDrag = (event: DragEvent<HTMLElement>) => {
+    const edgeSize = 140
+    const maxScrollStep = 26
+    const viewportHeight = window.innerHeight
+    const topDistance = event.clientY
+    const bottomDistance = viewportHeight - event.clientY
+    let nextScrollStep = 0
+
+    if (topDistance < edgeSize) {
+      const scrollStrength = (edgeSize - topDistance) / edgeSize
+      nextScrollStep = -Math.ceil(scrollStrength * maxScrollStep)
+    } else if (bottomDistance < edgeSize) {
+      const scrollStrength = (edgeSize - bottomDistance) / edgeSize
+      nextScrollStep = Math.ceil(scrollStrength * maxScrollStep)
+    }
+
+    dragScrollStepRef.current = nextScrollStep
+    if (nextScrollStep === 0) {
+      stopAutoScrollPageDuringDrag()
+      return
+    }
+
+    if (dragScrollStopTimeoutRef.current !== null) {
+      window.clearTimeout(dragScrollStopTimeoutRef.current)
+    }
+    dragScrollStopTimeoutRef.current = window.setTimeout(stopAutoScrollPageDuringDrag, 280)
+
+    if (dragScrollFrameRef.current === null) {
+      dragScrollFrameRef.current = requestAnimationFrame(runDragAutoScroll)
+    }
+  }
   const handleServiceDrop = (event: DragEvent<HTMLElement>, index: number) => {
     event.preventDefault()
     const fromIndex = Number(event.dataTransfer.getData('text/plain'))
+    stopAutoScrollPageDuringDrag()
     setDraggingServiceIndex(null)
     setServiceDropIndex(null)
     if (!Number.isInteger(fromIndex)) return
     reorderServiceCards(fromIndex, index)
   }
   const resetServiceDragState = () => {
+    stopAutoScrollPageDuringDrag()
     setDraggingServiceIndex(null)
     setServiceDropIndex(null)
   }
@@ -2228,12 +2295,14 @@ function BlockEditor({
   const handleClientDrop = (event: DragEvent<HTMLElement>, index: number) => {
     event.preventDefault()
     const fromIndex = Number(event.dataTransfer.getData('text/plain'))
+    stopAutoScrollPageDuringDrag()
     setDraggingClientIndex(null)
     setClientDropIndex(null)
     if (!Number.isInteger(fromIndex)) return
     reorderClientCards(fromIndex, index)
   }
   const resetClientDragState = () => {
+    stopAutoScrollPageDuringDrag()
     setDraggingClientIndex(null)
     setClientDropIndex(null)
   }
@@ -2280,12 +2349,14 @@ function BlockEditor({
   const handleTestimonialDrop = (event: DragEvent<HTMLElement>, index: number) => {
     event.preventDefault()
     const fromIndex = Number(event.dataTransfer.getData('text/plain'))
+    stopAutoScrollPageDuringDrag()
     setDraggingTestimonialIndex(null)
     setTestimonialDropIndex(null)
     if (!Number.isInteger(fromIndex)) return
     reorderTestimonialCards(fromIndex, index)
   }
   const resetTestimonialDragState = () => {
+    stopAutoScrollPageDuringDrag()
     setDraggingTestimonialIndex(null)
     setTestimonialDropIndex(null)
   }
@@ -2881,25 +2952,29 @@ function BlockEditor({
         {isClientesList && (
           <>
             {clientCards.map((client, index) => (
-              <Fragment key={`cliente-${index}`}>
+              <div
+                key={`cliente-${index}`}
+                className={`lg:col-span-2 grid grid-cols-1 gap-4 border-t pt-4 transition-all duration-150 lg:grid-cols-2 ${
+                  draggingClientIndex === index
+                    ? 'scale-[0.99] border-[#e7e9ee] opacity-60'
+                    : clientDropIndex === index
+                      ? 'border-[#e7e9ee] bg-[#fff6f7]'
+                      : 'border-[#e7e9ee]'
+                }`}
+                onDragEnter={() => setClientDropIndex(index)}
+                onDragOver={(event) => {
+                  event.preventDefault()
+                  event.dataTransfer.dropEffect = 'move'
+                  autoScrollPageDuringDrag(event)
+                  setClientDropIndex(index)
+                }}
+                onDrop={(event) => handleClientDrop(event, index)}
+              >
                 <div
-                  className={`lg:col-span-2 mt-2 flex items-center justify-between gap-3 border-t pt-4 transition-all duration-150 ${
-                    draggingClientIndex === index
-                      ? 'scale-[0.99] border-[#eb001a] opacity-60'
-                      : clientDropIndex === index
-                        ? 'border-[#eb001a] bg-[#fff6f7] shadow-[inset_4px_0_0_#eb001a]'
-                        : 'border-[#e7e9ee]'
-                  }`}
+                  className="flex items-center justify-between gap-3 lg:col-span-2"
                   draggable={clientCards.length > 1}
                   onDragStart={(event) => handleClientDragStart(event, index)}
                   onDragEnd={resetClientDragState}
-                  onDragEnter={() => setClientDropIndex(index)}
-                  onDragOver={(event) => {
-                    event.preventDefault()
-                    event.dataTransfer.dropEffect = 'move'
-                    setClientDropIndex(index)
-                  }}
-                  onDrop={(event) => handleClientDrop(event, index)}
                 >
                   <div className="flex min-w-0 items-center gap-3">
                     {clientCards.length > 1 && (
@@ -3015,13 +3090,13 @@ function BlockEditor({
                     </div>
                   </div>
                 </div>
-              </Fragment>
+              </div>
             ))}
             <div className="lg:col-span-2">
               <button
                 type="button"
                 className="inline-flex h-10 cursor-pointer items-center justify-center rounded-lg bg-[#111318] px-4 text-[13px] font-bold text-white transition-colors hover:bg-black"
-                onClick={() => updateClientCards([...clientCards, { name: 'Novo cliente', description: 'Descrição do novo cliente.', since: String(new Date().getFullYear()), segment: 'Serviços' }])}
+                onClick={() => updateClientCards([...clientCards, { name: '', description: '', since: String(new Date().getFullYear()), segment: 'Serviços' }])}
               >
                 Adicionar novo cliente
               </button>
@@ -3031,25 +3106,29 @@ function BlockEditor({
         {isDepoimentosList && (
           <>
             {testimonialCards.map((testimonial, index) => (
-              <Fragment key={`testimonial-card-${index}`}>
+              <div
+                key={`testimonial-card-${index}`}
+                className={`lg:col-span-2 grid grid-cols-1 gap-4 border-t pt-4 transition-all duration-150 lg:grid-cols-2 ${
+                  draggingTestimonialIndex === index
+                    ? 'scale-[0.99] border-[#e7e9ee] opacity-60'
+                    : testimonialDropIndex === index
+                      ? 'border-[#e7e9ee] bg-[#fff6f7]'
+                      : 'border-[#e7e9ee]'
+                }`}
+                onDragEnter={() => setTestimonialDropIndex(index)}
+                onDragOver={(event) => {
+                  event.preventDefault()
+                  event.dataTransfer.dropEffect = 'move'
+                  autoScrollPageDuringDrag(event)
+                  setTestimonialDropIndex(index)
+                }}
+                onDrop={(event) => handleTestimonialDrop(event, index)}
+              >
                 <div
-                  className={`lg:col-span-2 mt-2 flex items-center justify-between gap-3 border-t pt-4 transition-all duration-150 ${
-                    draggingTestimonialIndex === index
-                      ? 'scale-[0.99] border-[#eb001a] opacity-60'
-                      : testimonialDropIndex === index
-                        ? 'border-[#eb001a] bg-[#fff6f7] shadow-[inset_4px_0_0_#eb001a]'
-                        : 'border-[#e7e9ee]'
-                  }`}
+                  className="flex items-center justify-between gap-3 lg:col-span-2"
                   draggable={testimonialCards.length > 1}
                   onDragStart={(event) => handleTestimonialDragStart(event, index)}
                   onDragEnd={resetTestimonialDragState}
-                  onDragEnter={() => setTestimonialDropIndex(index)}
-                  onDragOver={(event) => {
-                    event.preventDefault()
-                    event.dataTransfer.dropEffect = 'move'
-                    setTestimonialDropIndex(index)
-                  }}
-                  onDrop={(event) => handleTestimonialDrop(event, index)}
                 >
                   <div className="flex min-w-0 items-center gap-3">
                     {testimonialCards.length > 1 && (
@@ -3124,7 +3203,7 @@ function BlockEditor({
                     onBlur={() => commitTestimonialCards()}
                   />
                 </label>
-              </Fragment>
+              </div>
             ))}
             <div className="lg:col-span-2">
               <button
@@ -3144,25 +3223,29 @@ function BlockEditor({
               const selectedIcon = serviceIconOptions.find((option) => option.key === (service.iconKey || serviceIconOptions[index % serviceIconOptions.length].key)) || serviceIconOptions[0]
               const SelectedIcon = selectedIcon.icon
               return (
-                <Fragment key={serviceId}>
+                <div
+                  key={serviceId}
+                  className={`lg:col-span-2 grid grid-cols-1 gap-4 border-t pt-4 transition-all duration-150 lg:grid-cols-2 ${
+                    draggingServiceIndex === index
+                      ? 'scale-[0.99] border-[#e7e9ee] opacity-60'
+                      : serviceDropIndex === index
+                        ? 'border-[#e7e9ee] bg-[#fff6f7]'
+                        : 'border-[#e7e9ee]'
+                  }`}
+                  onDragEnter={() => setServiceDropIndex(index)}
+                  onDragOver={(event) => {
+                    event.preventDefault()
+                    event.dataTransfer.dropEffect = 'move'
+                    autoScrollPageDuringDrag(event)
+                    setServiceDropIndex(index)
+                  }}
+                  onDrop={(event) => handleServiceDrop(event, index)}
+                >
                   <div
-                    className={`lg:col-span-2 mt-2 flex items-center justify-between gap-3 border-t pt-4 transition-all duration-150 ${
-                      draggingServiceIndex === index
-                        ? 'scale-[0.99] border-[#eb001a] opacity-60'
-                        : serviceDropIndex === index
-                          ? 'border-[#eb001a] bg-[#fff6f7] shadow-[inset_4px_0_0_#eb001a]'
-                          : 'border-[#e7e9ee]'
-                    }`}
+                    className="flex items-center justify-between gap-3 lg:col-span-2"
                     draggable={serviceCards.length > 1}
                     onDragStart={(event) => handleServiceDragStart(event, index)}
                     onDragEnd={resetServiceDragState}
-                    onDragEnter={() => setServiceDropIndex(index)}
-                    onDragOver={(event) => {
-                      event.preventDefault()
-                      event.dataTransfer.dropEffect = 'move'
-                      setServiceDropIndex(index)
-                    }}
-                    onDrop={(event) => handleServiceDrop(event, index)}
                   >
                     <div className="flex min-w-0 items-center gap-3">
                       {serviceCards.length > 1 && (
@@ -3260,7 +3343,7 @@ function BlockEditor({
                       onBlur={(event) => updateServiceCard(index, 'items', event.target.value, true)}
                     />
                   </label>
-                </Fragment>
+                </div>
               )
             })}
             <div className="lg:col-span-2">

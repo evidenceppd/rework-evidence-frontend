@@ -55,6 +55,16 @@ export interface AnalyticsCleanupResponse {
   olderThan: string
 }
 
+export function getAnalyticsSessionId() {
+  const key = 'evidence_analytics_session_id'
+  const existing = sessionStorage.getItem(key)
+  if (existing) return existing
+
+  const next = globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`
+  sessionStorage.setItem(key, next)
+  return next
+}
+
 export const analyticsService = {
   track: (payload: AnalyticsTrackPayload = {}) => api.post<AnalyticsTrackResponse>('/analytics/track', payload),
   getStats: () => api.get<AnalyticsStats>('/analytics/stats'),

@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import Footer from '../components/Footer'
 import { noticiasService } from '../services/noticias.service'
 import { resolveImageUrl } from '../services/api'
+import { analyticsService, getAnalyticsSessionId } from '../services/analytics.service'
 import { getBlogBlockTocItems, parseBlogBlocks } from '../utils/blogBlocks'
 import { BlogBlocksContent } from '../utils/blogBlocks.jsx'
 
@@ -49,6 +50,20 @@ export default function BlogPostPage() {
 
     return () => { mounted = false }
   }, [id])
+
+  useEffect(() => {
+    if (!article?.titulo) return
+
+    document.title = `${article.titulo} | Ag\u00eancia Evidence`
+    analyticsService.track({
+      page: window.location.pathname + window.location.search,
+      referrer: document.referrer,
+      sessionId: getAnalyticsSessionId(),
+      title: article.titulo,
+    }).catch(() => {
+      // Analytics must never break site navigation.
+    })
+  }, [article])
 
   const blocks = useMemo(() => parseBlogBlocks(article?.materia || article?.descricao), [article])
   const tocItems = useMemo(() => getBlogBlockTocItems(blocks), [blocks])
