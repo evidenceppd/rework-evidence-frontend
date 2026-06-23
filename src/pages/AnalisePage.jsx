@@ -65,6 +65,27 @@ function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(value || '').trim())
 }
 
+const ALLOWED_EMAIL_DOMAINS = new Set([
+  'gmail.com',
+  'hotmail.com',
+  'hotmail.com.br',
+  'outlook.com',
+  'outlook.com.br',
+  'yahoo.com',
+  'yahoo.com.br',
+  'uol.com.br',
+  'bol.com.br',
+  'terra.com.br',
+])
+
+function isAllowedEmailDomain(value) {
+  const raw = String(value || '').trim().toLowerCase()
+  const atIndex = raw.lastIndexOf('@')
+  if (atIndex === -1) return false
+  const domain = raw.slice(atIndex + 1)
+  return ALLOWED_EMAIL_DOMAINS.has(domain)
+}
+
 function normalizePublicForm(form) {
   const sections = Array.isArray(form.sections) ? form.sections.map(normalizeSection) : []
   return { ...form, sections, icon: form.icon || sections[0]?.metadata?.formIcon || sections[0]?.icon || 'briefcase' }
@@ -358,8 +379,12 @@ export default function AnalisePage() {
         nextErrors[key] = 'Campo obrigatório.'
         return
       }
-      if (key === 'email' && value && !isValidEmail(value)) {
-        nextErrors[key] = 'Informe um e-mail válido.'
+      if (key === 'email') {
+        if (value && !isValidEmail(value)) {
+          nextErrors[key] = 'Informe um e-mail válido.'
+        } else if (value && !isAllowedEmailDomain(value)) {
+          nextErrors[key] = 'O e-mail utilizado não pode ser aceito.'
+        }
       }
       if (key === 'phone' && value && !isValidPhone(value)) {
         nextErrors[key] = 'Informe um telefone válido com DDD.'
