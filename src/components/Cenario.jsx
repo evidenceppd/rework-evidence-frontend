@@ -51,7 +51,7 @@ export default function Cenario({ block = null }) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           <div className="text-center lg:text-left">
             <p className="text-red-600 text-xs font-bold tracking-widest uppercase mb-4 whitespace-pre-line" style={{ fontSize: '17px' }}>{content.eyebrow}</p>
-            <h2 className="font-poppins text-3xl sm:text-4xl font-bold text-zinc-900 leading-tight mb-6 whitespace-pre-line">
+            <h2 className="font-poppins md:text-3xl text-[20px] font-bold text-zinc-900 leading-tight mb-6 whitespace-pre-line">
               {content.headline}
             </h2>
             <div className="w-12 h-1 bg-red-600 mx-auto lg:mx-0" />

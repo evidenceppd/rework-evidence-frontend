@@ -34,15 +34,14 @@ function PostImage({ src, title }) {
     <img
       src={resolveImageUrl(src)}
       alt={title}
-      className="w-full object-cover"
-      style={{ height: '220px', flexShrink: 0 }}
+      className="h-auto w-full shrink-0 object-cover"
     />
   )
 }
 
 function IconClock() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '13px', height: '13px', flexShrink: 0 }}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-[13px] w-[13px] shrink-0">
       <circle cx="12" cy="12" r="10" />
       <polyline points="12 6 12 12 16 14" />
     </svg>
@@ -68,13 +67,13 @@ export function BlogHeroSection({ heroBlock, search = '', onSearchChange = () =>
     >
       <div className="absolute inset-0 lg:hidden" style={{ backgroundColor: 'rgba(247,248,248,0.78)' }} />
       <div className="relative max-w-368 mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-24 text-center lg:text-left">
-        <p className="text-red-600 font-bold tracking-widest uppercase mb-4" style={{ fontSize: '13px' }}>
+        <p className="text-red-600 font-bold tracking-widest uppercase mb-4 whitespace-pre-line" style={{ fontSize: '13px' }}>
           {heroBlock?.eyebrow || 'BLOG'}
         </p>
-        <h1 className="font-poppins font-bold text-zinc-900 leading-tight mb-4 mx-auto lg:mx-0" style={{ fontSize: 'clamp(26px, 3.5vw, 44px)', lineHeight: '1.15', maxWidth: '640px' }}>
-          {heroBlock?.headline || 'Conteúdos sobre marketing, vendas e crescimento empresarial'}
+        <h1 className="font-poppins font-bold text-zinc-900 leading-tight mb-4 mx-auto lg:mx-0 md:whitespace-pre-line" style={{ fontSize: 'clamp(26px, 3.5vw, 44px)', lineHeight: '1.15' }}>
+          {heroBlock?.headline || `Conteúdos sobre marketing, \n vendas e crescimento \n empresarial`}
         </h1>
-        <p className="text-zinc-700 mx-auto lg:mx-0" style={{ fontSize: '16px', lineHeight: '1.6', maxWidth: '480px', marginBottom: '2rem' }}>
+        <p className="text-zinc-700 mx-auto lg:mx-0 whitespace-pre-line" style={{ fontSize: '16px', lineHeight: '1.6', maxWidth: '480px', marginBottom: '2rem' }}>
           {heroBlock?.description || 'Insights práticos para empresas que querem gerar mais demanda e aumentar suas vendas.'}
         </p>
         <div className="flex items-center gap-3 border border-zinc-300 rounded-md bg-white px-4 py-3 w-full mx-auto lg:mx-0" style={{ maxWidth: '480px' }}>
@@ -92,8 +91,17 @@ export function BlogCtaSection({ ctaBlock }) {
       <div className="max-w-368 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-10 rounded-xl p-8 lg:p-10" style={{ border: '1px solid rgb(228, 228, 231)', boxShadow: 'rgba(0,0,0,0.06) 0px 2px 16px', display: 'flex', justifyContent: 'space-around', background: '#f6f6f6' }}>
           <div className="shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style={{ width: '140px', height: '140px', flexShrink: 0 }} fill="#dc2626">
-              <path d="M488.399 492h-21.933V173.536c0-14.823-12.06-26.882-26.882-26.882H390.56c-14.823 0-26.882 12.06-26.882 26.882V492h-55.692V317.825c0-14.823-12.059-26.882-26.882-26.882H232.08c-14.823 0-26.882 12.06-26.882 26.882V492h-55.692v-90.204c0-14.823-12.06-26.882-26.882-26.882H73.599c-14.823 0-26.882 12.06-26.882 26.882V492H23.601c-5.523 0-10 4.477-10 10s4.477 10 10 10h464.798c5.523 0 10-4.477 10-10s-4.477-10-10-10z" />
+            <svg width="587" height="587" viewBox="0 0 587 587" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-20 w-auto lg:h-[133px]">
+              <g clipPath="url(#clip0_blog_cta)">
+                <path d="M406.163 553.363V180.971H33.7717V318.658H268.476V553.363H406.163Z" stroke="#CB2C30" strokeWidth="9" />
+                <path d="M582.194 524.021V4.94043H63.1139V142.629H444.505V524.021H582.194Z" stroke="#CB2C30" strokeWidth="9" />
+                <path d="M230.133 582.704V357H4.42932V582.704H230.133Z" stroke="#CB2C30" strokeWidth="9" />
+              </g>
+              <defs>
+                <clipPath id="clip0_blog_cta">
+                  <rect width="587" height="587" fill="white" />
+                </clipPath>
+              </defs>
             </svg>
           </div>
           <div className="flex-1 text-center lg:text-left" style={{ maxWidth: '610px' }}>
@@ -183,16 +191,16 @@ export default function BlogPage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {paginated.map((post) => (
-                  <article key={post.id} className="flex flex-col border border-zinc-200 rounded-xl overflow-hidden bg-white transition-shadow duration-200" style={{ borderRadius: '7px', borderColor: 'rgba(0,0,0,0.08)' }}>
+                  <article key={post.id} className="flex flex-col overflow-hidden rounded-[7px] border border-black/[0.08] bg-white transition-shadow duration-200">
                     <PostImage src={post.image} title={post.title} />
                     <div className="flex flex-col flex-1 p-5">
                       <div className="flex items-center justify-between gap-3 mb-3">
-                        <span className="text-red-600 font-bold tracking-widest uppercase" style={{ fontSize: '12px' }}>{post.category}</span>
-                        <span className="flex items-center gap-1 text-zinc-400" style={{ fontSize: '12px' }}><IconClock />{post.date}</span>
+                        <span className="text-[12px] font-bold uppercase tracking-widest text-red-600">{post.category}</span>
+                        <span className="flex items-center gap-1 text-[12px] text-zinc-400"><IconClock />{post.date}</span>
                       </div>
-                      <h2 className="font-poppins font-bold text-zinc-900 mb-2" style={{ fontSize: '21px', lineHeight: '1.35' }}>{post.title}</h2>
-                      <p className="text-zinc-500 flex-1" style={{ fontSize: '17px', lineHeight: '1.6' }}>{post.excerpt}</p>
-                      <Link to={`/blog/${post.id}`} className="cursor-pointer inline-flex items-center gap-2 text-red-600 font-medium mt-4 hover:text-red-700 transition-colors duration-200" style={{ fontSize: '17px' }}>Ler artigo →</Link>
+                      <h2 className="font-poppins mb-2 text-[21px] font-bold leading-[1.35] text-zinc-900">{post.title}</h2>
+                      <p className="flex-1 text-[17px] leading-[1.6] text-zinc-500">{post.excerpt}</p>
+                      <Link to={`/blog/${post.id}`} className="mt-4 inline-flex cursor-pointer items-center gap-2 text-[17px] font-medium text-red-600 transition-colors duration-200 hover:text-red-700">Ler artigo →</Link>
                     </div>
                   </article>
                 ))}

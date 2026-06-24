@@ -133,19 +133,21 @@ function ComoTrabalhamosCtaSection({ cta }) {
           <div className="shrink-0"><LogoMark /></div>
           <div className="hidden lg:block self-stretch w-px min-h-[48px]" style={{ backgroundColor: 'rgb(220, 38, 38)' }} />
           <div className="flex-1 lg:max-w-xl text-center lg:text-left w-full" style={{ maxWidth: '650px' }}>
-            <h2 className="font-poppins font-bold text-white mb-3 leading-tight text-2xl sm:text-3xl lg:text-[29px]">{cta.headline}</h2>
-            <p className="text-zinc-400 text-sm leading-relaxed" style={{ fontSize: '15px' }}>{cta.description}</p>
+            <h2 className="font-poppins whitespace-pre-line font-bold text-white mb-3 leading-tight text-2xl sm:text-3xl lg:text-[29px]">{cta.headline}</h2>
+            <p className="whitespace-pre-line text-zinc-400 text-sm leading-relaxed" style={{ fontSize: '15px' }}>{cta.description}</p>
           </div>
-          <div className="hidden lg:block self-stretch w-px min-h-[48px]" style={{ backgroundColor: 'rgba(63, 63, 70, 0.37)' }} />
+          {/* <div className="hidden lg:block self-stretch w-px min-h-[48px]" style={{ backgroundColor: 'rgba(63, 63, 70, 0.37)' }} /> */}
           <div className="flex flex-col items-center lg:items-stretch gap-4 shrink-0 w-full lg:w-auto">
             <a href="#contato" className="cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold text-sm tracking-wide px-8 py-4 transition-colors duration-200 flex items-center justify-between gap-2" style={{ borderRadius: '4px', fontSize: '15px' }}>
               {cta.buttonPrimary}
               <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ width: '22px', height: '22px', flexShrink: 0 }}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </a>
+            {/*
             <div className="flex items-center justify-center lg:justify-start gap-3">
               <div className="flex -space-x-2 shrink-0">{[1, 2, 3, 4].map((i) => <img key={i} src={`/peoples/men${i}.jpg`} alt={`Cliente ${i}`} className="w-8 h-8 rounded-full border-2 border-zinc-900 object-cover" />)}</div>
               <p className="text-zinc-400 text-center lg:text-left" style={{ maxWidth: '131px', fontSize: '13px', lineHeight: '1.4' }}>+60 empresas j? confiam na Evidence</p>
             </div>
+            */}
           </div>
         </div>
       </div>
@@ -210,13 +212,13 @@ export default function ComoTrabalhamosPage() {
   return (
     <>
       <main style={{ marginTop: '90px' }}>
-        <section className="bg-white py-16 lg:py-24">
+        <section className="bg-white py-16 max-[390px]:pb-[30px] lg:py-24">
           <div className="max-w-384 mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row justify-between gap-12">
             <div className="flex flex-col gap-12 flex-1">
               <div style={{ maxWidth: '800px' }}>
-                <p className="text-red-600 text-xs font-bold tracking-widest uppercase mb-4 text-center lg:text-left" style={{ fontSize: '13px' }}>{about.eyebrow}</p>
-                <h1 className="font-poppins text-3xl sm:text-4xl lg:text-[42px] font-bold text-zinc-900 leading-tight mb-6 text-center lg:text-left" style={{ lineHeight: '1.15' }}>{about.headline}</h1>
-                <p className="text-zinc-500 text-sm leading-relaxed text-center lg:text-left" style={{ maxWidth: '685px', fontSize: '16px' }}>{about.description}</p>
+                <p className="whitespace-pre-line text-red-600 text-xs font-bold tracking-widest uppercase mb-4 text-center lg:text-left" style={{ fontSize: '13px' }}>{about.eyebrow}</p>
+                <h1 className="font-poppins md:whitespace-pre-line text-[20px] sm:text-4xl lg:text-[42px] font-bold text-zinc-900 leading-tight mb-6 text-center lg:text-left" style={{ lineHeight: '1.15' }}>{about.headline}</h1>
+                <p className="md:whitespace-pre-line text-zinc-500 text-sm leading-relaxed text-center lg:text-left" style={{ maxWidth: '685px', fontSize: '16px' }}>{about.description}</p>
               </div>
 
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-10 lg:pt-0" style={{ marginTop: 0, maxWidth: '730px', gap: '40px' }}>
@@ -224,26 +226,26 @@ export default function ComoTrabalhamosPage() {
                   <div key={feature.title} className="flex flex-col items-center lg:items-start gap-3 text-center lg:text-left">
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-red-600 shrink-0" style={{ width: 'fit-content' }}>{feature.icon}</div>
                     <div>
-                      <p className="font-poppins text-sm font-bold text-zinc-900 mb-1">{feature.title}</p>
-                      <p className="text-zinc-500 text-xs leading-relaxed" style={{ fontSize: '13px' }}>{feature.desc}</p>
+                      <p className="font-poppins whitespace-pre-line text-sm font-bold text-zinc-900 mb-1">{feature.title}</p>
+                      <p className="whitespace-pre-line text-zinc-500 text-xs leading-relaxed" style={{ fontSize: '13px' }}>{feature.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="relative pb-10 w-full lg:w-auto mx-auto lg:mx-0" style={{ maxWidth: '497px' }}>
+            <div className="relative h-fit w-full max-w-[497px] pb-10 mx-auto lg:w-auto lg:mx-0">
               <div className="absolute -top-4 -right-4 w-24 h-24 z-0 pointer-events-none">
                 <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full"><path d="M96 0 A96 96 0 0 1 0 96" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="6 5" fill="none" opacity="0.4" /></svg>
               </div>
               <div className="overflow-hidden relative z-10" style={{ borderRadius: '12px' }}>
-                <img src={about.imageUrl || '/equipe.webp'} alt="Equipe Agência Evidence" className="w-full object-cover" style={{ minHeight: '420px', maxHeight: '460px' }} />
+                <img src={about.imageUrl || '/equipe.png'} alt="Equipe Agência Evidence" className="h-auto w-full object-cover" />
               </div>
-              <div className="absolute bottom-0 left-4 right-4 lg:left-6 lg:right-6 bg-white z-20 p-4 flex items-start gap-3" style={{ borderRadius: '10px', boxShadow: '0 8px 32px rgba(0,0,0,0.13)', maxWidth: '348px', margin: '0 auto' }}>
+              <div className="z-20 mt-4 flex w-full items-start gap-3 rounded-[10px] bg-white p-4 shadow-[0_8px_32px_rgba(0,0,0,0.13)] min-[391px]:absolute min-[391px]:bottom-0 min-[391px]:left-0 min-[391px]:right-0 min-[391px]:mx-auto min-[391px]:mt-0 min-[391px]:max-w-[348px] lg:left-6 lg:right-6">
                 <div className="shrink-0 mt-0.5"><IconMedal /></div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-zinc-800 text-sm font-semibold leading-snug mb-1" style={{ fontSize: '14px' }}>{about.statOne}</p>
-                  <p className="font-poppins text-xl font-bold text-red-600 leading-none" style={{ fontSize: '21px' }}>{about.statTwo} <span className="text-zinc-500 text-xs font-normal" style={{ fontSize: '13px' }}>{about.statThree}</span></p>
+                  <p className="whitespace-pre-line text-zinc-800 text-sm font-semibold leading-snug mb-1" style={{ fontSize: '14px' }}>{about.statOne}</p>
+                  <p className="font-poppins whitespace-pre-line text-xl font-bold text-red-600 leading-none" style={{ fontSize: '21px' }}>{about.statTwo} <span className="whitespace-pre-line text-zinc-500 text-xs font-normal" style={{ fontSize: '13px' }}>{about.statThree}</span></p>
                 </div>
               </div>
             </div>
@@ -252,13 +254,13 @@ export default function ComoTrabalhamosPage() {
 
         <section className="bg-zinc-50 py-16 lg:py-20 border-t border-zinc-200">
           <div className="max-w-384 mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col lg:flex-row gap-6 lg:gap-16 mb-12 lg:mb-14">
+            <div className="mb-12 flex flex-col justify-between gap-6 lg:mb-14 lg:flex-row lg:gap-16">
               <div>
-                <p className="text-red-600 text-xs font-bold tracking-widest uppercase mb-4 text-center lg:text-left" style={{ fontSize: '13px' }}>{process.eyebrow}</p>
-                <h2 className="font-poppins text-2xl sm:text-3xl lg:text-[36px] font-bold text-zinc-900 leading-tight text-center lg:text-left">{process.headline}</h2>
+                <p className="mb-4 whitespace-pre-line text-center text-[13px] font-bold uppercase tracking-widest text-red-600 lg:text-left">{process.eyebrow}</p>
+                <h2 className="font-poppins whitespace-pre-line text-center text-2xl font-bold leading-tight text-zinc-900 sm:text-3xl lg:text-left lg:text-[36px]">{process.headline}</h2>
               </div>
-              <div className="flex items-end" style={{ maxWidth: '512px' }}>
-                <p className="text-zinc-500 text-sm leading-relaxed text-center lg:text-left" style={{ fontSize: '17px' }}>{process.description}</p>
+              <div className="flex max-w-[512px] items-end">
+                <p className="whitespace-pre-line text-center text-[17px] leading-relaxed text-zinc-500 lg:text-left">{process.description}</p>
               </div>
             </div>
 
@@ -268,8 +270,8 @@ export default function ComoTrabalhamosPage() {
                   <div className="flex-1 flex flex-col items-center text-center px-3 py-2">
                     <div className="w-14 h-14 rounded-full bg-zinc-900 flex items-center justify-center text-red-600 mb-4 shrink-0" style={{ width: '60px', height: '60px' }}><IconStep type={step.icon} /></div>
                     <p className="font-poppins text-sm font-bold text-red-600 mb-1" style={{ fontSize: '20px' }}>{step.num}</p>
-                    <p className="font-poppins text-sm font-bold text-zinc-900 mb-2" style={{ fontSize: '16px' }}>{step.title}</p>
-                    <p className="text-zinc-500 text-xs leading-relaxed" style={{ fontSize: '13px', width: '100%' }}>{step.desc}</p>
+                    <p className="font-poppins whitespace-pre-line text-sm font-bold text-zinc-900 mb-2" style={{ fontSize: '16px' }}>{step.title}</p>
+                    <p className="whitespace-pre-line text-zinc-500 text-xs leading-relaxed" style={{ fontSize: '13px', width: '100%' }}>{step.desc}</p>
                   </div>
                   {index < steps.length - 1 && <DashedArrow />}
                 </div>
@@ -280,21 +282,21 @@ export default function ComoTrabalhamosPage() {
 
         <section className="bg-white py-16 border-t border-zinc-200">
           <div className="max-w-384 mx-auto px-4 sm:px-6 lg:px-8">
-            <p className="text-red-600 text-xs font-bold tracking-widest uppercase mb-10 text-center lg:text-left" style={{ fontSize: '13px' }}>{values.eyebrow}</p>
+            <p className="whitespace-pre-line text-red-600 text-[17px] font-bold md:text-[13px] tracking-widest uppercase mb-10 text-center lg:text-left" >{values.eyebrow}</p>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-6">
               <div className="flex flex-col items-center lg:items-start gap-3 text-center lg:text-left" style={{ border: '1px solid #00000014', padding: '19px 25px', borderRadius: '10px' }}>
                 <div className="text-red-600"><IconTarget /></div>
-                <p className="font-poppins text-sm font-bold text-zinc-900" style={{ fontSize: '15px' }}>{values.cardOneTitle}</p>
-                <p className="text-zinc-500 text-xs leading-relaxed" style={{ fontSize: '14px' }}>{values.cardOneText}</p>
+                <p className="font-poppins whitespace-pre-line text-sm font-bold text-zinc-900" style={{ fontSize: '15px' }}>{values.cardOneTitle}</p>
+                <p className="md:whitespace-pre-line text-zinc-500 text-xs leading-relaxed" style={{ fontSize: '14px' }}>{values.cardOneText}</p>
               </div>
               <div className="flex flex-col items-center lg:items-start gap-3 text-center lg:text-left" style={{ border: '1px solid #00000014', padding: '19px 25px', borderRadius: '10px' }}>
                 <div className="text-red-600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '35px', height: '35px' }}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg></div>
-                <p className="font-poppins text-sm font-bold text-zinc-900" style={{ fontSize: '15px' }}>{values.cardTwoTitle}</p>
-                <p className="text-zinc-500 text-xs leading-relaxed" style={{ fontSize: '14px' }}>{values.cardTwoText}</p>
+                <p className="font-poppins md:whitespace-pre-line text-sm font-bold text-zinc-900" style={{ fontSize: '15px' }}>{values.cardTwoTitle}</p>
+                <p className="whitespace-pre-line text-zinc-500 text-xs leading-relaxed" style={{ fontSize: '14px' }}>{values.cardTwoText}</p>
               </div>
               <div className="flex flex-col items-center lg:items-start gap-3 text-center lg:text-left" style={{ border: '1px solid #00000014', padding: '19px 25px', borderRadius: '10px' }}>
                 <div className="text-red-600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '35px', height: '35px' }}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg></div>
-                <p className="font-poppins text-sm font-bold text-zinc-900" style={{ fontSize: '15px' }}>{values.cardThreeTitle}</p>
+                <p className="font-poppins md:whitespace-pre-line text-sm font-bold text-zinc-900" style={{ fontSize: '15px' }}>{values.cardThreeTitle}</p>
                 <ul className="text-zinc-500 text-xs leading-relaxed flex flex-col gap-1" style={{ fontSize: '14px' }}>
                   {valueItems.map((item) => <li key={item}>{item}</li>)}
                 </ul>

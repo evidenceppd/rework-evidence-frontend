@@ -30,6 +30,7 @@ export type DiagnosisFormSummary = {
   title: string
   description?: string | null
   isActive?: boolean
+  displayOrder?: number
   createdAt?: string
   updatedAt?: string
 }
@@ -160,6 +161,7 @@ export function normalizeForm(form: DiagnosisFormSummary | DiagnosisForm): Diagn
     title: form.title || 'Novo segmento',
     description: form.description || '',
     isActive: form.isActive !== false,
+    displayOrder: Number.isFinite(form.displayOrder) ? form.displayOrder : 0,
     sections,
     icon: getFormIcon({ sections, icon: (form as DiagnosisForm).icon }),
   }
@@ -200,7 +202,7 @@ export const diagnosisService = {
 
   async listFormsWithDetails(activeOnly?: boolean): Promise<DiagnosisForm[]> {
     const summaries = await this.listForms(activeOnly)
-    const details = await Promise.all(summaries.map(summary => this.getForm(summary.slug).then(detail => normalizeForm({ ...summary, ...detail }))))
+    const details = await Promise.all(summaries.map(summary => this.getForm(summary.slug).then(detail => normalizeForm({ ...summary, ...detail, displayOrder: summary.displayOrder ?? detail.displayOrder }))))
     return details
   },
 
@@ -210,6 +212,7 @@ export const diagnosisService = {
       title: form.title,
       description: form.description || null,
       isActive: form.isActive !== false,
+      displayOrder: form.displayOrder || 0,
       sections: toApiSections(form),
     }))
   },
@@ -219,6 +222,7 @@ export const diagnosisService = {
       title: form.title,
       description: form.description || null,
       isActive: form.isActive !== false,
+      displayOrder: form.displayOrder || 0,
       sections: toApiSections(form),
     }))
   },

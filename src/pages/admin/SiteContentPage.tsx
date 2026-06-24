@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState, type ChangeEvent, type DragEvent } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState, type ChangeEvent, type DragEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { siteContentService } from '../../services/siteContent.service'
 import Hero from '../../components/Hero'
@@ -757,11 +757,11 @@ function AboutSectionPreview({ block, imageSrc }: { block: SiteBlock; imageSrc: 
       <div className="mx-auto flex max-w-[1536px] flex-col justify-between gap-12 px-4 sm:px-6 lg:flex-row lg:px-8">
         <div className="flex flex-1 flex-col gap-12">
           <div style={{ maxWidth: '800px' }}>
-            <p className="mb-4 text-center text-xs font-bold uppercase tracking-widest text-red-600 lg:text-left" style={{ fontSize: '13px' }}>{block.eyebrow || 'SOBRE NÓS'}</p>
-            <h1 className="font-poppins mb-6 text-center text-3xl font-bold leading-tight text-zinc-900 sm:text-4xl lg:text-left lg:text-[42px]" style={{ lineHeight: 1.15 }}>
-              <HighlightedHeadline text={block.headline || 'Estratégia, criatividade e tecnologia para gerar resultados reais para o seu negócio.'} />
+            <p className="mb-4 whitespace-pre-line text-center text-xs font-bold uppercase tracking-widest text-red-600 lg:text-left" style={{ fontSize: '13px' }}>{block.eyebrow || 'SOBRE NÓS'}</p>
+            <h1 className="font-poppins mb-6 whitespace-pre-line text-center text-3xl font-bold leading-tight text-zinc-900 sm:text-4xl lg:text-left lg:text-[42px]" style={{ lineHeight: 1.15 }}>
+              {block.headline || 'Estratégia, criatividade e tecnologia para gerar resultados reais para o seu negócio.'}
             </h1>
-            <p className="text-center text-sm leading-relaxed text-zinc-500 lg:text-left" style={{ maxWidth: '685px', fontSize: '16px' }}>
+            <p className="whitespace-pre-line text-center text-sm leading-relaxed text-zinc-500 lg:text-left" style={{ maxWidth: '685px', fontSize: '16px' }}>
               {block.description || 'Somos uma agência de marketing focada em performance e crescimento sustentável. Ajudamos empresas a atrair clientes, fortalecer sua marca e aumentar suas vendas com estratégias personalizadas e orientadas a dados.'}
             </p>
           </div>
@@ -805,8 +805,8 @@ function AboutSectionPreview({ block, imageSrc }: { block: SiteBlock; imageSrc: 
                   )}
                 </div>
                 <div>
-                  <p className="font-poppins mb-1 text-sm font-bold text-zinc-900">{item.title}</p>
-                  <p className="text-xs leading-relaxed text-zinc-500" style={{ fontSize: '13px' }}>{item.text}</p>
+                  <p className="font-poppins mb-1 whitespace-pre-line text-sm font-bold text-zinc-900">{item.title}</p>
+                  <p className="whitespace-pre-line text-xs leading-relaxed text-zinc-500" style={{ fontSize: '13px' }}>{item.text}</p>
                 </div>
               </div>
             ))}
@@ -820,7 +820,7 @@ function AboutSectionPreview({ block, imageSrc }: { block: SiteBlock; imageSrc: 
             </svg>
           </div>
           <div className="relative z-10 overflow-hidden" style={{ borderRadius: '12px' }}>
-            <img alt="Equipe Agência Evidence" className="w-full object-cover" src={imageSrc || '/equipe.webp'} style={{ minHeight: '420px', maxHeight: '460px' }} />
+            <img alt="Equipe Agência Evidence" className="w-full object-cover" src={imageSrc || '/equipe.png'} style={{ minHeight: '420px', maxHeight: '460px' }} />
           </div>
           <div className="absolute bottom-0 left-4 right-4 z-20 mx-auto flex items-start gap-3 bg-white p-4 lg:left-6 lg:right-6" style={{ borderRadius: '10px', boxShadow: 'rgba(0, 0, 0, 0.13) 0px 8px 32px', maxWidth: '348px' }}>
             <div className="mt-0.5 shrink-0">
@@ -829,9 +829,9 @@ function AboutSectionPreview({ block, imageSrc }: { block: SiteBlock; imageSrc: 
               </svg>
             </div>
             <div className="min-w-0 flex-1">
-              <p className="mb-1 text-sm font-semibold leading-snug text-zinc-800" style={{ fontSize: '14px' }}>{block.statOne || 'Compromisso com excelência e resultados desde o início.'}</p>
-              <p className="font-poppins text-xl font-bold leading-none text-red-600" style={{ fontSize: '21px' }}>
-                {block.statTwo || '+20'} <span className="text-xs font-normal text-zinc-500" style={{ fontSize: '13px' }}>{block.statThree || 'empresas atendidas'}</span>
+              <p className="mb-1 whitespace-pre-line text-sm font-semibold leading-snug text-zinc-800" style={{ fontSize: '14px' }}>{block.statOne || 'Compromisso com excelência e resultados desde o início.'}</p>
+              <p className="font-poppins whitespace-pre-line text-xl font-bold leading-none text-red-600" style={{ fontSize: '21px' }}>
+                {block.statTwo || '+20'} <span className="whitespace-pre-line text-xs font-normal text-zinc-500" style={{ fontSize: '13px' }}>{block.statThree || 'empresas atendidas'}</span>
               </p>
             </div>
           </div>
@@ -920,15 +920,15 @@ function WorkProcessPreview({ block }: { block: SiteBlock }) {
   return (
     <section className="border-t border-zinc-200 bg-zinc-50 py-16 lg:py-20">
       <div className="mx-auto max-w-[1536px] px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 flex flex-col gap-6 lg:mb-14 lg:flex-row lg:gap-16">
+        <div className="mb-12 flex flex-col justify-between gap-6 lg:mb-14 lg:flex-row lg:gap-16">
           <div>
-            <p className="mb-4 text-center text-xs font-bold uppercase tracking-widest text-red-600 lg:text-left" style={{ fontSize: '13px' }}>{block.eyebrow || 'COMO TRABALHAMOS'}</p>
-            <h2 className="font-poppins text-center text-2xl font-bold leading-tight text-zinc-900 sm:text-3xl lg:text-left lg:text-[36px]">
-              <HighlightedHeadline text={block.headline || 'Um processo estratégico para transformar objetivos em resultados.'} />
+            <p className="mb-4 whitespace-pre-line text-center text-[13px] font-bold uppercase tracking-widest text-red-600 lg:text-left">{block.eyebrow || 'COMO TRABALHAMOS'}</p>
+            <h2 className="font-poppins whitespace-pre-line text-center text-2xl font-bold leading-tight text-zinc-900 sm:text-3xl lg:text-left lg:text-[36px]">
+              {block.headline || 'Um processo estratégico para transformar objetivos em resultados.'}
             </h2>
           </div>
-          <div className="flex items-end" style={{ maxWidth: '512px' }}>
-            <p className="text-center text-sm leading-relaxed text-zinc-500 lg:text-left" style={{ fontSize: '17px' }}>
+          <div className="flex max-w-[512px] items-end">
+            <p className="whitespace-pre-line text-center text-[17px] leading-relaxed text-zinc-500 lg:text-left">
               {block.description || 'Acreditamos em um método claro, colaborativo e orientado a dados para entregar soluções personalizadas que geram impacto real no seu negócio.'}
             </p>
           </div>
@@ -944,8 +944,8 @@ function WorkProcessPreview({ block }: { block: SiteBlock }) {
                   </div>
                 </div>
                 <p className="font-poppins mb-1 text-sm font-bold text-red-600" style={{ fontSize: '20px' }}>{step.number}</p>
-                <p className="font-poppins mb-2 text-sm font-bold text-zinc-900" style={{ fontSize: '16px' }}>{step.title}</p>
-                <p className="text-xs leading-relaxed text-zinc-500" style={{ fontSize: '13px', width: '100%' }}>{step.text}</p>
+                <p className="font-poppins mb-2 whitespace-pre-line text-sm font-bold text-zinc-900" style={{ fontSize: '16px' }}>{step.title}</p>
+                <p className="whitespace-pre-line text-xs leading-relaxed text-zinc-500" style={{ fontSize: '13px', width: '100%' }}>{step.text}</p>
               </div>
               {index < steps.length - 1 && <ProcessArrow />}
             </div>
@@ -982,7 +982,7 @@ function MissionVisionValuesPreview({ block }: { block: SiteBlock }) {
   return (
     <section className="bg-white py-16 border-t border-zinc-200">
       <div className="max-w-384 mx-auto px-4 sm:px-6 lg:px-8">
-        <p className="text-red-600 text-xs font-bold tracking-widest uppercase mb-10 text-center lg:text-left" style={{ fontSize: '13px' }}>
+        <p className="mb-10 whitespace-pre-line text-center text-xs font-bold uppercase tracking-widest text-red-600 lg:text-left" style={{ fontSize: '13px' }}>
           {eyebrow}
         </p>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-6">
@@ -994,8 +994,8 @@ function MissionVisionValuesPreview({ block }: { block: SiteBlock }) {
                 <circle cx="12" cy="12" r="2" />
               </svg>
             </div>
-            <p className="font-poppins text-sm font-bold text-zinc-900" style={{ fontSize: '15px' }}>{missionTitle}</p>
-            <p className="text-zinc-500 text-xs leading-relaxed" style={{ fontSize: '14px' }}>{missionText}</p>
+            <p className="font-poppins whitespace-pre-line text-sm font-bold text-zinc-900" style={{ fontSize: '15px' }}>{missionTitle}</p>
+            <p className="whitespace-pre-line text-xs leading-relaxed text-zinc-500" style={{ fontSize: '14px' }}>{missionText}</p>
           </div>
 
           <div className="flex flex-col items-center lg:items-start gap-3 text-center lg:text-left" style={{ border: '1px solid rgba(0, 0, 0, 0.08)', padding: '19px 25px', borderRadius: '10px' }}>
@@ -1005,8 +1005,8 @@ function MissionVisionValuesPreview({ block }: { block: SiteBlock }) {
                 <circle cx="12" cy="12" r="3" />
               </svg>
             </div>
-            <p className="font-poppins text-sm font-bold text-zinc-900" style={{ fontSize: '15px' }}>{visionTitle}</p>
-            <p className="text-zinc-500 text-xs leading-relaxed" style={{ fontSize: '14px' }}>{visionText}</p>
+            <p className="font-poppins whitespace-pre-line text-sm font-bold text-zinc-900" style={{ fontSize: '15px' }}>{visionTitle}</p>
+            <p className="whitespace-pre-line text-xs leading-relaxed text-zinc-500" style={{ fontSize: '14px' }}>{visionText}</p>
           </div>
 
           <div className="flex flex-col items-center lg:items-start gap-3 text-center lg:text-left" style={{ border: '1px solid rgba(0, 0, 0, 0.08)', padding: '19px 25px', borderRadius: '10px' }}>
@@ -1015,8 +1015,8 @@ function MissionVisionValuesPreview({ block }: { block: SiteBlock }) {
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
               </svg>
             </div>
-            <p className="font-poppins text-sm font-bold text-zinc-900" style={{ fontSize: '15px' }}>{valuesTitle}</p>
-            <ul className="text-zinc-500 text-xs leading-relaxed flex flex-col gap-1" style={{ fontSize: '14px' }}>
+            <p className="font-poppins whitespace-pre-line text-sm font-bold text-zinc-900" style={{ fontSize: '15px' }}>{valuesTitle}</p>
+            <ul className="flex flex-col gap-1 whitespace-pre-line text-xs leading-relaxed text-zinc-500" style={{ fontSize: '14px' }}>
               <li>{valueOne}</li>
               <li>{valueTwo}</li>
               <li>{valueThree}</li>
@@ -1055,10 +1055,10 @@ function CtaPreview({ block, pageId = '' }: { block: SiteBlock; pageId?: string 
           </div>
           <div className="hidden lg:block self-stretch w-px min-h-[48px]" style={{ backgroundColor: 'rgb(220, 38, 38)' }} />
           <div className="flex-1 lg:max-w-xl text-center lg:text-left w-full" style={{ maxWidth: isHomeCta ? '690px' : '650px' }}>
-            <h2 className="font-poppins font-bold text-white mb-3 leading-tight text-2xl sm:text-3xl lg:text-[29px]">
-              {isHomeCta ? block.headline || 'Quer resultados como esses na sua empresa?' : <HighlightedHeadline text={block.headline || 'Pronto para transformar seus objetivos em resultados reais?'} />}
+            <h2 className="font-poppins mb-3 whitespace-pre-line text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-[29px]">
+              {isHomeCta ? block.headline || 'Quer resultados como esses na sua empresa?' : block.headline || 'Pronto para transformar seus objetivos em resultados reais?'}
             </h2>
-            <p className="text-zinc-400 text-sm leading-relaxed" style={isHomeCta ? { fontSize: '18px', maxWidth: '550px' } : { fontSize: '15px' }}>
+            <p className="whitespace-pre-line text-sm leading-relaxed text-zinc-400" style={isHomeCta ? { fontSize: '18px', maxWidth: '550px' } : { fontSize: '15px' }}>
               {block.description || (isHomeCta ? 'Fale com nossos especialistas e descubra o que podemos fazer pelo seu crescimento.' : 'Fale com nossos especialistas e descubra como podemos criar estratégias personalizadas para acelerar o crescimento da sua empresa.')}
             </p>
           </div>
@@ -1070,6 +1070,7 @@ function CtaPreview({ block, pageId = '' }: { block: SiteBlock; pageId?: string 
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </a>
+            {/*
             {!isHomeCta && !isClientesPage && (
               <div className="flex items-center justify-center lg:justify-start gap-3">
                 <div className="flex -space-x-2 shrink-0">
@@ -1081,6 +1082,7 @@ function CtaPreview({ block, pageId = '' }: { block: SiteBlock; pageId?: string 
                 <p className="text-zinc-400 text-center lg:text-left" style={{ maxWidth: '131px', fontSize: '13px', lineHeight: 1.4 }}>{block.statOne || '+60 empresas já confiam na Evidence'}</p>
               </div>
             )}
+            */}
           </div>
         </div>
       </div>
@@ -1460,7 +1462,7 @@ const defaultClientCards: ClientCard[] = [
   { name: 'Ponto Certo Distribuição', description: 'Distribuição ágil e eficiente com foco em qualidade e relacionamento duradouro.', since: '2021', segment: 'Comércio' },
 ]
 
-const clientSegmentOptions = ['Indústria', 'Saúde', 'Agronegócio', 'Serviços', 'Comércio', 'Tecnologia']
+const clientSegmentOptions = ['Indústria', 'Agroindústria', 'Indústria Comércio', 'Saúde', 'Agronegócio', 'Serviços', 'Comércio', 'Tecnologia']
 
 function readClientCards(block: SiteBlock): ClientCard[] {
   if (block.clientsJson) {
@@ -1469,7 +1471,7 @@ function readClientCards(block: SiteBlock): ClientCard[] {
       if (Array.isArray(parsed)) {
         const clients = parsed
           .map((item) => ({
-            name: String(item?.name ?? ''),
+            name: String(item?.name ?? '').trim().toLowerCase() === 'novo cliente' ? '' : String(item?.name ?? ''),
             description: String(item?.description ?? ''),
             since: String(item?.since ?? ''),
             segment: String(item?.segment ?? ''),
@@ -1517,7 +1519,7 @@ function SectionPreview({ block, compact = false, pageId = '' }: { block: SiteBl
   const imageSrc = block.imageUrl || (
     block.id === 'hero' ? '/banner-home.png'
     : block.id === 'atuacao' ? '/mesa.webp'
-    : block.id === 'sobre-nos' ? '/equipe.webp'
+    : block.id === 'sobre-nos' ? '/equipe.png'
     : block.id === 'acelerador' ? '/foguete.png'
     : block.id === 'grid-servicos' ? '/crescimento1.png'
     : ''
@@ -1537,10 +1539,10 @@ function SectionPreview({ block, compact = false, pageId = '' }: { block: SiteBl
     return (
       <section className="grid min-h-[290px] place-items-center bg-[#050608] px-4 py-10 text-center text-white">
         <div className="max-w-[760px]">
-          <h1 className="font-poppins text-[34px] font-bold leading-[1.05] sm:text-[42px]">
+          <h1 className="font-poppins whitespace-pre-line text-[34px] font-bold leading-[1.05] sm:text-[42px]">
             {analiseHeadline}
           </h1>
-          <p className="mx-auto mt-7 max-w-[620px] text-[16px] leading-[1.8] text-white">
+          <p className="mx-auto mt-7 max-w-[620px] whitespace-pre-line text-[16px] leading-[1.8] text-white">
             {analiseDescription}
           </p>
           <p className="mt-10 text-[15px] font-bold text-white">
@@ -1688,9 +1690,9 @@ function SectionPreview({ block, compact = false, pageId = '' }: { block: SiteBl
     return (
       <section className="bg-zinc-950 py-16 border-t border-zinc-800">
         <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-[13px] md:mb-10 text-center md:text-left">
-            <p className="text-red-500 text-xs font-bold tracking-widest uppercase leading-tight" style={{ fontSize: '15px' }}>{eyebrow}</p>
-            <h2 className="font-poppins text-4xl font-bold text-white mt-1" style={{ fontSize: '30px' }}>{headline}</h2>
+          <div className="mb-[13px] text-center md:mb-10 md:text-left">
+            <p className="text-center text-[11px] font-bold uppercase leading-tight tracking-widest text-red-500 whitespace-pre-line">{eyebrow}</p>
+            <h2 className="mt-1 text-center font-poppins text-[42px] font-bold text-white whitespace-pre-line">{headline}</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-0 divide-y md:divide-y-0 md:divide-x divide-zinc-800">
             {cards.map((card, index) => (
@@ -1842,8 +1844,8 @@ function SectionPreview({ block, compact = false, pageId = '' }: { block: SiteBl
                       </div>
                     )}
                     <div>
-                      <h3 className="font-poppins text-sm font-bold text-white tracking-wide mb-2">{step.title}</h3>
-                      <p className="text-zinc-400 text-sm leading-relaxed">{step.text}</p>
+                      <h3 className="font-poppins mb-2 whitespace-pre-line text-sm font-bold tracking-wide text-white">{step.title}</h3>
+                      <p className="whitespace-pre-line text-sm leading-relaxed text-zinc-400">{step.text}</p>
                     </div>
                   </div>
                 </div>
@@ -2124,15 +2126,37 @@ function BlockEditor({
     setServiceCardsDraft(isGridServicos ? readServiceCards(block) : [])
   }, [isGridServicos, block.id, block.servicesJson])
   const serviceCards = isGridServicos ? serviceCardsDraft : []
-  const clientCards = isClientesList ? readClientCards(block) : []
+  const [clientCardsDraft, setClientCardsDraft] = useState<ClientCard[]>(() => (isClientesList ? readClientCards(block) : []))
+  useEffect(() => {
+    setClientCardsDraft(isClientesList ? readClientCards(block) : [])
+  }, [isClientesList, block.id, block.clientsJson])
+  const clientCards = isClientesList ? clientCardsDraft : []
   const [testimonialCardsDraft, setTestimonialCardsDraft] = useState<TestimonialCard[]>(() => (isDepoimentosList ? readTestimonialCards(block) : []))
   useEffect(() => {
     setTestimonialCardsDraft(isDepoimentosList ? readTestimonialCards(block) : [])
   }, [isDepoimentosList, block.id, block.testimonialsJson])
   const testimonialCards = isDepoimentosList ? testimonialCardsDraft : []
+  const [draggingServiceIndex, setDraggingServiceIndex] = useState<number | null>(null)
+  const [serviceDropIndex, setServiceDropIndex] = useState<number | null>(null)
+  const [draggingClientIndex, setDraggingClientIndex] = useState<number | null>(null)
+  const [clientDropIndex, setClientDropIndex] = useState<number | null>(null)
   const [draggingTestimonialIndex, setDraggingTestimonialIndex] = useState<number | null>(null)
   const [testimonialDropIndex, setTestimonialDropIndex] = useState<number | null>(null)
   const [openIconPicker, setOpenIconPicker] = useState<string | null>(null)
+  const [openClientSegmentPicker, setOpenClientSegmentPicker] = useState<string | null>(null)
+  const dragScrollFrameRef = useRef<number | null>(null)
+  const dragScrollStopTimeoutRef = useRef<number | null>(null)
+  const dragScrollStepRef = useRef(0)
+  useEffect(() => {
+    return () => {
+      if (dragScrollFrameRef.current !== null) {
+        cancelAnimationFrame(dragScrollFrameRef.current)
+      }
+      if (dragScrollStopTimeoutRef.current !== null) {
+        window.clearTimeout(dragScrollStopTimeoutRef.current)
+      }
+    }
+  }, [])
   const editorAttrs = (field: string, scope = block.id) => ({
     name: `${pageId || 'site'}-${scope}-${field}`,
     'data-edit-html': 'true',
@@ -2158,13 +2182,129 @@ function BlockEditor({
     })
     updateServiceCards(nextCards, shouldCommit)
   }
-  const updateClientCards = (nextCards: ClientCard[]) => {
+  const reorderServiceCards = (fromIndex: number, toIndex: number) => {
+    if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return
+
+    const nextCards = [...serviceCards]
+    const [movedCard] = nextCards.splice(fromIndex, 1)
+    if (!movedCard) return
+
+    nextCards.splice(toIndex, 0, movedCard)
+    updateServiceCards(nextCards)
+  }
+  const handleServiceDragStart = (event: DragEvent<HTMLElement>, index: number) => {
+    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.setData('text/plain', String(index))
+    setDraggingServiceIndex(index)
+  }
+  const stopAutoScrollPageDuringDrag = () => {
+    dragScrollStepRef.current = 0
+    if (dragScrollStopTimeoutRef.current !== null) {
+      window.clearTimeout(dragScrollStopTimeoutRef.current)
+      dragScrollStopTimeoutRef.current = null
+    }
+    if (dragScrollFrameRef.current !== null) {
+      cancelAnimationFrame(dragScrollFrameRef.current)
+      dragScrollFrameRef.current = null
+    }
+  }
+  const runDragAutoScroll = () => {
+    const scrollStep = dragScrollStepRef.current
+    if (scrollStep === 0) {
+      dragScrollFrameRef.current = null
+      return
+    }
+
+    window.scrollBy(0, scrollStep)
+    dragScrollFrameRef.current = requestAnimationFrame(runDragAutoScroll)
+  }
+  const autoScrollPageDuringDrag = (event: DragEvent<HTMLElement>) => {
+    const edgeSize = 140
+    const maxScrollStep = 26
+    const viewportHeight = window.innerHeight
+    const topDistance = event.clientY
+    const bottomDistance = viewportHeight - event.clientY
+    let nextScrollStep = 0
+
+    if (topDistance < edgeSize) {
+      const scrollStrength = (edgeSize - topDistance) / edgeSize
+      nextScrollStep = -Math.ceil(scrollStrength * maxScrollStep)
+    } else if (bottomDistance < edgeSize) {
+      const scrollStrength = (edgeSize - bottomDistance) / edgeSize
+      nextScrollStep = Math.ceil(scrollStrength * maxScrollStep)
+    }
+
+    dragScrollStepRef.current = nextScrollStep
+    if (nextScrollStep === 0) {
+      stopAutoScrollPageDuringDrag()
+      return
+    }
+
+    if (dragScrollStopTimeoutRef.current !== null) {
+      window.clearTimeout(dragScrollStopTimeoutRef.current)
+    }
+    dragScrollStopTimeoutRef.current = window.setTimeout(stopAutoScrollPageDuringDrag, 280)
+
+    if (dragScrollFrameRef.current === null) {
+      dragScrollFrameRef.current = requestAnimationFrame(runDragAutoScroll)
+    }
+  }
+  const handleServiceDrop = (event: DragEvent<HTMLElement>, index: number) => {
+    event.preventDefault()
+    const fromIndex = Number(event.dataTransfer.getData('text/plain'))
+    stopAutoScrollPageDuringDrag()
+    setDraggingServiceIndex(null)
+    setServiceDropIndex(null)
+    if (!Number.isInteger(fromIndex)) return
+    reorderServiceCards(fromIndex, index)
+  }
+  const resetServiceDragState = () => {
+    stopAutoScrollPageDuringDrag()
+    setDraggingServiceIndex(null)
+    setServiceDropIndex(null)
+  }
+  const commitClientCards = (nextCards = clientCards) => {
     onUpdate('clientsJson', JSON.stringify(nextCards))
   }
-  const updateClientCard = (index: number, field: keyof ClientCard, value: string) => {
+  const updateClientCards = (nextCards: ClientCard[], shouldCommit = true) => {
+    setClientCardsDraft(nextCards)
+    if (shouldCommit) {
+      commitClientCards(nextCards)
+    }
+  }
+  const updateClientCard = (index: number, field: keyof ClientCard, value: string, shouldCommit = false) => {
     updateClientCards(clientCards.map((client, clientIndex) => (
       clientIndex === index ? { ...client, [field]: value } : client
-    )))
+    )), shouldCommit)
+  }
+  const reorderClientCards = (fromIndex: number, toIndex: number) => {
+    if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return
+
+    const nextCards = [...clientCards]
+    const [movedCard] = nextCards.splice(fromIndex, 1)
+    if (!movedCard) return
+
+    nextCards.splice(toIndex, 0, movedCard)
+    updateClientCards(nextCards)
+  }
+  const handleClientDragStart = (event: DragEvent<HTMLElement>, index: number) => {
+    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.setData('text/plain', String(index))
+    setDraggingClientIndex(index)
+  }
+  const handleClientDrop = (event: DragEvent<HTMLElement>, index: number) => {
+    event.preventDefault()
+    const fromIndex = Number(event.dataTransfer.getData('text/plain'))
+    stopAutoScrollPageDuringDrag()
+    setDraggingClientIndex(null)
+    setClientDropIndex(null)
+    if (!Number.isInteger(fromIndex)) return
+    reorderClientCards(fromIndex, index)
+  }
+  const resetClientDragState = () => {
+    stopAutoScrollPageDuringDrag()
+    setDraggingClientIndex(null)
+    setClientDropIndex(null)
   }
   const handleClientImageUpload = (index: number, event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -2209,12 +2349,14 @@ function BlockEditor({
   const handleTestimonialDrop = (event: DragEvent<HTMLElement>, index: number) => {
     event.preventDefault()
     const fromIndex = Number(event.dataTransfer.getData('text/plain'))
+    stopAutoScrollPageDuringDrag()
     setDraggingTestimonialIndex(null)
     setTestimonialDropIndex(null)
     if (!Number.isInteger(fromIndex)) return
     reorderTestimonialCards(fromIndex, index)
   }
   const resetTestimonialDragState = () => {
+    stopAutoScrollPageDuringDrag()
     setDraggingTestimonialIndex(null)
     setTestimonialDropIndex(null)
   }
@@ -2222,12 +2364,13 @@ function BlockEditor({
   return (
     <div className="border-t border-[#eef0f3] bg-[#fbfbfc] p-5 sm:p-6">
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {(!isAnaliseHero && (isHero || isSobreNos || isCenario || isGargalos || isAtuacao || isProcesso || isAceleradorServicos)) && (
+        {(!isAnaliseHero && !isHomeHero && (isHero || isSobreNos || isCenario || isGargalos || isAtuacao || isProcesso || isAceleradorServicos)) && (
         <label className="block">
           <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">{labels.eyebrow}</span>
-          <input
+          <textarea
             {...editorAttrs('eyebrow')}
-            className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+            rows={2}
+            className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
             value={isHero || isSobreNos || isAceleradorServicos ? block.eyebrow : isCenario ? cenarioEyebrow : isGargalos ? gargalosEyebrow : isAtuacao ? atuacaoEyebrow : processoEyebrow}
             onChange={(event) => onUpdate('eyebrow', event.target.value)}
           />
@@ -2236,20 +2379,33 @@ function BlockEditor({
         {!isProcesso && !isEstatisticas && !isGridServicos && !isClientesList && !isDepoimentosList && (
         <label className="block lg:col-span-2">
           <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">{labels.headline}</span>
-          <input
+          <textarea
             {...editorAttrs('headline')}
-            className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+            className="min-h-[68px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2.5 text-[14px] leading-relaxed outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
             value={isCenario ? cenarioHeadline : isGargalos ? gargalosHeadline : isAtuacao ? atuacaoHeadline : isFullProcesso ? block.headline : isProcesso ? processoStepOneTitle : block.headline}
             onChange={(event) => onUpdate(isFullProcesso ? 'headline' : isProcesso ? 'stepOneTitle' : 'headline', event.target.value)}
           />
         </label>
         )}
+        {isHomeHero && (
+          <label className="block lg:col-span-2">
+            <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">{labels.eyebrow}</span>
+            <textarea
+              {...editorAttrs('eyebrow')}
+              rows={2}
+              className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              value={block.eyebrow}
+              onChange={(event) => onUpdate('eyebrow', event.target.value)}
+            />
+          </label>
+        )}
         {!isHero && !isSobreNos && !isCenario && !isGargalos && !isAtuacao && !isProcesso && !isCta && !isClientesList && !isDepoimentosList && !isAceleradorServicos && !isEstatisticas && !isBlogCta && !isDepoimentosCta && (
         <label className={isHero ? 'block lg:col-span-2' : 'block'}>
           <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">{labels.eyebrow}</span>
-          <input
+          <textarea
             {...editorAttrs('eyebrow')}
-            className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+            rows={2}
+            className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
             value={isCenario ? cenarioEyebrow : isGargalos ? gargalosEyebrow : isAtuacao ? atuacaoEyebrow : isProcesso ? processoEyebrow : block.eyebrow}
             onChange={(event) => onUpdate('eyebrow', event.target.value)}
           />
@@ -2270,8 +2426,9 @@ function BlockEditor({
           <>
             <label className="block">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título do diferencial 1</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.cardOneTitle ?? 'Focados em resultados'}
                 onChange={(event) => onUpdate('cardOneTitle', event.target.value)}
               />
@@ -2286,8 +2443,9 @@ function BlockEditor({
             </label>
             <label className="block">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título do diferencial 2</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.cardTwoTitle ?? 'Time especializado'}
                 onChange={(event) => onUpdate('cardTwoTitle', event.target.value)}
               />
@@ -2302,8 +2460,9 @@ function BlockEditor({
             </label>
             <label className="block">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título do diferencial 3</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.cardThreeTitle ?? 'Abordagem data-driven'}
                 onChange={(event) => onUpdate('cardThreeTitle', event.target.value)}
               />
@@ -2318,8 +2477,9 @@ function BlockEditor({
             </label>
             <label className="block">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título do diferencial 4</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.cardFourTitle ?? 'Parceria de verdade'}
                 onChange={(event) => onUpdate('cardFourTitle', event.target.value)}
               />
@@ -2334,24 +2494,27 @@ function BlockEditor({
             </label>
             <label className="block lg:col-span-2">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Texto do card inferior</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.statOne ?? 'Compromisso com excelência e resultados desde o início.'}
                 onChange={(event) => onUpdate('statOne', event.target.value)}
               />
             </label>
             <label className="block">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Número do card inferior</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.statTwo ?? '+20'}
                 onChange={(event) => onUpdate('statTwo', event.target.value)}
               />
             </label>
             <label className="block">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Complemento do número</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.statThree ?? 'empresas atendidas'}
                 onChange={(event) => onUpdate('statThree', event.target.value)}
               />
@@ -2390,8 +2553,9 @@ function BlockEditor({
           <>
             <label className="block">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título do card de missão</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.cardOneTitle ?? block.headline ?? 'Missão'}
                 onChange={(event) => onUpdate('cardOneTitle', event.target.value)}
               />
@@ -2406,8 +2570,9 @@ function BlockEditor({
             </label>
             <label className="block">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título do card de visão</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.cardTwoTitle ?? 'Visão'}
                 onChange={(event) => onUpdate('cardTwoTitle', event.target.value)}
               />
@@ -2422,8 +2587,9 @@ function BlockEditor({
             </label>
             <label className="block lg:col-span-2">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título do card de valores</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.cardThreeTitle ?? 'Valores'}
                 onChange={(event) => onUpdate('cardThreeTitle', event.target.value)}
               />
@@ -2521,9 +2687,28 @@ function BlockEditor({
         {isProcesso && (
           <>
             <label className="block lg:col-span-2">
+              <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título principal</span>
+              <textarea
+                {...editorAttrs('headline')}
+                className="min-h-[68px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2.5 text-[14px] leading-relaxed outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+                value={block.headline}
+                onChange={(event) => onUpdate('headline', event.target.value)}
+              />
+            </label>
+            <label className="block lg:col-span-2">
+              <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Texto de apoio</span>
+              <textarea
+                {...editorAttrs('description')}
+                className="min-h-[92px] w-full resize-none rounded-lg border border-[#dfe3ea] bg-white px-3 py-2.5 text-[14px] leading-relaxed outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+                value={block.description}
+                onChange={(event) => onUpdate('description', event.target.value)}
+              />
+            </label>
+            <label className="block lg:col-span-2">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título da etapa 1</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.stepOneTitle ?? (isFullProcesso ? 'Diagnóstico' : 'ANÁLISE DO CENÁRIO')}
                 onChange={(event) => onUpdate('stepOneTitle', event.target.value)}
               />
@@ -2538,8 +2723,9 @@ function BlockEditor({
             </label>
             <label className="block lg:col-span-2">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título da etapa 2</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.stepTwoTitle ?? (isFullProcesso ? 'Planejamento' : 'PLANEJAMENTO E EXECUÇÃO')}
                 onChange={(event) => onUpdate('stepTwoTitle', event.target.value)}
               />
@@ -2554,8 +2740,9 @@ function BlockEditor({
             </label>
             <label className="block lg:col-span-2">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título da etapa 3</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.stepThreeTitle ?? (isFullProcesso ? 'Execução' : 'ACOMPANHAMENTO E EVOLUÇÃO')}
                 onChange={(event) => onUpdate('stepThreeTitle', event.target.value)}
               />
@@ -2572,8 +2759,9 @@ function BlockEditor({
               <>
                 <label className="block">
                   <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título da etapa 4</span>
-                  <input
-                    className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+                  <textarea
+                    rows={2}
+                    className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                     value={block.stepFourTitle ?? 'Monitoramento'}
                     onChange={(event) => onUpdate('stepFourTitle', event.target.value)}
                   />
@@ -2588,8 +2776,9 @@ function BlockEditor({
                 </label>
                 <label className="block">
                   <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título da etapa 5</span>
-                  <input
-                    className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+                  <textarea
+                    rows={2}
+                    className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                     value={block.stepFiveTitle ?? 'Otimização'}
                     onChange={(event) => onUpdate('stepFiveTitle', event.target.value)}
                   />
@@ -2604,8 +2793,9 @@ function BlockEditor({
                 </label>
                 <label className="block">
                   <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título da etapa 6</span>
-                  <input
-                    className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+                  <textarea
+                    rows={2}
+                    className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                     value={block.stepSixTitle ?? 'Resultados'}
                     onChange={(event) => onUpdate('stepSixTitle', event.target.value)}
                   />
@@ -2656,40 +2846,45 @@ function BlockEditor({
           <>
             <label className="block">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Texto do botão principal</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.buttonPrimary ?? 'RECEBER ANÁLISE'}
                 onChange={(event) => onUpdate('buttonPrimary', event.target.value)}
               />
             </label>
             <label className="block">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Texto do botão secundário</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.buttonSecondary ?? 'VER COMO FUNCIONA'}
                 onChange={(event) => onUpdate('buttonSecondary', event.target.value)}
               />
             </label>
             <label className="block">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Indicador 1</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.statOne ?? 'Foco em geração de demanda qualificada'}
                 onChange={(event) => onUpdate('statOne', event.target.value)}
               />
             </label>
             <label className="block">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Indicador 2</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.statTwo ?? 'Estratégias alinhadas com seu processo comercial'}
                 onChange={(event) => onUpdate('statTwo', event.target.value)}
               />
             </label>
             <label className="block lg:col-span-2">
               <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Indicador 3</span>
-              <input
-                className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+              <textarea
+                rows={2}
+                className="min-h-[52px] w-full resize-y rounded-lg border border-[#dfe3ea] bg-white px-3 py-2 text-[14px] leading-5 outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                 value={block.statThree ?? 'Mais oportunidades e conversões para sua empresa'}
                 onChange={(event) => onUpdate('statThree', event.target.value)}
               />
@@ -2757,9 +2952,40 @@ function BlockEditor({
         {isClientesList && (
           <>
             {clientCards.map((client, index) => (
-              <Fragment key={`cliente-${index}`}>
-                <div className="lg:col-span-2 mt-2 flex items-center justify-between gap-3 border-t border-[#e7e9ee] pt-4">
-                  <p className="text-[12px] font-bold uppercase tracking-widest text-[#eb001a]">Cliente {index + 1}</p>
+              <div
+                key={`cliente-${index}`}
+                className={`lg:col-span-2 grid grid-cols-1 gap-4 border-t pt-4 transition-all duration-150 lg:grid-cols-2 ${
+                  draggingClientIndex === index
+                    ? 'scale-[0.99] border-[#e7e9ee] opacity-60'
+                    : clientDropIndex === index
+                      ? 'border-[#e7e9ee] bg-[#fff6f7]'
+                      : 'border-[#e7e9ee]'
+                }`}
+                onDragEnter={() => setClientDropIndex(index)}
+                onDragOver={(event) => {
+                  event.preventDefault()
+                  event.dataTransfer.dropEffect = 'move'
+                  autoScrollPageDuringDrag(event)
+                  setClientDropIndex(index)
+                }}
+                onDrop={(event) => handleClientDrop(event, index)}
+              >
+                <div
+                  className="flex items-center justify-between gap-3 lg:col-span-2"
+                  draggable={clientCards.length > 1}
+                  onDragStart={(event) => handleClientDragStart(event, index)}
+                  onDragEnd={resetClientDragState}
+                >
+                  <div className="flex min-w-0 items-center gap-3">
+                    {clientCards.length > 1 && (
+                      <span className="grid h-10 w-10 flex-none cursor-grab place-items-center rounded-lg border border-[#ffd5da] bg-white text-[#eb001a] shadow-sm active:cursor-grabbing">
+                        <GripVertical className="h-5 w-5" />
+                      </span>
+                    )}
+                    <div className="min-w-0">
+                      <p className="text-[12px] font-bold uppercase tracking-widest text-[#eb001a]">Cliente {index + 1}</p>
+                    </div>
+                  </div>
                   {clientCards.length > 1 && (
                     <button
                       type="button"
@@ -2772,27 +2998,41 @@ function BlockEditor({
                   )}
                 </div>
                 <label className="block">
-                  <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Nome</span>
-                  <input
-                    className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
-                    value={client.name}
-                    onChange={(event) => updateClientCard(index, 'name', event.target.value)}
-                  />
-                </label>
-                <label className="block">
                   <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Segmento</span>
-                  <select
-                    className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
-                    value={client.segment}
-                    onChange={(event) => updateClientCard(index, 'segment', event.target.value)}
-                  >
-                    {client.segment && !clientSegmentOptions.includes(client.segment) && (
-                      <option value={client.segment}>{client.segment}</option>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      className="flex h-11 w-full cursor-pointer items-center justify-between gap-3 rounded-lg border border-[#dfe3ea] bg-white px-3 text-left text-[14px] outline-none transition-colors hover:border-[#f87171] focus:border-[#f87171] focus:ring-2 focus:ring-[#f87171]/10"
+                      onClick={() => setOpenClientSegmentPicker(openClientSegmentPicker === `cliente-segmento-${index}` ? null : `cliente-segmento-${index}`)}
+                    >
+                      <span className="min-w-0 truncate text-[#111318]">{client.segment || 'Selecione um segmento'}</span>
+                      <ChevronDown className={`h-4 w-4 shrink-0 text-[#5f6672] transition-transform ${openClientSegmentPicker === `cliente-segmento-${index}` ? 'rotate-180' : ''}`} />
+                    </button>
+                    {openClientSegmentPicker === `cliente-segmento-${index}` && (
+                      <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-40 overflow-hidden rounded-xl border border-[#e7e9ee] bg-white py-1 shadow-xl">
+                        {[...(client.segment && !clientSegmentOptions.includes(client.segment) ? [client.segment] : []), ...clientSegmentOptions].map((segment) => {
+                          const isSelected = segment === client.segment
+                          return (
+                            <button
+                              key={segment}
+                              type="button"
+                              className={`flex h-10 w-full cursor-pointer items-center px-3 text-left text-[14px] transition-colors ${
+                                isSelected
+                                  ? 'bg-[#fee2e2] font-semibold text-[#b91c1c]'
+                                  : 'bg-white text-[#111318] hover:bg-[#fff7f7] hover:text-[#b91c1c]'
+                              }`}
+                              onClick={() => {
+                                updateClientCard(index, 'segment', segment, true)
+                                setOpenClientSegmentPicker(null)
+                              }}
+                            >
+                              {segment}
+                            </button>
+                          )
+                        })}
+                      </div>
                     )}
-                    {clientSegmentOptions.map((segment) => (
-                      <option key={segment} value={segment}>{segment}</option>
-                    ))}
-                  </select>
+                  </div>
                 </label>
                 <label className="block">
                   <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Cliente desde</span>
@@ -2800,6 +3040,7 @@ function BlockEditor({
                     className="h-11 w-full rounded-lg border border-[#dfe3ea] bg-white px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                     value={client.since}
                     onChange={(event) => updateClientCard(index, 'since', event.target.value)}
+                    onBlur={() => commitClientCards()}
                   />
                 </label>
                 <label className="block">
@@ -2808,6 +3049,7 @@ function BlockEditor({
                     className="min-h-[76px] w-full resize-none rounded-lg border border-[#dfe3ea] bg-white px-3 py-2.5 text-[14px] leading-relaxed outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                     value={client.description}
                     onChange={(event) => updateClientCard(index, 'description', event.target.value)}
+                    onBlur={() => commitClientCards()}
                   />
                 </label>
                 <div className="block lg:col-span-2">
@@ -2848,13 +3090,13 @@ function BlockEditor({
                     </div>
                   </div>
                 </div>
-              </Fragment>
+              </div>
             ))}
             <div className="lg:col-span-2">
               <button
                 type="button"
                 className="inline-flex h-10 cursor-pointer items-center justify-center rounded-lg bg-[#111318] px-4 text-[13px] font-bold text-white transition-colors hover:bg-black"
-                onClick={() => updateClientCards([...clientCards, { name: 'Novo cliente', description: 'Descrição do novo cliente.', since: String(new Date().getFullYear()), segment: 'Serviços' }])}
+                onClick={() => updateClientCards([...clientCards, { name: '', description: '', since: String(new Date().getFullYear()), segment: 'Serviços' }])}
               >
                 Adicionar novo cliente
               </button>
@@ -2864,25 +3106,29 @@ function BlockEditor({
         {isDepoimentosList && (
           <>
             {testimonialCards.map((testimonial, index) => (
-              <Fragment key={`testimonial-card-${index}`}>
+              <div
+                key={`testimonial-card-${index}`}
+                className={`lg:col-span-2 grid grid-cols-1 gap-4 border-t pt-4 transition-all duration-150 lg:grid-cols-2 ${
+                  draggingTestimonialIndex === index
+                    ? 'scale-[0.99] border-[#e7e9ee] opacity-60'
+                    : testimonialDropIndex === index
+                      ? 'border-[#e7e9ee] bg-[#fff6f7]'
+                      : 'border-[#e7e9ee]'
+                }`}
+                onDragEnter={() => setTestimonialDropIndex(index)}
+                onDragOver={(event) => {
+                  event.preventDefault()
+                  event.dataTransfer.dropEffect = 'move'
+                  autoScrollPageDuringDrag(event)
+                  setTestimonialDropIndex(index)
+                }}
+                onDrop={(event) => handleTestimonialDrop(event, index)}
+              >
                 <div
-                  className={`lg:col-span-2 mt-2 flex items-center justify-between gap-3 border-t pt-4 transition-all duration-150 ${
-                    draggingTestimonialIndex === index
-                      ? 'scale-[0.99] border-[#eb001a] opacity-60'
-                      : testimonialDropIndex === index
-                        ? 'border-[#eb001a] bg-[#fff6f7] shadow-[inset_4px_0_0_#eb001a]'
-                        : 'border-[#e7e9ee]'
-                  }`}
+                  className="flex items-center justify-between gap-3 lg:col-span-2"
                   draggable={testimonialCards.length > 1}
                   onDragStart={(event) => handleTestimonialDragStart(event, index)}
                   onDragEnd={resetTestimonialDragState}
-                  onDragEnter={() => setTestimonialDropIndex(index)}
-                  onDragOver={(event) => {
-                    event.preventDefault()
-                    event.dataTransfer.dropEffect = 'move'
-                    setTestimonialDropIndex(index)
-                  }}
-                  onDrop={(event) => handleTestimonialDrop(event, index)}
                 >
                   <div className="flex min-w-0 items-center gap-3">
                     {testimonialCards.length > 1 && (
@@ -2957,7 +3203,7 @@ function BlockEditor({
                     onBlur={() => commitTestimonialCards()}
                   />
                 </label>
-              </Fragment>
+              </div>
             ))}
             <div className="lg:col-span-2">
               <button
@@ -2977,9 +3223,38 @@ function BlockEditor({
               const selectedIcon = serviceIconOptions.find((option) => option.key === (service.iconKey || serviceIconOptions[index % serviceIconOptions.length].key)) || serviceIconOptions[0]
               const SelectedIcon = selectedIcon.icon
               return (
-                <Fragment key={serviceId}>
-                  <div className="lg:col-span-2 mt-2 flex items-center justify-between gap-3 border-t border-[#e7e9ee] pt-4">
-                    <p className="text-[12px] font-bold uppercase tracking-widest text-[#eb001a]">Serviço {index + 1}</p>
+                <div
+                  key={serviceId}
+                  className={`lg:col-span-2 grid grid-cols-1 gap-4 border-t pt-4 transition-all duration-150 lg:grid-cols-2 ${
+                    draggingServiceIndex === index
+                      ? 'scale-[0.99] border-[#e7e9ee] opacity-60'
+                      : serviceDropIndex === index
+                        ? 'border-[#e7e9ee] bg-[#fff6f7]'
+                        : 'border-[#e7e9ee]'
+                  }`}
+                  onDragEnter={() => setServiceDropIndex(index)}
+                  onDragOver={(event) => {
+                    event.preventDefault()
+                    event.dataTransfer.dropEffect = 'move'
+                    autoScrollPageDuringDrag(event)
+                    setServiceDropIndex(index)
+                  }}
+                  onDrop={(event) => handleServiceDrop(event, index)}
+                >
+                  <div
+                    className="flex items-center justify-between gap-3 lg:col-span-2"
+                    draggable={serviceCards.length > 1}
+                    onDragStart={(event) => handleServiceDragStart(event, index)}
+                    onDragEnd={resetServiceDragState}
+                  >
+                    <div className="flex min-w-0 items-center gap-3">
+                      {serviceCards.length > 1 && (
+                        <span className="grid h-10 w-10 flex-none cursor-grab place-items-center rounded-lg border border-[#ffd5da] bg-white text-[#eb001a] shadow-sm active:cursor-grabbing">
+                          <GripVertical className="h-5 w-5" />
+                        </span>
+                      )}
+                      <p className="text-[12px] font-bold uppercase tracking-widest text-[#eb001a]">Serviço {index + 1}</p>
+                    </div>
                     {serviceCards.length > 1 && (
                       <button
                         type="button"
@@ -3068,7 +3343,7 @@ function BlockEditor({
                       onBlur={(event) => updateServiceCard(index, 'items', event.target.value, true)}
                     />
                   </label>
-                </Fragment>
+                </div>
               )
             })}
             <div className="lg:col-span-2">
@@ -3483,8 +3758,8 @@ export default function SiteContentPage({
                       </label>
                       <label className="block lg:col-span-2">
                         <span className="mb-1.5 block text-[13px] font-bold text-[#111318]">Título principal</span>
-                        <input
-                          className="h-11 w-full rounded-lg border border-[#dfe3ea] px-3 text-[14px] outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
+                        <textarea
+                          className="min-h-[68px] w-full resize-y rounded-lg border border-[#dfe3ea] px-3 py-2.5 text-[14px] leading-relaxed outline-none focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10"
                           value={block.headline}
                           onChange={(event) => updateBlock(block.id, 'headline', event.target.value)}
                         />

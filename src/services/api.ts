@@ -1,10 +1,28 @@
-export const BACKEND_ORIGIN = (import.meta.env.VITE_BACKEND_ORIGIN || 'http://localhost:3000').replace(/\/$/, '')
-export const BACKEND_URL = (import.meta.env.VITE_API_URL || `${BACKEND_ORIGIN}/api`).replace(/\/$/, '')
+const configuredApiUrl = import.meta.env.VITE_API_URL
+const configuredBackendOrigin = import.meta.env.VITE_BACKEND_ORIGIN
+const defaultBackendOrigin = configuredBackendOrigin || 'http://localhost:3000'
+const isAbsoluteApiUrl = /^https?:\/\//i.test(configuredApiUrl || '')
+
+export const BACKEND_ORIGIN = (
+  configuredApiUrl && isAbsoluteApiUrl
+    ? new URL(configuredApiUrl).origin
+    : defaultBackendOrigin
+).replace(/\/$/, '')
+
+export const BACKEND_URL = (configuredApiUrl || `${BACKEND_ORIGIN}/api`).replace(/\/$/, '')
 
 type ApiEnvelope<T> = { status?: string; data?: T; message?: string; error?: string }
 
 function authToken() {
   return localStorage.getItem('admin_token') || localStorage.getItem('admin_mfa_token') || ''
+}
+
+function shouldExpireSession(endpoint: string, envelope?: ApiEnvelope<unknown>) {
+  const message = String(envelope?.message || envelope?.error || '').toLowerCase()
+  const isCodeValidationEndpoint = endpoint.includes('/auth/mfa') || endpoint.includes('/confirm-email')
+  const isCodeValidationError = message.includes('code') || message.includes('mfa')
+
+  return !(isCodeValidationEndpoint && isCodeValidationError)
 }
 
 async function request<T>(method: string, endpoint: string, body?: unknown): Promise<T> {
@@ -26,7 +44,7 @@ async function request<T>(method: string, endpoint: string, body?: unknown): Pro
 
   if (!response.ok) {
     const envelope = parsed as ApiEnvelope<T> | undefined
-    if (response.status === 401) {
+    if (response.status === 401 && shouldExpireSession(endpoint, envelope as ApiEnvelope<unknown> | undefined)) {
       localStorage.removeItem('admin_token')
       window.dispatchEvent(new Event('auth:expired'))
     }

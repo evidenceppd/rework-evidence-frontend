@@ -6,7 +6,14 @@ function getYoutubeEmbedUrl(url) {
   const value = String(url ?? '').trim()
   if (!value) return ''
   const match = value.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/)
-  return match ? `https://www.youtube.com/embed/${match[1]}` : ''
+  if (!match) return ''
+
+  const params = new URLSearchParams({ rel: '0', modestbranding: '1' })
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    params.set('origin', window.location.origin)
+  }
+
+  return `https://www.youtube.com/embed/${match[1]}?${params.toString()}`
 }
 
 function VideoBg({ video }) {
@@ -20,6 +27,7 @@ function VideoBg({ video }) {
           title="V?deo do depoimento"
           className="h-full min-h-[220px] w-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
         />
       </div>
@@ -87,7 +95,7 @@ export default function Depoimentos() {
     <section className="bg-white py-16 border-t border-zinc-200">
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-10">
-          <p className="text-red-500 text-xs font-bold tracking-widest uppercase text-center sm:text-left" style={{ fontSize: '18px' }}>
+          <p className="text-red-500 md:text-[20px] text-[17px] font-bold md:tracking-widest uppercase text-center sm:text-left">
             O QUE NOSSOS CLIENTES DIZEM
           </p>
           <a
@@ -103,13 +111,13 @@ export default function Depoimentos() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((t) => (
-            <div key={t.id} className={`border border-zinc-200 flex flex-col overflow-hidden ${t.hasVideo ? '' : 'p-6'}`}>
+          {testimonials.map((t, index) => (
+            <div key={t.id} className={`border border-zinc-200 flex-col overflow-hidden ${index > 0 ? 'hidden md:flex' : 'flex'} ${t.hasVideo ? '' : 'p-6'}`}>
               {t.hasVideo ? (
                 <div className="flex flex-col sm:flex-row h-full">
                   <VideoBg video={t.video} />
                   <div className="flex flex-col justify-between p-5">
-                    <p className="text-zinc-700 text-sm leading-relaxed mb-4">"{t.quote}"</p>
+                    <p className="text-zinc-700 text-sm leading-relaxed mb-4 whitespace-pre-line">"{t.quote}"</p>
                     <div>
                       <p className="text-zinc-900 text-sm font-bold">{t.name}</p>
                       <p className="text-zinc-500 text-xs">{t.role}</p>
@@ -124,7 +132,7 @@ export default function Depoimentos() {
                     </svg>
                   </div>
                   <div className="flex flex-col justify-between">
-                    <p className="text-zinc-700 text-sm leading-relaxed mb-6">"{t.quote}"</p>
+                    <p className="text-zinc-700 text-sm leading-relaxed mb-6 whitespace-pre-line">"{t.quote}"</p>
                     <div>
                       <p className="text-zinc-900 text-sm font-bold">{t.name}</p>
                       <p className="text-zinc-500 text-xs">{t.role}</p>
@@ -134,6 +142,18 @@ export default function Depoimentos() {
               )}
             </div>
           ))}
+        </div>
+
+        <div className="mt-8 flex justify-center sm:hidden">
+          <a
+            href="/depoimentos"
+            className="cursor-pointer inline-flex items-center justify-center gap-2 bg-red-600 px-6 py-4 text-center text-sm font-bold tracking-wide text-white transition-colors duration-200 hover:bg-red-700"
+          >
+            VER DEPOIMENTOS
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
         </div>
       </div>
     </section>

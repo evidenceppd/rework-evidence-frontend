@@ -27,22 +27,25 @@ function splitHeadline(headline) {
 
 export default function Hero({ block = null }) {
   const content = { ...defaultBlock, ...(block || {}) }
-  const splitTitle = splitHeadline(content.headline)
+  const splitTitle = content.eyebrow
+    ? { first: content.headline || defaultBlock.headline, second: content.eyebrow }
+    : splitHeadline(content.headline)
   const first = splitTitle.first
-  const second = content.eyebrow || splitTitle.second
+  const second = splitTitle.second
   const stats = [content.statOne, content.statTwo, content.statThree]
 
   return (
     <section
       id="inicio"
-      className="relative h-screen bg-black flex items-center sm:pt-[76px]"
+      className="relative md:min-h-screen bg-black flex items-center sm:pt-[76px] h-fit [@media(min-width:768px)_and_(max-height:710px)]:min-h-[calc(100vh+92px)]"
       style={{ paddingTop: 0 }}
     >
       <div className="absolute inset-0">
-        <img src={content.imageUrl || defaultBlock.imageUrl} alt="" className="w-full h-full object-cover" />
+        <img src={content.imageUrl || defaultBlock.imageUrl} alt="" className="w-full h-full object-cover object-[100%_center]" />
+        <div className="absolute inset-0 bg-black/60 sm:bg-black/35 lg:bg-transparent" />
       </div>
 
-      <div className="relative z-10 max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:py-20 lg:py-28 w-full [@media(max-height:710px)]:flex [@media(max-height:710px)]:flex-col [@media(max-height:710px)]:justify-between [@media(max-height:710px)]:pb-6 [@media(max-height:710px)]:h-full" style={{ paddingTop: 0 }}>
+      <div className="relative z-10 max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 pt-[30px] pb-16 sm:py-20 lg:py-28 w-full [@media(max-height:710px)]:flex [@media(max-height:710px)]:flex-col [@media(max-height:710px)]:justify-between [@media(max-height:710px)]:pb-6 [@media(max-height:710px)]:h-full">
         <div className="[@media(max-height:710px)]:flex [@media(max-height:710px)]:items-center [@media(max-height:710px)]:flex-1">
           <div
             className="max-w-2xl mx-auto sm:mx-0 text-center sm:text-left [@media(max-height:710px)]:h-[calc(100vh-90px)] [@media(max-height:710px)]:flex [@media(max-height:710px)]:flex-col [@media(max-height:710px)]:justify-center"
@@ -61,8 +64,8 @@ export default function Hero({ block = null }) {
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center sm:justify-start">
               <a
-                href={content.buttonHref || '#contato'}
-                className="cursor-pointer inline-flex w-full max-w-[288px] items-center justify-center gap-2 self-center bg-red-600 px-6 py-4 text-center text-sm font-bold sm:text-left tracking-wide text-white transition-colors duration-200 hover:bg-red-700 sm:w-auto sm:min-w-[256px] sm:max-w-[360px] sm:self-auto"
+                href={content.buttonHref || '/analise'}
+                className="cursor-pointer inline-flex w-full max-w-[288px] items-center justify-center gap-2 self-center bg-red-600 px-6 py-4 text-center text-sm font-bold sm:text-left tracking-wide text-white transition-colors duration-200 hover:bg-red-700 sm:w-auto sm:min-w-[256px] sm:max-w-[360px] sm:self-auto whitespace-pre-line"
               >
                 {content.buttonPrimary || defaultBlock.buttonPrimary}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -70,8 +73,8 @@ export default function Hero({ block = null }) {
                 </svg>
               </a>
               <a
-                href={content.buttonSecondaryHref || '#como-trabalhamos'}
-                className="cursor-pointer inline-flex w-full max-w-[288px] items-center justify-center gap-2 self-center border border-white/30 px-6 py-4 text-center text-sm font-semibold sm:text-left tracking-wide text-white transition-colors duration-200 hover:border-white/60 sm:w-auto sm:min-w-[224px] sm:max-w-[320px] sm:self-auto"
+                href={content.buttonSecondaryHref || '/como-trabalhamos'}
+                className="cursor-pointer inline-flex w-full max-w-[288px] items-center justify-center gap-2 self-center border border-white/30 px-6 py-4 text-center text-sm font-semibold sm:text-left tracking-wide text-white transition-colors duration-200 hover:border-white/60 sm:w-auto sm:min-w-[224px] sm:max-w-[320px] sm:self-auto whitespace-pre-line"
               >
                 {content.buttonSecondary || defaultBlock.buttonSecondary}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -82,14 +85,14 @@ export default function Hero({ block = null }) {
           </div>
         </div>
 
-        <div className="mt-10 sm:mt-16 flex flex-row gap-4 sm:gap-8 items-start justify-center sm:justify-start [@media(max-height:710px)]:mt-0">
+        <div className="mt-10 sm:mt-16 flex flex-row gap-4 sm:gap-8 items-start justify-center sm:justify-start [@media(max-height:710px)]:mt-0" style={{ flexWrap: 'wrap' }}>
           <div className="flex flex-col items-center text-center sm:flex-row sm:items-center sm:text-left gap-2 sm:gap-3 flex-1 sm:flex-none">
             <div className="shrink-0">
               <svg className="text-red-500 w-10 h-10 sm:w-[50px] sm:h-[50px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.5V21h4V13.5H3zm7-6V21h4V7.5h-4zm7 3V21h4V10.5h-4z" />
               </svg>
             </div>
-            <p className="text-zinc-400 leading-relaxed text-[11px] sm:text-[14px] whitespace-pre-line" style={{ lineHeight: '18px', maxWidth: '113px' }}>{stats[0] || defaultBlock.statOne}</p>
+            <p className="text-zinc-400 leading-relaxed text-[11px] sm:text-[14px] whitespace-pre-line" style={{ lineHeight: '18px' }}>{stats[0] || defaultBlock.statOne}</p>
           </div>
 
           <div className="w-px self-stretch bg-zinc-700" />
@@ -100,7 +103,7 @@ export default function Hero({ block = null }) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
               </svg>
             </div>
-            <p className="text-zinc-400 leading-relaxed text-[11px] sm:text-[14px] whitespace-pre-line" style={{ lineHeight: '18px', maxWidth: '130px' }}>{stats[1] || defaultBlock.statTwo}</p>
+            <p className="text-zinc-400 leading-relaxed text-[11px] sm:text-[14px] whitespace-pre-line" style={{ lineHeight: '18px' }}>{stats[1] || defaultBlock.statTwo}</p>
           </div>
 
           <div className="w-px self-stretch bg-zinc-700" />
@@ -111,7 +114,7 @@ export default function Hero({ block = null }) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
             </div>
-            <p className="text-zinc-400 leading-relaxed text-[11px] sm:text-[14px] whitespace-pre-line" style={{ lineHeight: '18px', maxWidth: '132px' }}>{stats[2] || defaultBlock.statThree}</p>
+            <p className="text-zinc-400 leading-relaxed text-[11px] sm:text-[14px] whitespace-pre-line" style={{ lineHeight: '18px' }}>{stats[2] || defaultBlock.statThree}</p>
           </div>
         </div>
       </div>

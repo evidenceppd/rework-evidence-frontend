@@ -344,16 +344,30 @@ export default function AnaliseBuilderPage(): ReactElement {
 
   const saveCurrentForm = async (): Promise<void> => {
     if (!selectedForm) return
-    const normalized = normalizeForm({ ...selectedForm, slug: selectedForm.originalSlug || selectedForm.slug || slugify(selectedForm.title) })
+    const normalized = normalizeForm({ ...selectedForm, slug: selectedForm.originalSlug || selectedForm.slug || slugify(selectedForm.title), displayOrder: formIndex })
     if (!normalized.title.trim()) { setError('Informe o título do segmento.'); return }
     if (!normalized.sections.length) { setError('Adicione ao menos uma etapa.'); return }
     setSaving(true)
     setError('')
     try {
-      const saved = selectedForm.originalSlug && !selectedForm.isNew
-        ? await diagnosisService.updateForm(selectedForm.originalSlug, normalized)
-        : await diagnosisService.createForm({ ...normalized, slug: slugify(normalized.title) })
-      setForms(current => current.map((form, index) => index === formIndex ? { ...saved, originalSlug: saved.slug } : form))
+      const activeSlug = selectedForm.originalSlug || selectedForm.slug
+      for (let index = 0; index < forms.length; index += 1) {
+        const currentForm = forms[index]
+        const formToSave = normalizeForm({
+          ...currentForm,
+          ...(index === formIndex ? normalized : {}),
+          slug: currentForm.originalSlug || currentForm.slug || slugify(currentForm.title),
+          displayOrder: index,
+        })
+        if (currentForm.originalSlug && !currentForm.isNew) {
+          await diagnosisService.updateForm(currentForm.originalSlug, formToSave)
+        } else {
+          await diagnosisService.createForm({ ...formToSave, slug: slugify(formToSave.title) })
+        }
+      }
+      const refreshedForms = (await diagnosisService.listFormsWithDetails(false)).map(item => ({ ...item, originalSlug: item.slug }))
+      setForms(refreshedForms)
+      setFormIndex(Math.max(0, refreshedForms.findIndex(form => form.slug === activeSlug)))
       toast.success('Formulário salvo na API. Recarregue /analise para ver a versão publicada.')
     } catch (err) {
       console.warn(err)
@@ -383,7 +397,6 @@ export default function AnaliseBuilderPage(): ReactElement {
           {error && <p className="mt-2 text-[12px] font-bold text-[#eb001a]">{error}</p>}
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <div className="hidden h-10 min-w-[240px] items-center rounded-xl border border-[#dfe3ea] bg-[#f8fafc] px-3 text-[13px] text-[#8a93a3] md:flex">Buscar...</div>
           <button type="button" onClick={saveCurrentForm} disabled={saving} className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#eb001a] px-5 text-[13px] font-bold text-white shadow-[0_10px_24px_rgba(235,0,26,0.22)] disabled:opacity-60">
             <Save className="h-4 w-4" /> {saving ? 'Salvando...' : 'Salvar'}
           </button>
@@ -393,7 +406,7 @@ export default function AnaliseBuilderPage(): ReactElement {
       <div className="grid min-h-[760px] grid-cols-1 xl:grid-cols-[300px_minmax(0,1fr)]">
         <aside className="border-r border-[#e3e7ee] bg-white p-6">
           <h2 className="text-[16px] font-bold">Segmentos</h2>
-          <p className="mt-2 text-[13px] leading-relaxed text-[#5f6672]">Cada segmento Ã© um formulário da API.</p>
+          <p className="mt-2 text-[13px] leading-relaxed text-[#5f6672]">Cada segmento é um formulário da API.</p>
           <div className="mt-5 space-y-3">
             {forms.map((form, index) => {
               const Icon = getIcon(form.icon).Icon
@@ -591,7 +604,10 @@ export default function AnaliseBuilderPage(): ReactElement {
                     </div>
                   ))}
                 </div>
-                <button type="button" onClick={() => updateQuestion(item => ({ ...item, options: [...item.options, `Opção ${item.options.length + 1}`] }))} className="mt-2 text-[13px] font-bold text-[#eb001a]"><Plus className="mr-1 inline h-4 w-4" />Adicionar opção</button>
+                <div className="mt-2 flex flex-wrap gap-4">
+                  <button type="button" onClick={() => updateQuestion(item => ({ ...item, options: [...item.options, `Opção ${item.options.length + 1}`] }))} className="text-[13px] font-bold text-[#eb001a]"><Plus className="mr-1 inline h-4 w-4" />Adicionar opção</button>
+                  <button type="button" onClick={() => updateQuestion(item => item.options.some(option => option.trim().toLowerCase() === 'outro') ? item : ({ ...item, options: [...item.options, 'Outro'] }))} className="text-[13px] font-bold text-[#111318]"><Plus className="mr-1 inline h-4 w-4" />Adicionar Outro</button>
+                </div>
               </div>
             )}
             <div className="flex justify-between border-t border-[#e3e7ee] pt-4">
@@ -605,4 +621,3 @@ export default function AnaliseBuilderPage(): ReactElement {
     </div>
   )
 }
-

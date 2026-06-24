@@ -17,11 +17,13 @@ type ApiUsuario = Usuario & {
 }
 
 function fromApi(usuario: ApiUsuario): Usuario {
+  const ativo = usuario.ativo ?? usuario.active ?? false
   return {
     ...usuario,
     nome: usuario.nome || usuario.nomeCompleto || '',
     role: String(usuario.role || 'editor').toLowerCase() as Usuario['role'],
-    ativo: usuario.ativo ?? usuario.active ?? false,
+    ativo,
+    emailPendente: usuario.emailPendente ?? !ativo,
   }
 }
 

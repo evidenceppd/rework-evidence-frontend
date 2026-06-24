@@ -36,7 +36,7 @@ function readClientCards(block) {
         const clients = parsed
           .map((item, index) => ({
             id: index + 1,
-            name: String(item?.name ?? ''),
+            name: String(item?.name ?? '').trim().toLowerCase() === 'novo cliente' ? '' : String(item?.name ?? ''),
             description: String(item?.description ?? ''),
             since: String(item?.since ?? ''),
             segment: String(item?.segment ?? ''),
@@ -55,17 +55,26 @@ function readClientCards(block) {
 /* ── SVG Placeholders & Icons ── */
 function LogoPlaceholder() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="168" height="90" viewBox="0 0 168 90" style={{ flexShrink: 0, width: 'clamp(80px, 18vw, 168px)', height: 'auto' }}>
+    <svg xmlns="http://www.w3.org/2000/svg" width="168" height="90" viewBox="0 0 168 90" className="h-full w-full rounded-md border border-zinc-200">
       <rect width="168" height="90" rx="6" fill="#f4f4f5" stroke="#e4e4e7" strokeWidth="1.5" />
     </svg>
   )
 }
 
 function ClientLogo({ client }) {
-  if (!client.imageUrl) return <LogoPlaceholder />
+  const frameClassName = 'grid w-full max-w-[130px] shrink-0 place-items-center overflow-hidden rounded-md bg-white xl:max-w-[168px]'
+
+  if (!client.imageUrl) {
+    return (
+      <div className={frameClassName} style={{ aspectRatio: '168 / 90' }}>
+        <LogoPlaceholder />
+      </div>
+    )
+  }
+
   return (
-    <div className="grid shrink-0 place-items-center overflow-hidden rounded-md border border-zinc-200 bg-white" style={{ width: 'clamp(80px, 18vw, 168px)', aspectRatio: '168 / 90' }}>
-      <img src={client.imageUrl} alt={client.name} className="h-full w-full object-cover" />
+    <div className={frameClassName} style={{ aspectRatio: '168 / 90' }}>
+      <img src={client.imageUrl} alt={client.name} className="max-h-full w-full object-contain" />
     </div>
   )
 }
@@ -131,18 +140,18 @@ function IconCalendarSm() {
 
 
 export function ClientesHeroSection({ heroBlock, preview = false }) {
+  const hasHeroImage = Boolean(heroBlock?.imageUrl)
+  const heroImageUrl = hasHeroImage ? heroBlock.imageUrl : '/clientes-banner-fallback.png'
+
   return (
     <>
       {/* ── HERO ── */}
       <section className="relative bg-zinc-950" style={preview ? { marginBottom: '72px' } : undefined}>
         {/* bg image overlay */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 bg-cover bg-[position:54%_center] bg-no-repeat sm:bg-[position:60%_center] lg:bg-[position:right_35%]"
           style={{
-            backgroundImage: `url(${heroBlock?.imageUrl || '/2e8498a6-0a0c-474f-9b7f-a6fe475f0613.png'})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'right 35%',
-            backgroundRepeat: 'no-repeat',
+            backgroundImage: `url(${heroImageUrl})`,
             opacity: 0.35,
           }}
         />
@@ -155,7 +164,7 @@ export function ClientesHeroSection({ heroBlock, preview = false }) {
             className="font-poppins font-bold text-white leading-tight mb-4 mx-auto lg:mx-0"
             style={{ fontSize: 'clamp(28px, 4vw, 48px)', maxWidth: '726px', lineHeight: '1.2' }}
           >
-            {heroBlock?.headline || <>Empresas que confiam<br />na Evidence para <span className="text-red-600">crescer.</span></>}
+            {heroBlock?.headline || 'Empresas que confiam na Evidence para crescer'}
           </h1>
           <p className="text-zinc-400 mx-auto lg:mx-0" style={{ fontSize: '20px', maxWidth: '457px', lineHeight: '1.6' }}>
             {heroBlock?.description || 'Parcerias construídas com estratégia, compromisso e foco em resultados reais.'}
@@ -168,7 +177,7 @@ export function ClientesHeroSection({ heroBlock, preview = false }) {
               <div className="flex flex-col lg:flex-row items-center gap-2 lg:gap-4">
                 <div className="text-red-600 shrink-0"><IconUsers /></div>
                 <div>
-                  <p className="font-poppins font-bold text-white" style={{ fontSize: 'clamp(16px, 2.5vw, 22px)', lineHeight: '1.2' }}>{heroBlock?.statOne || '+20'}</p>
+                  <p className="font-poppins font-bold text-white" style={{ fontSize: 'clamp(16px, 2.5vw, 22px)', lineHeight: '1.2' }}>{heroBlock?.statOne || '+500'}</p>
                   <p className="text-zinc-400" style={{ fontSize: '13px' }}>{heroBlock?.statOneLabel || 'empresas atendidas'}</p>
                 </div>
               </div>
@@ -192,7 +201,7 @@ export function ClientesHeroSection({ heroBlock, preview = false }) {
               <div className="flex flex-col lg:flex-row items-center gap-2 lg:gap-4">
                 <div className="text-red-600 shrink-0"><IconCalendar /></div>
                 <div>
-                  <p className="font-poppins font-bold text-white" style={{ fontSize: 'clamp(16px, 2.5vw, 22px)', lineHeight: '1.2' }}>{heroBlock?.statFour || 'desde 2020'}</p>
+                  <p className="font-poppins font-bold text-white" style={{ fontSize: 'clamp(16px, 2.5vw, 22px)', lineHeight: '1.2' }}>{heroBlock?.statFour || 'desde 2015'}</p>
                   <p className="text-zinc-400" style={{ fontSize: '13px' }}>{heroBlock?.statFourLabel || 'gerando resultados'}</p>
                 </div>
               </div>
@@ -204,7 +213,7 @@ export function ClientesHeroSection({ heroBlock, preview = false }) {
   )
 }
 
-export function ClientesGridSection({ clients, compact = false }) {
+export function ClientesGridSection({ clients, compact = false, loading = false }) {
   const [activeSegment, setActiveSegment] = useState('Todos os segmentos')
   const filterScrollRef = useRef(null)
   const segments = ['Todos os segmentos', ...Array.from(new Set(clients.map((client) => client.segment).filter(Boolean)))]
@@ -224,6 +233,12 @@ export function ClientesGridSection({ clients, compact = false }) {
       {/* ── FILTERS + GRID ── */}
       <section className={compact ? 'bg-white pt-8 pb-8' : 'bg-white pt-8 lg:pt-[120px] pb-12 lg:pb-16'}>
         <div className="max-w-368 mx-auto px-4 sm:px-6 lg:px-8">
+          {loading ? (
+            <div className="py-16 text-center">
+              <p className="font-poppins text-[18px] font-bold text-zinc-900">Carregando</p>
+            </div>
+          ) : (
+          <>
 
           {/* Filter tabs */}
           <div className={`relative flex items-center gap-2 ${compact ? 'mb-6' : 'mb-10'}`}>
@@ -279,10 +294,12 @@ export function ClientesGridSection({ clients, compact = false }) {
                 <div className="flex flex-col xl:flex-row gap-3 xl:gap-4 p-5 flex-1 items-center xl:items-start text-center xl:text-left">
                   <ClientLogo client={client} />
                   <div className="flex flex-col justify-center min-w-0">
-                    <p className="font-poppins font-bold text-zinc-900 mb-1" style={{ fontSize: '14px', lineHeight: '1.3' }}>
-                      {client.name}
-                    </p>
-                    <p className="text-zinc-500" style={{ fontSize: '13px', lineHeight: '1.5' }}>
+                    {client.name && (
+                      <p className="font-poppins font-bold text-zinc-900 mb-1" style={{ fontSize: '14px', lineHeight: '1.3' }}>
+                        {client.name}
+                      </p>
+                    )}
+                    <p className="whitespace-pre-line text-zinc-500" style={{ fontSize: '13px', lineHeight: '1.5' }}>
                       {client.description}
                     </p>
                   </div>
@@ -294,6 +311,8 @@ export function ClientesGridSection({ clients, compact = false }) {
               </div>
             ))}
           </div>
+          </>
+          )}
         </div>
       </section>
     </>
@@ -364,8 +383,11 @@ export function ClientesCtaSection({ ctaBlock }) {
 /* ?? Page ?? */
 export default function ClientesPage() {
   const [adminData, setAdminData] = useState(null)
+  const [loadingClients, setLoadingClients] = useState(true)
   useEffect(() => {
-    getPublicSitePage('content-clientes').then(setAdminData)
+    getPublicSitePage('content-clientes')
+      .then(setAdminData)
+      .finally(() => setLoadingClients(false))
   }, [])
 
   const adminBlocks = adminData?.blocks ?? null
@@ -378,7 +400,7 @@ export default function ClientesPage() {
     <>
       <main style={{ marginTop: '90px' }}>
         <ClientesHeroSection heroBlock={heroBlock} />
-        <ClientesGridSection clients={clients} />
+        <ClientesGridSection clients={clients} loading={loadingClients} />
         <ClientesCtaSection ctaBlock={ctaBlock} />
       </main>
       <Footer />

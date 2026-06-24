@@ -47,12 +47,10 @@ export default function CtaFinal({ block = null }) {
             <h2 className="font-poppins font-bold text-white mb-3 leading-tight text-2xl sm:text-3xl lg:text-[29px] whitespace-pre-line">
               {content.headline}
             </h2>
-            <p className="text-zinc-400 text-sm leading-relaxed whitespace-pre-line" style={{ fontSize: '18px', maxWidth: '550px' }}>
+            <p className="text-zinc-400 text-sm leading-relaxed md:whitespace-pre-line" style={{ fontSize: '18px', maxWidth: '550px' }}>
               {content.description}
             </p>
           </div>
-
-          <div className="hidden lg:block self-stretch w-px min-h-[48px]" />
 
           <div className="flex flex-col items-center lg:items-stretch gap-4 shrink-0 w-full lg:w-auto">
             <a

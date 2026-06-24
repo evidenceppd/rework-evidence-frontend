@@ -135,17 +135,17 @@ export default function Header({ onToggleSidebar, isSidebarOpen, isDarkMode, onT
               <button
                 role="menuitem"
                 onClick={handleEditProfile}
-                className="w-full flex items-center gap-2 bg-[#eb001a]/8 px-4 py-2 text-sm font-medium text-[#eb001a] hover:bg-[#eb001a]/20 hover:text-[#eb001a] dark:text-[#ff5364] dark:hover:text-white transition-colors cursor-pointer"
+                className="w-full flex items-center gap-2 bg-[#eb001a]/8 px-4 py-2 text-sm font-medium text-[#eb001a] hover:bg-[#eb001a]/20 hover:text-[#eb001a] dark:text-[#ff5364] dark:hover:text-[#ff5364] transition-colors cursor-pointer"
               >
-                <Pencil size={16} className="text-[#eb001a]" />
+                <Pencil size={16} className="text-current" />
                 Editar usuário
               </button>
               <button
                 role="menuitem"
                 onClick={handleLogout}
-                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
+                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-600 dark:text-[#ff5364] dark:hover:bg-[#eb001a]/10 dark:hover:text-[#ff5364] transition-colors cursor-pointer"
               >
-                <LogOut size={16} className="text-red-500" />
+                <LogOut size={16} className="text-current" />
                 Deslogar
               </button>
             </div>

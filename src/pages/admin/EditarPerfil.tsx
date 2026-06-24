@@ -237,7 +237,7 @@ export default function EditarPerfil({ onBack }: EditarPerfilProps) {
               type="button"
               onClick={onBack}
               disabled={saving}
-              className="px-5 py-2 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 cursor-pointer"
+              className="px-5 py-2 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:border-[#eb001a]/30 hover:bg-[#eb001a]/5 hover:text-[#eb001a] dark:hover:bg-[#eb001a]/10 transition-colors disabled:opacity-50 cursor-pointer"
             >
               Cancelar
             </button>
@@ -246,7 +246,7 @@ export default function EditarPerfil({ onBack }: EditarPerfilProps) {
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="px-5 py-2 bg-[#eb001a] hover:bg-[#b8893a] text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 flex items-center gap-2 cursor-pointer"
+            className="px-5 py-2 bg-[#eb001a] hover:bg-[#c90015] text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 flex items-center gap-2 cursor-pointer"
           >
             <Save size={16} />
             {saving ?'Salvando...' : 'Salvar Alterações'}
