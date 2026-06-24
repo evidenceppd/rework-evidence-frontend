@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'r
 import { Routes, Route, useLocation } from 'react-router-dom'
 import './index.css'
 import Navbar from './components/Navbar'
+import MetaPixel from './components/MetaPixel'
 import Hero from './components/Hero'
 import Cenario from './components/Cenario'
 import Gargalos from './components/Gargalos'
@@ -156,6 +157,7 @@ function App() {
 
   return (
     <div className="font-sans antialiased">
+      <MetaPixel />
       <ScrollToTop />
       {!hideNav && <Navbar />}
       {!hideNav && <WhatsAppFloatingButton />}
