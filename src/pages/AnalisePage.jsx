@@ -77,12 +77,58 @@ const ALLOWED_EMAIL_DOMAINS = new Set([
   'terra.com.br',
 ])
 
+function hasRepeatedNumber(value) {
+  const digits = onlyDigits(value)
+  if (digits.length < 6) return false
+  return new Set(digits).size === 1
+}
+
+function hasLinkLikeValue(value) {
+  const raw = String(value || '').trim().toLowerCase()
+  if (!raw) return false
+  if (/https?:\/\//i.test(raw) || /^www\./i.test(raw)) return true
+  return /(^|[\s(])[\w.-]+\.(?:com|com\.br|br|net|org|io|co\.uk|gov|edu|dev|app)(?:[/?#][^\s]*)?($|[\s)])/i.test(raw)
+}
+
 function isAllowedEmailDomain(value) {
   const raw = String(value || '').trim().toLowerCase()
   const atIndex = raw.lastIndexOf('@')
   if (atIndex === -1) return false
   const domain = raw.slice(atIndex + 1)
   return ALLOWED_EMAIL_DOMAINS.has(domain)
+}
+
+function getFieldError(field, value) {
+  const key = fieldKey(field)
+  const cleaned = String(value || '').trim()
+
+  if (field.required && !cleaned) {
+    return 'Campo obrigatório.'
+  }
+
+  if (hasLinkLikeValue(cleaned)) {
+    return 'Não é permitido inserir link neste campo.'
+  }
+
+  if (key === 'email') {
+    if (cleaned && !isValidEmail(cleaned)) {
+      return 'Informe um e-mail válido.'
+    }
+    if (cleaned && !isAllowedEmailDomain(cleaned)) {
+      return 'O e-mail utilizado não pode ser aceito.'
+    }
+  }
+
+  if (key === 'phone' && cleaned) {
+    if (!isValidPhone(cleaned)) {
+      return 'Informe um telefone válido com DDD.'
+    }
+    if (hasRepeatedNumber(cleaned)) {
+      return 'Informe um telefone válido (números repetidos não são aceitos).'
+    }
+  }
+
+  return ''
 }
 
 function normalizePublicForm(form) {
@@ -249,10 +295,10 @@ function SegmentScreen({ adminData, forms, loading, error, onSelect }) {
   )
 }
 
-function Field({ field, value, error, onChange, fieldIndex }) {
+function Field({ field, value, error, onChange, onBlur, fieldIndex }) {
   const key = fieldKey(field)
   const id = `field-${key}`
-  const commonClass = `mt-2 w-full rounded-md border bg-white px-4 py-3 text-[14px] outline-none ${error ? 'border-[#eb001a]' : 'border-[#dfe3ea] focus:border-[#eb001a]'}`
+  const commonClass = `mt-2 w-full rounded-md border bg-white px-4 py-3 text-[14px] outline-none ${error ? 'border-[#eb001a] bg-[#fff4f5] ring-1 ring-[#eb001a]/25' : 'border-[#dfe3ea] focus:border-[#eb001a] focus:ring-2 focus:ring-[#eb001a]/10'}`
   const options = field.options || []
   const otherOption = options.find((option) => option.trim().toLowerCase() === 'outro')
   const selectedOther = otherOption && value && !options.includes(value)
@@ -261,7 +307,7 @@ function Field({ field, value, error, onChange, fieldIndex }) {
       <label htmlFor={id} className="block text-[15px] font-bold text-[#111318]">{fieldIndex + 1}. {field.label}{field.required && <span className="ml-2 rounded bg-[#fff1f3] px-2 py-0.5 text-[11px] text-[#eb001a]">Obrigatório</span>}</label>
       {field.description && <p className="mt-1 text-[12px] text-[#6b7280]">{field.description}</p>}
       {field.type === 'textarea' ? (
-        <textarea id={id} rows={5} value={value || ''} placeholder={field.placeholder} onChange={(event) => onChange(key, event.target.value)} className={commonClass} />
+        <textarea id={id} rows={5} value={value || ''} placeholder={field.placeholder} onChange={(event) => onChange(key, event.target.value)} onBlur={(event) => onBlur?.(field, event.target.value)} aria-invalid={!!error} className={commonClass} />
       ) : field.type === 'select' ? (
         <CustomSelect id={id} value={value || ''} placeholder={field.placeholder || 'Selecione'} options={options} error={error} onChange={(nextValue) => onChange(key, nextValue)} />
       ) : field.type === 'single' || field.type === 'radio' ? (
@@ -276,7 +322,17 @@ function Field({ field, value, error, onChange, fieldIndex }) {
           )}
         </div>
       ) : (
-        <input id={id} type={key === 'email' ? 'email' : key === 'phone' ? 'tel' : 'text'} inputMode={key === 'phone' ? 'tel' : undefined} value={value || ''} placeholder={field.placeholder} onChange={(event) => onChange(key, event.target.value)} className={commonClass} />
+        <input
+          id={id}
+          type={key === 'email' ? 'email' : key === 'phone' ? 'tel' : 'text'}
+          inputMode={key === 'phone' ? 'tel' : undefined}
+          value={value || ''}
+          placeholder={field.placeholder}
+          onChange={(event) => onChange(key, event.target.value)}
+          onBlur={(event) => onBlur?.(field, event.target.value)}
+          aria-invalid={!!error}
+          className={commonClass}
+        />
       )}
       {error && <p className="mt-2 text-[12px] font-semibold text-[#eb001a]">{error}</p>}
     </div>
@@ -303,7 +359,7 @@ function Sidebar({ currentStep, selectedForm, answers, onJump, steps }) {
   )
 }
 
-function DiagnosticScreen({ selectedForm, answers, currentStep, errors, submitting, onAnswer, onBack, onJump, onNext }) {
+function DiagnosticScreen({ selectedForm, answers, currentStep, errors, submitting, onAnswer, onBlur, onBack, onJump, onNext }) {
   const steps = useMemo(() => [contactStep, ...selectedForm.sections], [selectedForm])
   const step = steps[currentStep]
   const fields = fieldsForStep(step)
@@ -318,7 +374,19 @@ function DiagnosticScreen({ selectedForm, answers, currentStep, errors, submitti
           <div className="mb-6 hidden rounded-md bg-[#07090c] p-5 text-white max-[900px]:block"><div className="flex items-center justify-between"><p className="text-[14px] font-bold">Progresso da análise</p><p className="text-[12px] text-white/75">{progress}% concluído</p></div><div className="mt-3 h-1.5 rounded-full bg-white/10"><div className="h-full rounded-full bg-[#eb001a]" style={{ width: `${progress}%` }} /></div></div>
           <div><h1 id="analysis-title" className="font-poppins text-[clamp(24px,3vw,42px)] font-bold leading-tight"><span className="text-[#eb001a]">Diagnóstico</span> do seu negócio</h1><div className="mt-3 flex items-center gap-2 text-[18px] font-semibold"><FormIcon icon={formIconName(selectedForm)} className="h-5 w-5" />{selectedForm.title}</div><p className="mt-6 max-w-[620px] text-[14px] leading-[1.8] text-[#5f6672]">Responda às perguntas abaixo para que possamos entender melhor seu negócio e identificar as melhores oportunidades de crescimento.</p></div>
           <div className="mt-12 flex items-center justify-between"><h2 className="text-[24px] font-bold">{step.title}</h2><span className="text-[13px] font-medium text-[#3c424d]">{currentStep + 1} de {steps.length}</span></div>
-          <div className="mt-6 space-y-5">{fields.map((field, index) => <Field key={fieldKey(field)} field={field} value={answers[fieldKey(field)]} error={errors[fieldKey(field)]} onChange={onAnswer} fieldIndex={index} />)}</div>
+          <div className="mt-6 space-y-5">
+            {fields.map((field, index) => (
+              <Field
+                key={fieldKey(field)}
+                field={field}
+                value={answers[fieldKey(field)]}
+                error={errors[fieldKey(field)]}
+                onChange={onAnswer}
+                onBlur={onBlur}
+                fieldIndex={index}
+              />
+            ))}
+          </div>
           <div className="mt-8 flex gap-3 max-[520px]:flex-col"><button type="button" onClick={onBack} className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-md border border-[#e0e3e8] bg-white px-5 text-[14px] font-semibold"><ArrowLeft className="h-4 w-4" />Voltar</button><button type="button" onClick={onNext} disabled={submitting} className="inline-flex h-12 min-h-12 flex-1 cursor-pointer items-center justify-center gap-3 rounded-md bg-[#e60018] px-6 py-0 text-[14px] font-bold leading-none text-white disabled:cursor-not-allowed disabled:opacity-60 max-[520px]:w-full max-[520px]:flex-none max-[520px]:text-[15px]"><span>{submitting ? 'Enviando...' : currentStep === steps.length - 1 ? 'Finalizar' : 'Continuar'}</span><ArrowRight className="h-4 w-4 max-[520px]:h-5 max-[520px]:w-5" /></button></div>
         </section>
         <aside className="space-y-10 max-[900px]:hidden"><InfoCard title="Por que estas perguntas?" items={['Oportunidades específicas do seu setor', 'Desafios do seu mercado', 'Estratégias mais eficazes para seu negócio', 'Benchmarks do seu segmento']} /><div className="rounded-md bg-[#f5f5f5] p-6"><Lock className="h-7 w-7 text-[#111318]" /><h3 className="mt-4 text-[15px] font-bold">Segurança dos dados</h3><p className="mt-2 text-[12px] leading-[1.65] text-[#5f6672]">Suas informações estão 100% seguras e são utilizadas apenas para gerar seu diagnóstico personalizado.</p></div></aside>
@@ -338,6 +406,11 @@ function scrollAnalysisTop() {
 }
 
 function ResultScreen({ selectedSegment, onRestart }) {
+  useEffect(() => {
+    if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+      window.fbq('track', 'Lead')
+    }
+  }, [])
   return <main className="bg-white text-[#111318]"><QuizHeader /><Stepper stage="result" selectedSegment={selectedSegment} light /><section className="mx-auto max-w-[1180px] px-8 pb-20 pt-8"><div className="mx-auto max-w-[820px] text-center"><div className="mx-auto grid h-[72px] w-[72px] place-items-center rounded-full bg-[#eb001a] text-white"><Check className="h-8 w-8" /></div><h1 id="analysis-title" className="font-poppins mt-8 text-[42px] font-bold leading-tight max-[720px]:text-[26px]">Recebemos suas respostas</h1><p className="mx-auto mt-4 max-w-[640px] text-[16px] leading-[1.8] text-[#5f6672]">Nossa equipe analisará seu caso e entraremos em contato em breve com os próximos passos.</p></div><div className="mt-9 flex justify-center"><button className="h-[54px] cursor-pointer rounded-md border border-[#e0e3e8] px-7 text-[14px] font-semibold" type="button" onClick={onRestart}>Refazer análise</button></div></section><Footer /></main>
 }
 
@@ -389,20 +462,10 @@ export default function AnalisePage() {
     const nextErrors = {}
     fieldsForStep(step).forEach((field) => {
       const key = fieldKey(field)
-      const value = String(answers[key] || '').trim()
-      if (field.required && !value) {
-        nextErrors[key] = 'Campo obrigatório.'
-        return
-      }
-      if (key === 'email') {
-        if (value && !isValidEmail(value)) {
-          nextErrors[key] = 'Informe um e-mail válido.'
-        } else if (value && !isAllowedEmailDomain(value)) {
-          nextErrors[key] = 'O e-mail utilizado não pode ser aceito.'
-        }
-      }
-      if (key === 'phone' && value && !isValidPhone(value)) {
-        nextErrors[key] = 'Informe um telefone válido com DDD.'
+      const value = String(answers[key] || '')
+      const error = getFieldError(field, value)
+      if (error) {
+        nextErrors[key] = error
       }
     })
     setErrors(nextErrors)
@@ -477,5 +540,23 @@ export default function AnalisePage() {
 
   if (stage === 'segment') return <SegmentScreen adminData={adminData} onSelect={handleSegmentSelect} forms={forms} loading={formsLoading} error={formsError} />
   if (stage === 'result') return <ResultScreen selectedSegment={selectedForm?.title || ''} onRestart={handleRestart} />
-  return selectedForm ? <DiagnosticScreen selectedForm={selectedForm} answers={answers} currentStep={currentStep} errors={errors} submitting={submitting} onAnswer={handleAnswer} onBack={handleBack} onJump={handleJump} onNext={handleNext} /> : null
+  return selectedForm ? (
+    <DiagnosticScreen
+      selectedForm={selectedForm}
+      answers={answers}
+      currentStep={currentStep}
+      errors={errors}
+      submitting={submitting}
+      onAnswer={handleAnswer}
+      onBlur={(field, value) => {
+        const key = fieldKey(field)
+        setErrors((current) => ({ ...current, [key]: getFieldError(field, value) }))
+      }}
+      onBack={handleBack}
+      onJump={handleJump}
+      onNext={handleNext}
+    />
+  ) : null
 }
+
+
