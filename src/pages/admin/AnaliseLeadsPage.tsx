@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactElement } from 'react'
-import { AlertCircle, ArrowUpRight, CalendarDays, CheckCircle2, ChevronDown, FileDown, Flame, Mail, MapPin, Phone, RefreshCw, Search, SlidersHorizontal, Sparkles, X } from 'lucide-react'
+import { AlertCircle, ArrowUpRight, CalendarDays, CheckCircle2, ChevronDown, FileDown, Flame, Mail, MapPin, Phone, RefreshCw, Search, SlidersHorizontal, Sparkles, Trash2, X } from 'lucide-react'
 import { jsPDF } from 'jspdf'
 import { diagnosisService, type DiagnosisForm, type DiagnosisLead, type DiagnosisLeadStatus, type DiagnosisLeadSummary } from '../../services/diagnosis.service'
 
@@ -65,6 +65,17 @@ function flattenDiagnosis(value: unknown, labels: Record<string, string>, prefix
 
 function formatPdfText(value?: string | number | null) {
   return String(value ?? '--').trim() || '--'
+}
+
+function pdfFileName(value?: string | null) {
+  const normalized = String(value || 'lead')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+
+  return `relatorio-${normalized || 'lead'}.pdf`
 }
 
 function exportLeadPdf({ lead, formTitle, status, temperature, answers }: { lead: DiagnosisLead; formTitle: string; status: string; temperature: string; answers: Array<{ label: string; value: string }> }) {
@@ -176,10 +187,7 @@ function exportLeadPdf({ lead, formTitle, status, temperature, answers }: { lead
   doc.setFontSize(9)
   drawWrappedText(`Documento gerado pelo admin da Agencia Evidence em ${formatDate(new Date().toISOString())}.`, margin, cursorY, contentWidth, 11)
 
-  const reportUrl = URL.createObjectURL(doc.output('blob'))
-  const previewWindow = window.open(reportUrl, '_blank', 'noopener,noreferrer')
-  if (!previewWindow) URL.revokeObjectURL(reportUrl)
-  window.setTimeout(() => URL.revokeObjectURL(reportUrl), 60_000)
+  doc.save(pdfFileName(lead.companyName || lead.name))
 }
 
 function MetricCard({ label, value, detail, icon }: { label: string; value: string | number; detail: string; icon: ReactElement }) {
@@ -235,14 +243,14 @@ function SmartSelect<T extends string>({ label, value, options, onChange, classN
   )
 }
 
-function LeadRow({ lead, active, formTitle, onSelect }: { lead: DiagnosisLeadSummary; active: boolean; formTitle: string; onSelect: (lead: DiagnosisLeadSummary) => void }) {
+function LeadRow({ lead, active, formTitle, deleting, onSelect, onDelete }: { lead: DiagnosisLeadSummary; active: boolean; formTitle: string; deleting: boolean; onSelect: (lead: DiagnosisLeadSummary) => void; onDelete: (lead: DiagnosisLeadSummary) => void }) {
   const status = statusMeta(lead.status)
   const temperature = temperatureMeta(lead.leadTemperature)
   return (
-    <button type="button" onClick={() => onSelect(lead)} className={`w-full rounded-2xl border p-4 text-left transition ${active ? 'border-[#eb001a] bg-[#fff7f8] shadow-sm ring-4 ring-[#eb001a]/5' : 'border-[#e3e7ee] bg-white hover:border-[#eb001a]/35 hover:bg-[#fffafb]'}`}>
+    <div className={`w-full rounded-2xl border p-4 text-left transition ${active ? 'border-[#eb001a] bg-[#fff7f8] shadow-sm ring-4 ring-[#eb001a]/5' : 'border-[#e3e7ee] bg-white hover:border-[#eb001a]/35 hover:bg-[#fffafb]'}`}>
       <div className="flex items-start gap-4">
         <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#111318] text-[13px] font-black text-white">{initials(lead.companyName || lead.name)}</div>
-        <div className="min-w-0 flex-1">
+        <button type="button" onClick={() => onSelect(lead)} className="min-w-0 flex-1 text-left">
           <div className="flex flex-wrap items-center gap-2">
             <strong className="truncate text-[15px] font-black text-[#111318]">{lead.companyName || 'Empresa não informada'}</strong>
             <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 ${status.tone}`}>{status.label}</span>
@@ -254,14 +262,20 @@ function LeadRow({ lead, active, formTitle, onSelect }: { lead: DiagnosisLeadSum
             <span className="inline-flex items-center gap-1"><CalendarDays className="h-3.5 w-3.5" />{formatDate(lead.createdAt)}</span>
             <span className="inline-flex items-center gap-1"><Flame className="h-3.5 w-3.5" />Score {lead.score ?? 0}</span>
           </div>
+        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <button type="button" onClick={() => onDelete(lead)} disabled={deleting} className="grid h-9 w-9 place-items-center rounded-xl border border-[#f2c5cb] bg-white text-[#eb001a] transition hover:bg-[#fff1f3] disabled:cursor-not-allowed disabled:opacity-50" aria-label={`Excluir resposta de ${lead.companyName || lead.name}`}>
+            <Trash2 className="h-4 w-4" />
+          </button>
+          <button type="button" onClick={() => onSelect(lead)} className="grid h-9 w-9 place-items-center rounded-xl text-[#a3adba] transition hover:bg-[#f8fafc]" aria-label={`Abrir detalhes de ${lead.companyName || lead.name}`}>
+            <ArrowUpRight className="h-5 w-5" />
+          </button>
         </div>
-        <ArrowUpRight className="h-5 w-5 shrink-0 text-[#a3adba]" />
       </div>
-    </button>
+    </div>
   )
 }
-
-function LeadDetailsModal({ lead, loading, open, formTitle, questionLabels, onClose, onStatusChange }: { lead: DiagnosisLead | null; loading: boolean; open: boolean; formTitle: string; questionLabels: Record<string, string>; onClose: () => void; onStatusChange: (status: DiagnosisLeadStatus) => void }) {
+function LeadDetailsModal({ lead, loading, open, formTitle, questionLabels, deleting, onClose, onStatusChange, onDelete }: { lead: DiagnosisLead | null; loading: boolean; open: boolean; formTitle: string; questionLabels: Record<string, string>; deleting: boolean; onClose: () => void; onStatusChange: (status: DiagnosisLeadStatus) => void; onDelete: (lead: DiagnosisLead) => void }) {
   useEffect(() => {
     if (!open) return undefined
     const handleKey = (event: KeyboardEvent) => { if (event.key === 'Escape') onClose() }
@@ -325,6 +339,9 @@ function LeadDetailsModal({ lead, loading, open, formTitle, questionLabels, onCl
               <button type="button" onClick={handleExport} className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl border border-[#e3e7ee] bg-white px-4 text-[13px] font-black text-[#111318] shadow-sm transition hover:border-[#eb001a]/40 hover:bg-[#fff1f3]">
                 <FileDown className="h-4 w-4 text-[#eb001a]" />Exportar
               </button>
+              <button type="button" onClick={() => onDelete(lead)} disabled={deleting} className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl border border-[#f2c5cb] bg-white px-4 text-[13px] font-black text-[#eb001a] shadow-sm transition hover:bg-[#fff1f3] disabled:cursor-not-allowed disabled:opacity-50">
+                <Trash2 className="h-4 w-4" />{deleting ? 'Excluindo...' : 'Excluir resposta'}
+              </button>
             </aside>
 
             <section className="p-6">
@@ -359,6 +376,7 @@ export default function AnaliseLeadsPage(): ReactElement {
   const [modalOpen, setModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [detailLoading, setDetailLoading] = useState(false)
+  const [deletingId, setDeletingId] = useState('')
   const [error, setError] = useState('')
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState<DiagnosisLeadStatus | 'all'>('all')
@@ -436,6 +454,25 @@ export default function AnaliseLeadsPage(): ReactElement {
     }
   }
 
+  const handleDeleteLead = async (lead: DiagnosisLeadSummary) => {
+    setDeletingId(lead.id)
+    setError('')
+    try {
+      await diagnosisService.deleteLead(lead.id)
+      setLeads(current => current.filter(item => item.id !== lead.id))
+      if (selectedId === lead.id) {
+        setSelected(null)
+        setSelectedId('')
+        setModalOpen(false)
+      }
+    } catch (err) {
+      console.warn(err)
+      setError('Nao foi possivel excluir esta resposta.')
+    } finally {
+      setDeletingId('')
+    }
+  }
+
   return (
     <div className="min-h-[calc(100vh-96px)] rounded-[28px] border border-[#e3e7ee] bg-[#f8fafc] p-5 text-[#111318] shadow-sm sm:p-6">
       <header className="overflow-hidden rounded-[26px] border border-[#16181d] bg-[#07090c] p-6 text-white shadow-[0_24px_70px_rgba(7,9,12,0.22)]">
@@ -472,12 +509,12 @@ export default function AnaliseLeadsPage(): ReactElement {
         {error && <div className="mt-4 flex items-center gap-2 rounded-2xl border border-[#eb001a]/20 bg-[#fff1f3] p-4 text-sm font-bold text-[#eb001a]"><AlertCircle className="h-4 w-4" />{error}</div>}
         {loading ? <div className="mt-4 rounded-2xl bg-[#f8fafc] p-8 text-center text-sm font-bold text-[#6b7280]">Carregando chegadas...</div> : filtered.length === 0 ? <div className="mt-4 rounded-2xl border border-dashed border-[#cfd6e1] bg-[#fbfcfe] p-10 text-center"><SlidersHorizontal className="mx-auto h-9 w-9 text-[#eb001a]" /><h3 className="mt-3 font-black">Nenhuma chegada encontrada</h3><p className="mt-1 text-sm text-[#6b7280]">Ajuste filtros ou aguarde novos envios de /analise.</p></div> : (
           <div className="mt-4 space-y-3">
-            {filtered.map(lead => <LeadRow key={lead.id} lead={lead} formTitle={formTitleBySlug.get(lead.formType) || lead.formType} active={lead.id === selectedId} onSelect={selectLead} />)}
+            {filtered.map(lead => <LeadRow key={lead.id} lead={lead} formTitle={formTitleBySlug.get(lead.formType) || lead.formType} active={lead.id === selectedId} deleting={deletingId === lead.id} onSelect={selectLead} onDelete={handleDeleteLead} />)}
           </div>
         )}
       </section>
 
-      <LeadDetailsModal lead={selected} loading={detailLoading} open={modalOpen} formTitle={selected ? formTitleBySlug.get(selected.formType) || selected.formType : ''} questionLabels={questionLabels} onClose={() => setModalOpen(false)} onStatusChange={handleStatusChange} />
+      <LeadDetailsModal lead={selected} loading={detailLoading} open={modalOpen} formTitle={selected ? formTitleBySlug.get(selected.formType) || selected.formType : ''} questionLabels={questionLabels} deleting={!!selected && deletingId === selected.id} onClose={() => setModalOpen(false)} onStatusChange={handleStatusChange} onDelete={handleDeleteLead} />
     </div>
   )
 }

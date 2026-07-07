@@ -248,6 +248,10 @@ export const diagnosisService = {
     return api.patch<DiagnosisLeadSummary>(`/diagnosis/leads/${id}/status`, { status })
   },
 
+  async deleteLead(id: string): Promise<void> {
+    return api.delete<void>(`/diagnosis/leads/${id}`)
+  },
+
   async submitLead(payload: LeadPayload): Promise<unknown> {
     return api.post('/diagnosis', payload)
   },
